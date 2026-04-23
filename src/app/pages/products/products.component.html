@@ -1,0 +1,123 @@
+<!-- Hero Section -->
+<section class="relative w-full h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-beeses-dark">
+  <div class="absolute inset-0 w-full h-full">
+    <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
+    <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/80 via-beeses-dark/50 to-beeses-silver"></div>
+  </div>
+  
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-20">
+    <span class="text-beeses-gold text-[11px] md:text-sm tracking-[0.5em] font-bold uppercase mb-6 block drop-shadow-md">Koleksiyonumuz</span>
+    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">ÜRÜNLERİMİZ</h1>
+    <div class="w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
+    <p class="text-lg md:text-xl text-gray-200 font-light leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
+      Sesi bir sanat formuna dönüştüren premium cihazlarımızı keşfedin.
+    </p>
+  </div>
+</section>
+
+<section class="w-full bg-beeses-silver py-12 md:py-20">
+  <div class="container mx-auto px-4 md:px-8 lg:px-12">
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+      
+      <!-- Sidebar (Filters & Search) -->
+      <div class="w-full lg:w-1/4 shrink-0 sticky top-24">
+        
+        <!-- Combined Search Box & Categories -->
+        <div class="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
+          
+          <h3 class="text-sm font-bold text-gray-400 tracking-[0.15em] uppercase mb-4">Ürün Ara</h3>
+          <div class="relative mb-8">
+            <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Örn: SQL-4400" 
+                   class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm text-beeses-dark focus:outline-none focus:ring-2 focus:ring-beeses-gold/50 focus:border-beeses-gold transition-all">
+            <lucide-icon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>
+          </div>
+
+          <h3 class="text-sm font-bold text-gray-400 tracking-[0.15em] uppercase mb-4">Kategoriler</h3>
+          <ul class="space-y-2">
+            <li>
+              <button (click)="filterByCategory(null)" 
+                      class="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm flex items-center justify-between"
+                      [ngClass]="selectedCategory === null ? 'bg-beeses-dark text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'">
+                Tüm Ürünler
+                <lucide-icon name="chevron-right" class="w-4 h-4 opacity-50"></lucide-icon>
+              </button>
+            </li>
+            <li *ngFor="let cat of categories">
+              <button (click)="filterByCategory(cat)" 
+                      class="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm flex items-center justify-between"
+                      [ngClass]="selectedCategory === cat ? 'bg-beeses-dark text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'">
+                {{ cat }}
+                <lucide-icon name="chevron-right" class="w-4 h-4 opacity-50"></lucide-icon>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Main Content (Product Grid) -->
+      <div class="w-full lg:w-3/4 min-h-[400px]">
+        
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="flex flex-col items-center justify-center h-64">
+          <div class="w-12 h-12 border-4 border-gray-200 border-t-beeses-gold rounded-full animate-spin mb-4"></div>
+          <p class="text-gray-500 font-medium text-sm tracking-widest uppercase animate-pulse">Ürünler Yükleniyor...</p>
+        </div>
+
+        <div *ngIf="!isLoading">
+          <!-- Result count -->
+          <div class="mb-8 pb-4 border-b border-gray-200/50 flex justify-between items-center animate-fade-in">
+            <p class="text-gray-500 text-sm font-medium">Toplam <span class="text-beeses-dark font-bold">{{ filteredProducts.length }}</span> ürün bulundu.</p>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="filteredProducts.length === 0" class="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100 animate-fade-in">
+            <lucide-icon name="search-x" class="w-12 h-12 text-gray-300 mx-auto mb-4"></lucide-icon>
+            <h3 class="text-xl font-bold text-beeses-dark mb-2">Ürün Bulunamadı</h3>
+            <p class="text-gray-500">Arama kriterlerinize uygun ürün bulunamadı. Lütfen filtreleri temizleyerek tekrar deneyin.</p>
+            <button (click)="searchQuery=''; filterByCategory(null)" class="mt-6 px-6 py-2 bg-beeses-gold text-white rounded-full text-sm font-bold hover:bg-beeses-dark transition-colors">Filtreleri Temizle</button>
+          </div>
+
+          <!-- Grid -->
+          <div *ngIf="filteredProducts.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            
+            <!-- Product Card -->
+            <a *ngFor="let product of filteredProducts" [routerLink]="['/products', product.id]" 
+               class="group bg-white rounded-2xl overflow-hidden shadow-[0_5px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 flex flex-col cursor-pointer animate-fade-in">
+              
+              <!-- Image Area -->
+              <div class="w-full aspect-square bg-[#F8F9FA] relative flex items-center justify-center p-8 overflow-hidden">
+                <!-- Category Badge -->
+                <div class="absolute top-4 left-4 z-10 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold tracking-widest uppercase text-beeses-dark shadow-sm border border-black/5">
+                  {{ product.category }}
+                </div>
+                
+                <img [src]="product.image" [alt]="product.name" class="max-w-full max-h-full object-contain filter drop-shadow-xl transition-transform duration-700 group-hover:scale-110">
+                
+                <!-- Hover Overlay -->
+                <div class="absolute inset-0 bg-beeses-dark/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </div>
+
+              <!-- Content Area -->
+              <div class="p-6 flex-1 flex flex-col">
+                <h3 class="text-xl font-bold text-beeses-dark mb-3 group-hover:text-beeses-gold transition-colors">{{ product.name }}</h3>
+                <p class="text-sm text-gray-500 leading-relaxed font-light mb-6 flex-1 line-clamp-3">
+                  {{ product.shortDescription }}
+                </p>
+                
+                <div class="mt-auto flex items-center justify-between text-xs font-bold text-beeses-dark uppercase tracking-widest pt-4 border-t border-gray-100 group-hover:border-beeses-gold/20 transition-colors">
+                  <span>İncele</span>
+                  <lucide-icon name="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></lucide-icon>
+                </div>
+              </div>
+              
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+      
+    </div>
+  </div>
+</section>

@@ -1,0 +1,128 @@
+<header class="fixed top-0 left-0 w-full z-50 transition-all duration-700 text-white uppercase tracking-[0.20em] font-medium">
+  
+  <div [ngClass]="isScrolled ? 'lang-bar-hidden' : 'lang-bar-visible'" 
+       class="bg-transparent border-b border-white/5 transition-all duration-700 overflow-hidden"> 
+    <div class="container mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-end">
+      <div class="relative group/lang">
+        <button class="flex items-center gap-2 hover:text-beeses-gold transition text-[11px] font-bold outline-none">
+          <img [src]="currentLang.flag" class="w-5 h-auto rounded-sm shadow-sm">
+          <span>{{ currentLang.code }}</span>
+          <lucide-icon name="chevron-down" class="w-3.5 h-3.5"></lucide-icon>
+        </button>
+        
+        <div class="absolute right-0 mt-2 w-36 border border-white/10 shadow-xl rounded-sm overflow-hidden z-20 opacity-0 invisible group-hover/lang:opacity-100 group-hover/lang:visible transition-all duration-300">
+          <button *ngFor="let lang of languages" (click)="changeLang(lang)" class="flex w-full items-center gap-3 px-4 py-3 hover:bg-white/5 transition text-[10px] font-medium border-b border-white/5 last:border-0 leading-none">
+            <img [src]="lang.flag" class="w-4 h-auto">
+            <span>{{ lang.name }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [ngClass]="isScrolled ? 'bg-beeses-dark/95 backdrop-blur-md shadow-lg' : 'bg-beeses-dark'" 
+       class="border-b border-white/5 transition-all duration-500">
+    <div class="container mx-auto px-4 md:px-8 lg:px-12 py-4 md:py-5 flex items-center justify-between">
+      
+      <a routerLink="/" class="flex items-center flex-shrink-0 group">
+        <img src="assets/logo.png" alt="Beeses Audio" class="h-9 md:h-11 w-auto object-contain transition-transform group-hover:scale-105">
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-10 font-bold flex-grow justify-center pl-10 text-[12px]">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">ANA SAYFA</a>
+        
+        <div class="relative group/nav">
+          <a routerLink="/kurumsal" routerLinkActive="active" class="nav-link flex items-center gap-1">
+            KURUMSAL <lucide-icon name="chevron-down" class="w-3 h-3 opacity-50"></lucide-icon>
+          </a>
+          <div class="dropdown-menu">
+            <a routerLink="/corporate/components/about">Hakkımızda</a>
+            <a routerLink="/corporate/components/team">Ekibimiz</a>
+            <a routerLink="/corporate/components/sss">Sıkça Sorulan Sorular</a>
+            <a routerLink="/corporate/components/references">Referanslarımız</a>
+          </div>
+        </div>
+        
+        <div class="relative group/nav">
+          <a routerLink="/products" routerLinkActive="active" class="nav-link flex items-center gap-1">
+            ÜRÜNLERİMİZ <lucide-icon name="chevron-down" class="w-3 h-3 opacity-50"></lucide-icon>
+          </a>
+          <div class="dropdown-menu">
+            <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }">SQL SERİSİ</a>
+            <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }">OF SERİSİ</a>
+            <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }">PETEK SERİSİ</a>
+          </div>
+        </div>
+        
+        <a routerLink="/contact" routerLinkActive="active" class="nav-link">İLETİŞİM</a>
+      </nav>
+
+      <div class="flex items-center flex-shrink-0">
+        <button (click)="toggleSideMenu()" class="p-2 hover:text-beeses-gold transition-all hover:scale-110">
+          <lucide-icon name="menu" class="w-7 h-7"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fixed inset-0 z-[60] transition-all duration-500" [ngClass]="{'opacity-100 visible': isSideMenuOpen, 'opacity-0 invisible': !isSideMenuOpen}">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" (click)="toggleSideMenu()"></div>
+    
+    <div class="absolute left-0 top-0 h-full w-full max-w-[340px] bg-beeses-dark border-r border-white/5 p-10 flex flex-col shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.8,0,0.2,1)]"
+         [ngClass]="{'translate-x-0': isSideMenuOpen, '-translate-x-full': !isSideMenuOpen}">
+      
+      <div class="flex justify-between items-center mb-12">
+        <img src="assets/logo.png" alt="Beeses Audio" class="h-9 w-auto object-contain">
+        <button (click)="toggleSideMenu()" class="hover:text-beeses-gold transition-transform hover:rotate-90">
+          <lucide-icon name="x" class="w-9 h-9"></lucide-icon>
+        </button>
+      </div>
+
+      <div class="flex gap-4 mb-10 pb-10 border-b border-white/5">
+        <button *ngFor="let lang of languages" (click)="changeLang(lang)" 
+                class="flex items-center gap-2 px-3 py-2 rounded border border-white/5 text-[10px] font-bold"
+                [ngClass]="{'bg-beeses-gold text-white border-beeses-gold': currentLang.code === lang.code}">
+          <img [src]="lang.flag" class="w-4 h-auto"> {{ lang.code }}
+        </button>
+      </div>
+
+      <nav class="flex flex-col gap-6">
+        
+        <a routerLink="/" (click)="toggleSideMenu()" class="mobile-main-link">ANA SAYFA</a>
+        
+       <div class="flex flex-col">
+          <button (click)="toggleMobileKurumsal($event)" class="mobile-main-link flex justify-between items-center w-full">
+            KURUMSAL
+            <lucide-icon [name]="isMobileKurumsalOpen ? 'chevron-up' : 'chevron-down'" class="w-5 h-5 opacity-40"></lucide-icon>
+          </button>
+          
+          <div class="mobile-sub-menu" [ngClass]="{'open': isMobileKurumsalOpen}">
+            <a routerLink="/corporate/components/about" (click)="toggleSideMenu()">HAKKIMIZDA</a>
+            <a routerLink="/corporate/components/team" (click)="toggleSideMenu()">EKİBİMİZ</a>
+            <a routerLink="/corporate/components/sss" (click)="toggleSideMenu()">S.S.S</a>
+            <a routerLink="/corporate/components/references" (click)="toggleSideMenu()">REFERANSLARIMIZ</a>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <button (click)="toggleMobileUrunler($event)" class="mobile-main-link flex justify-between items-center w-full">
+            ÜRÜNLERİMİZ
+            <lucide-icon [name]="isMobileUrunlerOpen ? 'chevron-up' : 'chevron-down'" class="w-5 h-5 opacity-40"></lucide-icon>
+          </button>
+          <div class="mobile-sub-menu" [ngClass]="{'open': isMobileUrunlerOpen}">
+            <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }" (click)="toggleSideMenu()">SQL SERİSİ</a>
+            <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }" (click)="toggleSideMenu()">OF SERİSİ</a>
+            <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }" (click)="toggleSideMenu()">PETEK SERİSİ</a>
+          </div>
+        </div>
+
+        <a routerLink="/contact" (click)="toggleSideMenu()" class="mobile-main-link">İLETİŞİM</a>
+      </nav>
+
+      <div class="mt-auto pt-10 text-[10px] text-white/40 leading-relaxed tracking-widest uppercase font-medium">
+        <p class="text-beeses-gold mb-2 font-bold">BEESES AUDIO TECHNOLOGIES</p>
+        <p>ESENLER / İSTANBUL</p>
+      </div>
+    </div>
+  </div>
+</header>

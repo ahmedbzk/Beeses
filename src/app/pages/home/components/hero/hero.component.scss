@@ -1,0 +1,32 @@
+.slider-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  // Sağdan sola süzülme süresi ve yumuşaklığı
+  transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  will-change: transform;
+}
+
+.slide-unit {
+  min-width: 100%; // Her slayt ekranı tam kaplar
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center; // Dikeyde ortalama
+}
+
+.slide-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6; // Premium loş görünüm
+}
+
+/* Cam kartın yerleşimi için ek destek */
+.z-20 {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  // Kartın içindeki metinlerin kayarken titrememesi için
+  backface-visibility: hidden;
+}

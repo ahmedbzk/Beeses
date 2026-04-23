@@ -1,0 +1,144 @@
+<!-- Hero Section -->
+<section class="relative w-full h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+  <!-- Background Image with Overlay -->
+  <div class="absolute inset-0 w-full h-full">
+    <img src="assets/backgrounds/bg1.jpg" alt="Contact Hero" class="w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-black/60"></div>
+  </div>
+  
+  <!-- Hero Content -->
+  <div class="relative z-10 text-center px-4">
+    <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">İletişime Geçin</h1>
+    <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+      Sorularınız, önerileriniz veya işbirlikleri için bizimle iletişime geçmekten çekinmeyin. Size en kısa sürede dönüş yapacağız.
+    </p>
+  </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="relative w-full bg-beeses-silver py-20 overflow-hidden">
+  <div class="contact-pattern"></div>
+  <div class="contact-bg-text">BEESES</div>
+
+  <div class="px-4 md:px-8 max-w-7xl mx-auto relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+      
+      <!-- Contact Info -->
+      <div class="space-y-10">
+        <div>
+          <h2 class="text-4xl font-bold text-beeses-dark mb-6">Bize Ulaşın</h2>
+          <p class="text-gray-600 mb-8 text-lg leading-relaxed">
+            Beeses Audio olarak müşteri memnuniyetine büyük önem veriyoruz. Her türlü geri bildiriminiz bizim için değerlidir.
+          </p>
+        </div>
+
+        <div class="space-y-8">
+          <div class="flex items-start gap-6">
+            <div class="w-14 h-14 rounded-full bg-beeses-gold/10 border border-beeses-gold/20 flex items-center justify-center shrink-0 mt-1">
+              <lucide-icon name="map-pin" class="text-beeses-gold w-6 h-6"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-gray-600 leading-relaxed text-[15px]">
+                Oruçreis Mahallesi Giyimkent 16. Sokak <br>
+                Giyimkent Sitesi B170 Blok no: 112/A <br>
+                <strong class="text-beeses-dark">Esenler / İSTANBUL</strong>
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-6">
+            <div class="w-14 h-14 rounded-full bg-beeses-gold/10 border border-beeses-gold/20 flex items-center justify-center shrink-0">
+              <lucide-icon name="mail" class="text-beeses-gold w-6 h-6"></lucide-icon>
+            </div>
+            <div>
+              <a href="mailto:info@iotek.com.tr" class="text-gray-600 hover:text-beeses-gold transition-colors text-[15px]">info&#64;iotek.com.tr</a>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-6">
+            <div class="w-14 h-14 rounded-full bg-beeses-gold/10 border border-beeses-gold/20 flex items-center justify-center shrink-0">
+              <lucide-icon name="phone" class="text-beeses-gold w-6 h-6"></lucide-icon>
+            </div>
+            <div>
+              <a href="tel:+902120000000" class="text-gray-600 hover:text-beeses-gold transition-colors text-[15px]">+90 (212) 000 00 00</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="bg-white border border-gray-200 shadow-2xl rounded-2xl p-8 md:p-10">
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Name -->
+            <div class="space-y-2">
+              <label for="name" class="block text-sm font-bold text-beeses-dark">Adınız</label>
+              <input type="text" id="name" formControlName="name"
+                     class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors"
+                     [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': contactForm.get('name')?.invalid && contactForm.get('name')?.touched}"
+                     placeholder="John">
+              <p *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched" class="text-red-500 text-xs mt-1 font-medium">
+                Ad alanı zorunludur.
+              </p>
+            </div>
+
+            <!-- Surname -->
+            <div class="space-y-2">
+              <label for="surname" class="block text-sm font-bold text-beeses-dark">Soyadınız</label>
+              <input type="text" id="surname" formControlName="surname"
+                     class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors"
+                     [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': contactForm.get('surname')?.invalid && contactForm.get('surname')?.touched}"
+                     placeholder="Doe">
+              <p *ngIf="contactForm.get('surname')?.invalid && contactForm.get('surname')?.touched" class="text-red-500 text-xs mt-1 font-medium">
+                Soyad alanı zorunludur.
+              </p>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="space-y-2">
+            <label for="email" class="block text-sm font-bold text-beeses-dark">Email Adresiniz</label>
+            <input type="email" id="email" formControlName="email"
+                   class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors"
+                   [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': contactForm.get('email')?.invalid && contactForm.get('email')?.touched}"
+                   placeholder="ornek@email.com">
+            <p *ngIf="contactForm.get('email')?.hasError('required') && contactForm.get('email')?.touched" class="text-red-500 text-xs mt-1 font-medium">
+              Email alanı zorunludur.
+            </p>
+            <p *ngIf="contactForm.get('email')?.hasError('email') && contactForm.get('email')?.touched" class="text-red-500 text-xs mt-1 font-medium">
+              Geçerli bir email adresi giriniz.
+            </p>
+          </div>
+
+          <!-- Message -->
+          <div class="space-y-2">
+            <label for="message" class="block text-sm font-bold text-beeses-dark">Mesajınız</label>
+            <textarea id="message" formControlName="message" rows="5"
+                      class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors resize-none"
+                      [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': contactForm.get('message')?.invalid && contactForm.get('message')?.touched}"
+                      placeholder="Mesajınızı buraya yazın..."></textarea>
+            <p *ngIf="contactForm.get('message')?.hasError('required') && contactForm.get('message')?.touched" class="text-red-500 text-xs mt-1 font-medium">
+              Mesaj alanı zorunludur.
+            </p>
+            <p *ngIf="contactForm.get('message')?.hasError('minlength') && contactForm.get('message')?.touched" class="text-red-500 text-xs mt-1 font-medium">
+              Mesajınız en az 10 karakter olmalıdır.
+            </p>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" [disabled]="isSubmitting"
+                  class="w-full py-4 px-6 mt-4 rounded-lg bg-beeses-gold hover:bg-beeses-dark hover:text-beeses-gold text-white font-bold tracking-wider uppercase text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg">
+            <lucide-icon *ngIf="!isSubmitting" name="mail" class="w-5 h-5"></lucide-icon>
+            <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-3 h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {{ isSubmitting ? 'GÖNDERİLİYOR...' : 'MESAJI GÖNDER' }}
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>

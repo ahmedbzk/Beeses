@@ -1,0 +1,12 @@
+{
+  "categories": [
+    {
+      "id": "stereo-players",
+      "name_tr": "Stereo Çalarlar",
+      "name_en": "Stereo Players",
+      "products": [
+        { "id": 1, "name": "Petek V1", "specs": { "power": "2x100W" } }
+      ]
+    }
+  ]
+}

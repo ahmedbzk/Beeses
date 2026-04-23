@@ -1,0 +1,50 @@
+<div class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-30 flex flex-col items-center gap-4 group">
+  
+  <!-- Menü Öğeleri (Hover durumunda yukarı doğru açılır) -->
+  <div class="flex flex-col gap-3 translate-y-10 opacity-0 pointer-events-none group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 ease-out">
+    
+    <!-- WhatsApp (Phone ikonu) -->
+    <a href="#" target="_blank" rel="noopener noreferrer" 
+       title="WhatsApp"
+       class="w-12 h-12 rounded-full bg-[#25D366]/10 backdrop-blur-md border border-[#25D366]/30 flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-all duration-300 shadow-lg hover:scale-110">
+      <lucide-icon name="phone" class="w-5 h-5"></lucide-icon>
+    </a>
+
+    <!-- YouTube -->
+    <a href="#" target="_blank" rel="noopener noreferrer" 
+       title="YouTube"
+       class="w-12 h-12 rounded-full bg-[#FF0000]/10 backdrop-blur-md border border-[#FF0000]/30 flex items-center justify-center text-[#FF0000] hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] transition-all duration-300 shadow-lg hover:scale-110">
+      <lucide-icon name="youtube" class="w-5 h-5"></lucide-icon>
+    </a>
+    
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/beeses.audio?igsh=MTU2bGR3bWd5MnJsdQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" 
+       title="Instagram"
+       class="w-12 h-12 rounded-full bg-[#E1306C]/10 backdrop-blur-md border border-[#E1306C]/30 flex items-center justify-center text-[#E1306C] hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:text-white hover:border-transparent transition-all duration-300 shadow-lg hover:scale-110">
+      <lucide-icon name="instagram" class="w-5 h-5"></lucide-icon>
+    </a>
+    
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/share/1DWuneXLUK/?mibextid=wwXlfr" target="_blank" rel="noopener noreferrer" 
+       title="Facebook"
+       class="w-12 h-12 rounded-full bg-[#1877F2]/10 backdrop-blur-md border border-[#1877F2]/30 flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-all duration-300 shadow-lg hover:scale-110">
+      <lucide-icon name="facebook" class="w-5 h-5"></lucide-icon>
+    </a>
+
+  </div>
+
+  <!-- Ana Buton (Trigger) -->
+  <button class="relative w-14 h-14 rounded-full bg-beeses-gold border border-beeses-gold/50 flex items-center justify-center text-white shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-500 z-10 group-hover:bg-beeses-dark group-hover:border-beeses-gold cursor-default">
+    
+    <!-- Bildirim Rozeti (Badge) -->
+    <div class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center text-white text-[11px] font-bold border-2 border-beeses-dark z-20 transition-all duration-300 group-hover:scale-0 group-hover:opacity-0 shadow-sm">
+      4
+    </div>
+
+    <div class="relative w-6 h-6 flex items-center justify-center">
+      <lucide-icon name="layout-grid" class="w-6 h-6 absolute transition-all duration-500 transform group-hover:rotate-90 group-hover:scale-0 group-hover:opacity-0"></lucide-icon>
+      <lucide-icon name="x" class="w-6 h-6 absolute transition-all duration-500 transform -rotate-90 scale-0 opacity-0 group-hover:rotate-0 group-hover:scale-100 group-hover:opacity-100 group-hover:text-beeses-gold"></lucide-icon>
+    </div>
+  </button>
+  
+</div>

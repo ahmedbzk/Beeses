@@ -1,0 +1,64 @@
+.footer-section {
+  @apply bg-beeses-dark border-t border-white/5 relative overflow-hidden;
+}
+
+.footer-col {
+  @apply flex flex-col;
+}
+
+.footer-title {
+  @apply text-beeses-gold text-[12px] font-bold tracking-[0.4em] uppercase mb-10;
+}
+
+.footer-links {
+  @apply flex flex-col gap-5;
+  
+  li a {
+    @apply text-beeses-silver/50 text-[11px] font-bold tracking-[0.2em] uppercase transition-all duration-300 inline-block;
+    
+    &:hover {
+      @apply text-beeses-gold translate-x-2;
+    }
+  }
+}
+
+.contact-info {
+  @apply flex flex-col gap-6;
+
+  .info-item {
+    @apply flex items-center gap-4 text-beeses-silver/50 text-[11px] leading-relaxed;
+    
+    .icon-wrapper {
+      @apply w-5 flex items-center justify-center text-beeses-gold/40;
+      lucide-icon { @apply w-4 h-4; }
+    }
+
+    strong { @apply text-beeses-silver/80 font-bold; }
+  }
+}
+
+.social-icon {
+  // İkonu tam merkezde tutan flex yapısı
+  @apply w-11 h-11 rounded-full border border-white/5 flex items-center justify-center 
+         text-beeses-silver/30 transition-all duration-500 bg-white/[0.02] p-0;
+  line-height: 0; // İkonun yukarı kayma eğilimini sıfırlar
+
+  &:hover {
+    @apply border-beeses-gold text-beeses-gold -translate-y-1 bg-beeses-gold/5;
+  }
+
+  lucide-icon {
+    @apply w-4 h-4;
+    display: flex; // İkonun kendi iç hizalamasını zorlar
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.footer-bottom {
+  @apply mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6;
+  
+  p {
+    @apply text-beeses-silver/20 text-[10px] font-bold tracking-[0.2em] uppercase;
+  }
+}

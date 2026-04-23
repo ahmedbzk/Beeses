@@ -1,0 +1,76 @@
+.tech-section {
+  @apply w-full h-[60vh] md:h-[80vh] overflow-hidden;
+  padding: 0 !important;
+  margin: 0 !important;
+  background-color: #0c0c0c; /* Varsa boşluklarda tam siyah görünsün */
+}
+
+.accordion-container {
+  @apply flex flex-col md:flex-row w-full h-full;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.accordion-card {
+  @apply relative flex-1 bg-cover bg-center overflow-hidden cursor-pointer transition-all duration-700 ease-in-out border-b md:border-b-0 md:border-r border-white/10;
+  
+  /* Performans için donanım hızlandırması ve ağır filtrelerin kaldırılması */
+  transform: translateZ(0);
+  will-change: flex-grow;
+
+  &:hover {
+    flex-grow: 4;
+    
+    .card-overlay {
+      @apply bg-black/10;
+    }
+
+    .tech-details {
+      @apply opacity-100 translate-y-0 delay-200;
+    }
+    
+    .tech-title {
+      @apply text-beeses-gold;
+    }
+    
+    .tech-icon {
+      @apply text-beeses-gold scale-110;
+    }
+  }
+}
+
+.card-overlay {
+  @apply absolute inset-0 bg-black/80 transition-colors duration-700 pointer-events-none;
+}
+
+.card-content {
+  @apply absolute inset-0 p-6 md:p-10 flex flex-col justify-end z-10;
+}
+
+.icon-title-wrap {
+  @apply flex items-center gap-4 mb-2;
+}
+
+.tech-icon {
+  @apply w-6 h-6 md:w-8 md:h-8 text-beeses-silver shrink-0 transition-all duration-500;
+}
+
+.tech-title {
+  @apply text-beeses-silver text-sm md:text-2xl font-light tracking-[0.2em] uppercase transition-colors duration-500 whitespace-nowrap;
+}
+
+.tech-details {
+  @apply flex flex-col md:flex-row justify-between items-start md:items-end opacity-0 translate-y-4 transition-all duration-500 ease-out h-0 md:h-auto overflow-hidden;
+}
+
+.accordion-card:hover .tech-details {
+  @apply h-auto overflow-visible mt-2;
+}
+
+.tech-desc {
+  @apply text-beeses-silver/80 text-xs md:text-sm max-w-sm leading-relaxed font-light mb-4 md:mb-0;
+}
+
+.tech-number {
+  @apply text-beeses-gold/30 text-3xl md:text-5xl font-bold tracking-tighter self-end md:ml-4;
+}

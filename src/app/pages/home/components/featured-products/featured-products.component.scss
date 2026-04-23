@@ -1,0 +1,79 @@
+.featured-section {
+  background-color: #f2f2f2; 
+  @apply py-24 border-t border-black/5 relative overflow-hidden;
+}
+
+.featured-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.15;
+  filter: grayscale(1) brightness(0.6);
+  background-image: url('/assets/bg-patterns/bg-pattern4.jpg');
+  background-size: cover;
+  background-position: center;
+  
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.featured-bg-text {
+  position: absolute;
+  bottom: 10%;
+  left: 5%;
+  z-index: 0;
+  color: #0c0c0c; // beeses-dark karşılığı
+  font-size: 3vw; // text-[15vw] yerine
+  opacity: 0.03;   // opacity-[0.03] yerine
+  @apply font-bold tracking-[0.2em] uppercase;
+  font-family: 'Times New Roman', serif;
+  pointer-events: none;
+}
+
+.product-card {
+  @apply flex flex-col cursor-pointer transition-all duration-700;
+
+  .image-wrapper {
+    @apply relative overflow-hidden bg-white flex items-center justify-center p-8 border border-black/5 transition-all duration-700;
+    aspect-ratio: 3 / 4; // aspect-[3/4] yerine (HATANIN ANA KAYNAĞI)
+    box-shadow: 0 10px 20px -10px rgba(0,0,0,0.1);
+
+    &:hover {
+      @apply border-beeses-gold/30;
+      box-shadow: 0 15px 30px -15px rgba(0,0,0,0.15);
+      
+      .product-img { transform: scale(1.05); }
+      .hover-overlay { opacity: 1; }
+    }
+  }
+
+  .product-img {
+    @apply w-full h-auto object-contain transition-transform duration-1000 ease-out;
+  }
+
+  .hover-overlay {
+    @apply absolute inset-0 bg-black/5 flex items-center justify-center transition-opacity duration-500;
+    opacity: 0;
+    backdrop-filter: blur(1px); // backdrop-blur-[1px] yerine
+  }
+
+  .explore-text {
+    @apply text-beeses-gold font-bold tracking-[0.3em] border border-beeses-gold/40 px-5 py-2.5 bg-white/90;
+    font-size: 9px; // text-[9px] yerine
+  }
+
+  .product-info {
+    @apply mt-6 text-center md:text-left;
+
+    .product-title {
+      @apply text-beeses-dark font-bold text-lg tracking-tight transition-colors duration-500;
+      .group:hover & { @apply text-beeses-gold; }
+    }
+
+    .product-type {
+      @apply text-black/30 font-bold tracking-[0.25em] mt-1.5 uppercase;
+      font-size: 8px; // text-[8px] yerine
+    }
+  }
+}

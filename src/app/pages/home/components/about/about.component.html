@@ -1,0 +1,58 @@
+<section class="about-section">
+  <div class="about-pattern"></div>
+
+  <div class="container mx-auto px-6 md:px-12 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+      
+      <div class="flex flex-col items-start justify-center z-10">
+        <h3 class="text-beeses-gold text-[11px] font-bold tracking-[0.5em] mb-10 uppercase">THE BEESES PHILOSOPHY</h3>
+        <h2 class="text-beeses-silver text-5xl md:text-7xl font-bold tracking-tighter leading-[1] mb-10 uppercase">
+          SESİN SINIRLARINI <br> 
+          <span class="text-beeses-gold italic font-extrabold text-shadow-gold">YENİDEN</span> TANIMLIYORUZ
+        </h2>
+        <p class="text-beeses-silver/60 text-lg leading-relaxed max-w-lg mb-14 font-light">
+          Sadece hoparlör üretmiyoruz; her notanın arkasındaki saf duyguyu yakalayan mühendislik harikaları tasarlıyoruz. Milimetrik işçilik ve kayıpsız ses iletimi ile müziği olduğu gibi yaşamanız için buradayız.
+        </p>
+        
+        <div class="flex flex-col items-start gap-4">
+          <div class="w-16 h-[1px] bg-beeses-gold transition-all duration-700"></div>
+          <span class="text-beeses-gold text-[12px] tracking-[0.3em] font-bold uppercase">SINCE 2026</span>
+        </div>
+      </div>
+
+      <div class="relative flex items-center justify-center lg:justify-end min-h-[550px] cursor-pointer z-10" (click)="rotateProducts()">
+        
+        <div *ngFor="let product of products; let i = index" 
+             class="absolute transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)]"
+             [ngClass]="{
+               'z-30 scale-100 opacity-100 translate-x-0': i === currentIndex,
+               'z-20 scale-90 opacity-60 translate-x-36': i === (currentIndex + 1) % products.length
+             }">
+             
+          <div class="relative group">
+            <img [src]="'assets/products/' + product.name" 
+                 [alt]="product.title" 
+                 class="w-full h-auto max-w-[550px] md:max-w-[620px] drop-shadow-[0_45px_45px_rgba(0,0,0,0.85)] transition-transform duration-700 group-hover:scale-105">
+            
+            <div *ngIf="i === currentIndex" class="product-label">
+              <h4 class="text-beeses-gold font-bold text-[13px] tracking-[0.35em] uppercase leading-none mb-2">
+                {{ product.title }}
+              </h4>
+              <p class="text-beeses-silver/40 text-[10px] tracking-[0.25em] uppercase font-medium mb-6">
+                {{ product.type }}
+              </p>
+              
+            <a class="view-product-btn" (click)="$event.stopPropagation()">
+  <span>ÜRÜNÜ İNCELE</span>
+  <div class="btn-line"></div>
+</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute w-[110%] h-[110%] bg-beeses-gold/5 rounded-full blur-[160px] -z-10 opacity-30"></div>
+      </div>
+
+    </div>
+  </div>
+</section>

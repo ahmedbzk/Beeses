@@ -1,0 +1,49 @@
+<!-- Hero Section -->
+<section class="relative w-full h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-beeses-dark">
+  <div class="absolute inset-0 w-full h-full">
+    <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
+    <!-- Gradient fading into beeses-silver at the very bottom -->
+    <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/80 via-beeses-dark/50 to-beeses-silver"></div>
+  </div>
+  
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-20">
+    <span class="text-beeses-gold text-[11px] md:text-sm tracking-[0.5em] font-bold uppercase mb-6 block drop-shadow-md">Bizimle Çalışanlar</span>
+    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">REFERANSLARIMIZ</h1>
+    <div class="w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
+    <p class="text-lg md:text-2xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
+      Sesin gücüne inanan profesyonellerin ilk tercihi.
+    </p>
+  </div>
+</section>
+
+<!-- Content Section -->
+<section class="w-full bg-beeses-silver py-20 md:py-32 relative">
+  <div class="container mx-auto px-6 md:px-12">
+    <!-- Grid Layout for References -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      
+      <!-- Reference Card -->
+      <div *ngFor="let ref of testimonials" class="bg-[#232323] rounded-2xl p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-transform duration-500 hover:-translate-y-2 border border-white/5 flex flex-col justify-between min-h-[300px]">
+        
+        <div>
+          <!-- Category -->
+          <h4 class="text-gray-400 font-bold tracking-[0.15em] uppercase text-[9px] md:text-[10px] mb-4 leading-relaxed">
+            {{ ref.category }}
+          </h4>
+          
+          <!-- Comment -->
+          <p class="text-white text-sm md:text-[15px] leading-relaxed font-serif font-light tracking-wide">
+            {{ ref.comment }}
+          </p>
+        </div>
+
+        <!-- Author -->
+        <div class="mt-8 flex items-center gap-3">
+          <div class="w-6 h-[1px] bg-white/20"></div>
+          <span class="text-gray-300 font-medium tracking-widest text-[10px] md:text-xs uppercase">{{ ref.author }}</span>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>

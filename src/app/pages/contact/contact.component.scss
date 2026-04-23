@@ -1,0 +1,27 @@
+.contact-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.15;
+  filter: grayscale(1) brightness(0.6);
+  background-image: url('/assets/bg-patterns/bg-pattern4.jpg');
+  background-size: cover;
+  background-position: center;
+  
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.contact-bg-text {
+  position: absolute;
+  bottom: 10%;
+  left: 5%;
+  z-index: 0;
+  color: #0c0c0c;
+  font-size: 8vw; 
+  opacity: 0.03;
+  @apply font-bold tracking-[0.2em] uppercase;
+  font-family: 'Times New Roman', serif;
+  pointer-events: none;
+}
