@@ -1,16 +1,17 @@
 <header class="fixed top-0 left-0 w-full z-50 transition-all duration-700 text-white uppercase tracking-[0.20em] font-medium">
   
   <div [ngClass]="isScrolled ? 'lang-bar-hidden' : 'lang-bar-visible'" 
-       class="bg-transparent border-b border-white/5 transition-all duration-700 overflow-hidden"> 
+       class="bg-transparent border-b border-white/5 transition-all duration-700"> 
     <div class="container mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-end">
       <div class="relative group/lang">
-        <button class="flex items-center gap-2 hover:text-beeses-gold transition text-[11px] font-bold outline-none">
+        <button (click)="toggleLangDropdown()" class="flex items-center gap-2 hover:text-beeses-gold transition text-[11px] font-bold outline-none">
           <img [src]="currentLang.flag" class="w-5 h-auto rounded-sm shadow-sm">
           <span>{{ currentLang.code }}</span>
           <lucide-icon name="chevron-down" class="w-3.5 h-3.5"></lucide-icon>
         </button>
         
-        <div class="absolute right-0 mt-2 w-36 border border-white/10 shadow-xl rounded-sm overflow-hidden z-20 opacity-0 invisible group-hover/lang:opacity-100 group-hover/lang:visible transition-all duration-300">
+        <div [ngClass]="{'opacity-100 visible': isLangDropdownOpen, 'opacity-0 invisible': !isLangDropdownOpen}" 
+             class="absolute right-0 mt-2 w-36 bg-beeses-dark border border-white/10 shadow-xl rounded-sm overflow-hidden z-20 transition-all duration-300 group-hover/lang:opacity-100 group-hover/lang:visible">
           <button *ngFor="let lang of languages" (click)="changeLang(lang)" class="flex w-full items-center gap-3 px-4 py-3 hover:bg-white/5 transition text-[10px] font-medium border-b border-white/5 last:border-0 leading-none">
             <img [src]="lang.flag" class="w-4 h-auto">
             <span>{{ lang.name }}</span>

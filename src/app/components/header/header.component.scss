@@ -73,6 +73,7 @@
   padding: 0.50rem 0;
   pointer-events: auto;
   transition: all 0.7s ease-in-out;
+  overflow: visible;
   /* Çerçeve görünürken varsayılan değerinde kalsın */
 }
 
@@ -83,6 +84,7 @@
   padding: 0;
   pointer-events: none;
   transition: all 0.7s ease-in-out;
+  overflow: hidden;
   
   // HATA ÇÖZÜMÜ: 1px boşluğu burası siliyor
   border-bottom: 0px solid transparent !important; 
