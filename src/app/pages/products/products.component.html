@@ -15,14 +15,37 @@
   </div>
 </section>
 
-<section class="w-full bg-beeses-silver py-12 md:py-20">
+<section class="w-full bg-beeses-silver py-8 md:py-20">
   <div class="container mx-auto px-4 md:px-8 lg:px-12">
+    
+    <!-- Mobile Filter Header (Sticky on Mobile) -->
+    <div class="lg:hidden mb-8 space-y-4 animate-fade-in">
+      <div class="relative">
+        <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Ürün Ara..." 
+               class="w-full bg-white border border-gray-200 rounded-2xl py-4 pl-12 pr-4 text-sm text-beeses-dark shadow-sm focus:outline-none focus:ring-2 focus:ring-beeses-gold/50 transition-all">
+        <lucide-icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></lucide-icon>
+      </div>
+      
+      <!-- Horizontal Categories Scroll -->
+      <div class="flex overflow-x-auto gap-2 pb-2 -mx-4 px-4 no-scrollbar">
+        <button (click)="filterByCategory(null)" 
+                class="whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-sm border"
+                [ngClass]="selectedCategory === null ? 'bg-beeses-dark text-white border-beeses-dark' : 'bg-white text-gray-500 border-gray-100'">
+          TÜMÜ
+        </button>
+        <button *ngFor="let cat of categories" (click)="filterByCategory(cat)" 
+                class="whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-sm border"
+                [ngClass]="selectedCategory === cat ? 'bg-beeses-dark text-white border-beeses-dark' : 'bg-white text-gray-500 border-gray-100'">
+          {{ cat }}
+        </button>
+      </div>
+    </div>
+
     <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
       
-      <!-- Sidebar (Filters & Search) -->
-      <div class="w-full lg:w-1/4 shrink-0 sticky top-24">
+      <!-- Sidebar (Desktop Only) -->
+      <div class="hidden lg:block lg:w-1/4 shrink-0 sticky top-24">
         
-        <!-- Combined Search Box & Categories -->
         <div class="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
           
           <h3 class="text-sm font-bold text-gray-400 tracking-[0.15em] uppercase mb-4">Ürün Ara</h3>
@@ -79,7 +102,7 @@
           </div>
 
           <!-- Grid -->
-          <div *ngIf="filteredProducts.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div *ngIf="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             
             <!-- Product Card -->
             <a *ngFor="let product of filteredProducts" [routerLink]="['/products', product.id]" 

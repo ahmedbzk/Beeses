@@ -20,6 +20,7 @@ export class ProductsComponent implements OnInit {
   selectedCategory: string | null = null;
   searchQuery: string = '';
   isLoading: boolean = true;
+  isFilterOpen: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -45,6 +46,10 @@ export class ProductsComponent implements OnInit {
   filterByCategory(category: string | null): void {
     this.selectedCategory = category;
     this.applyFilters();
+    // Mobilde kategori seçilince menüyü kapat
+    if (window.innerWidth < 1024) {
+      this.isFilterOpen = false;
+    }
   }
 
   onSearchChange(): void {
@@ -64,5 +69,9 @@ export class ProductsComponent implements OnInit {
     }
 
     this.filteredProducts = result;
+  }
+
+  toggleFilter(): void {
+    this.isFilterOpen = !this.isFilterOpen;
   }
 }
