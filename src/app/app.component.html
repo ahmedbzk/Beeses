@@ -1,10 +1,10 @@
-<app-header></app-header>
-<app-alert></app-alert>
+<app-header *ngIf="!isDemoPage"></app-header>
+<app-alert *ngIf="!isDemoPage"></app-alert>
 
-<main class="min-h-screen bg-beeses-dark">
+<main class="min-h-screen" [ngClass]="{'bg-beeses-dark': !isDemoPage}">
   <router-outlet></router-outlet>
 </main>
 
-<app-social-fab></app-social-fab>
+<app-social-fab *ngIf="!isDemoPage"></app-social-fab>
 
-<app-footer></app-footer>
+<app-footer *ngIf="!isDemoPage"></app-footer>

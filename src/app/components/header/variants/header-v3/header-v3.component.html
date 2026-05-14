@@ -1,0 +1,72 @@
+<header class="fixed top-0 left-0 w-full z-[9999] transition-all duration-700">
+  
+  <!-- Dil Çubuğu -->
+  <div [ngClass]="isScrolled ? 'max-h-0 opacity-0 invisible' : 'max-h-10 opacity-100 py-2 visible'"
+    class="relative z-[120] bg-transparent transition-all duration-700 overflow-visible flex items-center justify-end">
+    <div class="container mx-auto px-12 flex justify-end">
+        <div class="relative group/lang pointer-events-auto">
+            <button (click)="toggleLangDropdown()" class="flex items-center gap-2 text-[10px] font-black text-gray-400 hover:text-black transition tracking-widest uppercase outline-none cursor-pointer">
+                <img [src]="currentLang.flag" class="w-4 h-auto rounded-sm">
+                {{ currentLang.code }}
+                <lucide-icon name="chevron-down" class="w-3 h-3 text-beeses-gold"></lucide-icon>
+            </button>
+
+            <div [ngClass]="{'opacity-100 visible translate-y-0': isLangDropdownOpen, 'opacity-0 invisible -translate-y-2': !isLangDropdownOpen}"
+              class="absolute right-0 mt-2 w-32 bg-white border border-gray-100 shadow-2xl rounded-lg overflow-hidden z-[130] transition-all duration-300">
+              <button *ngFor="let lang of languages" (click)="changeLang(lang)"
+                class="flex w-full items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-[10px] text-gray-800 font-bold border-b border-gray-50 last:border-0 leading-none cursor-pointer">
+                <img [src]="lang.flag" class="w-4 h-auto shadow-sm">
+                <span>{{ lang.name }}</span>
+              </button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Ana Header -->
+  <div [ngClass]="isScrolled ? 'bg-white/95 backdrop-blur-lg shadow-xl py-3' : 'bg-white py-6'"
+       class="relative z-[100] transition-all duration-700 ease-in-out border-b border-gray-100">
+    <div class="container mx-auto px-4 md:px-12 flex items-center justify-between">
+      
+      <nav class="hidden lg:flex items-center gap-10 flex-1 text-[11px] font-black tracking-widest text-black uppercase">
+        <a routerLink="/" class="hover:text-beeses-gold transition-colors duration-300 cursor-pointer">ANA SAYFA</a>
+        
+        <div class="relative group/v3 py-4 cursor-pointer">
+            <span class="flex items-center gap-1 hover:text-beeses-gold transition-colors">KURUMSAL <lucide-icon name="chevron-down" class="w-3.5 h-3.5 text-black"></lucide-icon></span>
+            <div class="absolute top-full left-0 mt-0 w-48 bg-white shadow-2xl border-t-2 border-beeses-gold opacity-0 invisible group-hover/v3:opacity-100 group-hover/v3:visible transition-all duration-300 z-[110] py-2 flex flex-col">
+                <a routerLink="/corporate/components/about" class="px-6 py-3 text-[10px] hover:bg-gray-50 transition-all text-black cursor-pointer">Hakkımızda</a>
+                <a routerLink="/corporate/components/certificates" class="px-6 py-3 text-[10px] hover:bg-gray-50 transition-all text-black cursor-pointer">Sertifikalar</a>
+                <a routerLink="/corporate/components/sss" class="px-6 py-3 text-[10px] hover:bg-gray-50 transition-all text-black cursor-pointer">S.S.S</a>
+            </div>
+        </div>
+
+        <div class="relative group/v3 py-4 cursor-pointer">
+            <span class="flex items-center gap-1 hover:text-beeses-gold transition-colors">ÜRÜNLERİMİZ <lucide-icon name="chevron-down" class="w-3.5 h-3.5 text-black"></lucide-icon></span>
+            <div class="absolute top-full left-0 mt-0 w-48 bg-white shadow-2xl border-t-2 border-beeses-gold opacity-0 invisible group-hover/v3:opacity-100 group-hover/v3:visible transition-all duration-300 z-[110] py-2 flex flex-col">
+                <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }" class="px-6 py-3 text-[10px] hover:bg-gray-50 transition-all text-black cursor-pointer">SQL SERİSİ</a>
+                <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }" class="px-6 py-3 text-[10px] hover:bg-gray-50 transition-all text-black cursor-pointer">OF SERİSİ</a>
+                <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }" class="px-6 py-3 text-[10px] hover:bg-gray-50 transition-all text-black cursor-pointer">PETEK SERİSİ</a>
+                <a routerLink="/products/innovation" class="px-6 py-3 text-[10px] hover:bg-gray-50 transition-all text-beeses-gold font-bold cursor-pointer">İNOVASYON</a>
+            </div>
+        </div>
+      </nav>
+
+      <div class="flex-shrink-0 px-12">
+        <a routerLink="/" class="block group cursor-pointer">
+          <img src="assets/logo_siyah.png" alt="Beeses Audio" 
+               [ngClass]="isScrolled ? 'h-10' : 'h-16'"
+               class="w-auto transition-all duration-700 ease-in-out transform group-hover:scale-110">
+        </a>
+      </div>
+
+      <nav class="hidden lg:flex items-center justify-end gap-10 flex-1 text-[11px] font-black tracking-widest text-black uppercase">
+        <a routerLink="/distributors" class="hover:text-beeses-gold transition-colors duration-300 cursor-pointer">DİSTRİBÜTÖRLERİMİZ</a>
+        <a routerLink="/contact" class="hover:text-beeses-gold transition-colors duration-300 cursor-pointer">BİZE ULAŞIN</a>
+        <a href="mailto:info@iotek.com.tr" class="flex items-center gap-2 ml-4 px-6 py-3 bg-black text-white rounded-full hover:bg-beeses-gold transition-all duration-500 shadow-xl shadow-black/10 cursor-pointer">
+            <lucide-icon name="mail" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+            <span class="text-[9px] font-black tracking-widest uppercase">İLETİŞİME GEÇ</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>

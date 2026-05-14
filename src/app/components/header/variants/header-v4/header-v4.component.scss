@@ -1,0 +1,11 @@
+.v4-fixed-link {
+  position: relative;
+  transition: all 0.3s ease;
+  opacity: 0.8;
+  white-space: nowrap;
+  
+  &:hover {
+    opacity: 1;
+    color: #fff;
+  }
+}

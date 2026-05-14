@@ -1,0 +1,100 @@
+<section class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
+  <div class="absolute inset-0 w-full h-full">
+    <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
+    <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/95 via-beeses-dark/70 to-beeses-silver"></div>
+  </div>
+  
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-6 md:pb-12">
+    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">Ar-Ge & İnovasyon</span>
+    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">İNOVASYON & GELECEK</h1>
+    <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
+    <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
+      Ses teknolojilerinin sınırlarını geleceğin projeleriyle zorluyoruz.
+    </p>
+  </div>
+</section>
+
+<!-- Content Section -->
+<section class="relative z-10 w-full bg-beeses-silver py-12 md:py-24 -mt-2">
+  <div class="container mx-auto px-4 md:px-8 lg:px-12">
+    
+    <div class="max-w-4xl mx-auto text-center mb-20">
+      <h2 class="text-3xl font-bold text-beeses-dark mb-6">Geleceği Bugün İnşa Ediyoruz</h2>
+      <p class="text-gray-500 text-base md:text-lg leading-relaxed">
+        Beeses Audio mühendislik ekibi, akustik mükemmellik arayışında yeni malzemeler ve dijital teknolojiler üzerinde çalışmaya devam ediyor. 
+        Geliştirme aşamasındaki en son projelerimize göz atın.
+      </p>
+    </div>
+
+    <!-- Ürün Kartları (Daha Küçük ve Zarif) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-5xl mx-auto">
+      <div *ngFor="let item of upcomingProducts" 
+           class="group relative bg-white border border-gray-100 rounded-[32px] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-700">
+        
+        <!-- Ürün Görsel Alanı -->
+        <div class="aspect-[16/10] w-full bg-beeses-dark relative overflow-hidden flex items-center justify-center">
+          <div class="absolute inset-0 bg-gradient-to-br from-beeses-dark/90 to-beeses-dark/60"></div>
+          <lucide-icon name="audio-waveform" class="w-16 h-16 text-beeses-gold/20 group-hover:scale-110 group-hover:text-beeses-gold/40 transition-all duration-1000"></lucide-icon>
+          
+          <!-- Status Badge -->
+          <div class="absolute top-6 left-6 px-4 py-1.5 bg-beeses-gold text-white text-[9px] font-black tracking-widest uppercase rounded-full">
+            {{ item.status }}
+          </div>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-5">
+          <div class="space-y-1">
+            <p class="text-beeses-gold text-[9px] font-black tracking-[0.3em] uppercase">{{ item.subtitle }}</p>
+            <h3 class="text-2xl font-extrabold text-beeses-dark group-hover:text-beeses-gold transition-colors">{{ item.title }}</h3>
+          </div>
+
+          <p class="text-gray-500 text-[13px] leading-relaxed line-clamp-3">
+            {{ item.description }}
+          </p>
+
+          <div class="flex flex-wrap gap-2 pt-1">
+            <span *ngFor="let feature of item.features" 
+                  class="px-3 py-1 bg-gray-50 border border-gray-100 text-[9px] text-gray-500 rounded-full font-bold uppercase tracking-wider">
+              {{ feature }}
+            </span>
+          </div>
+
+          <div class="pt-6 border-t border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-beeses-gold/10 flex items-center justify-center">
+                <lucide-icon name="calendar" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[8px] text-gray-400 font-bold uppercase tracking-widest leading-none">Lansman</span>
+                <span class="text-xs text-beeses-dark font-black tracking-tight">{{ item.launchDate }}</span>
+              </div>
+            </div>
+            <button class="px-6 py-2.5 bg-beeses-dark text-white rounded-full text-[10px] font-black tracking-widest hover:bg-beeses-gold transition-all duration-300">
+              BİLGİ AL
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bülten Kayıt -->
+    <div class="mt-24 p-12 bg-beeses-dark rounded-[40px] text-center space-y-8 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-beeses-gold/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+      
+      <div class="relative z-10 space-y-4">
+        <h2 class="text-3xl md:text-4xl font-black text-white tracking-tight">GELECEĞİ KAÇIRMAYIN</h2>
+        <p class="text-gray-400 max-w-xl mx-auto font-light text-base">
+          Yeni nesil ses sistemlerimiz lansman gününde e-posta kutunuzda olsun. Ar-Ge projelerimizden haberdar olun.
+        </p>
+      </div>
+
+      <div class="relative z-10 flex flex-col sm:flex-row gap-4 max-w-lg mx-auto pt-4">
+        <input type="email" placeholder="E-POSTA ADRESİNİZ" 
+               class="flex-grow px-8 py-5 bg-white/5 border border-white/10 text-white rounded-2xl focus:outline-none focus:border-beeses-gold transition-colors text-xs font-bold tracking-widest">
+        <button class="px-10 py-5 bg-beeses-gold text-white hover:bg-white hover:text-beeses-dark transition-all duration-500 rounded-2xl text-xs font-black tracking-widest shadow-xl shadow-beeses-gold/20">
+          KAYDOL
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

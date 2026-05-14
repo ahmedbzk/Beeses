@@ -1,0 +1,172 @@
+<section class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
+  <div class="absolute inset-0 w-full h-full">
+    <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
+    <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/95 via-beeses-dark/70 to-beeses-silver"></div>
+  </div>
+  
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-6 md:pb-12">
+    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">Küresel Ağımız</span>
+    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">DİSTRİBÜTÖRLERİMİZ</h1>
+    <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
+    <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
+      Dünyanın dört bir yanındaki yetkili satış noktalarımızı keşfedin.
+    </p>
+  </div>
+</section>
+
+<section class="relative z-10 w-full bg-beeses-silver py-8 md:py-20 -mt-2">
+  <div class="container mx-auto px-4 md:px-8 lg:px-12">
+    
+    <!-- Mobile Filter Header -->
+    <div class="lg:hidden mb-8 space-y-4 animate-fade-in">
+      <div class="relative">
+        <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Distribütör Ara..." 
+               class="w-full bg-white border border-gray-200 rounded-2xl py-4 pl-12 pr-4 text-sm text-beeses-dark shadow-sm focus:outline-none focus:ring-2 focus:ring-beeses-gold/50 transition-all">
+        <lucide-icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></lucide-icon>
+      </div>
+      
+      <!-- Horizontal Countries Scroll -->
+      <div class="flex overflow-x-auto gap-2 pb-2 -mx-4 px-4 no-scrollbar">
+        <button (click)="filterByCountry(null)" 
+                class="whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-sm border"
+                [ngClass]="selectedCountry === null ? 'bg-beeses-dark text-white border-beeses-dark' : 'bg-white text-gray-500 border-gray-100'">
+          TÜMÜ
+        </button>
+        <button *ngFor="let country of countries" (click)="filterByCountry(country)" 
+                class="whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-sm border"
+                [ngClass]="selectedCountry === country ? 'bg-beeses-dark text-white border-beeses-dark' : 'bg-white text-gray-500 border-gray-100'">
+          {{ country }}
+        </button>
+      </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+      
+      <!-- Sidebar (Desktop Only) -->
+      <div class="hidden lg:block lg:w-1/4 shrink-0 sticky top-24">
+        
+        <div class="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
+          
+          <h3 class="text-sm font-bold text-gray-400 tracking-[0.15em] uppercase mb-4">Arama</h3>
+          <div class="relative mb-8">
+            <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Distribütör adı veya ülke..." 
+                   class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm text-beeses-dark focus:outline-none focus:ring-2 focus:ring-beeses-gold/50 focus:border-beeses-gold transition-all">
+            <lucide-icon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>
+          </div>
+
+          <h3 class="text-sm font-bold text-gray-400 tracking-[0.15em] uppercase mb-4">Ülkeler</h3>
+          <ul class="space-y-2">
+            <li>
+              <button (click)="filterByCountry(null)" 
+                      class="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm flex items-center justify-between"
+                      [ngClass]="selectedCountry === null ? 'bg-beeses-dark text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'">
+                Tüm Ülkeler
+                <lucide-icon name="chevron-right" class="w-4 h-4 opacity-50"></lucide-icon>
+              </button>
+            </li>
+            <li *ngFor="let country of countries">
+              <button (click)="filterByCountry(country)" 
+                      class="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm flex items-center justify-between"
+                      [ngClass]="selectedCountry === country ? 'bg-beeses-dark text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'">
+                {{ country }}
+                <lucide-icon name="chevron-right" class="w-4 h-4 opacity-50"></lucide-icon>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Main Content (Distributor Grid) -->
+      <div class="w-full lg:w-3/4 min-h-[400px]">
+        
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="flex flex-col items-center justify-center h-64">
+          <div class="w-12 h-12 border-4 border-gray-200 border-t-beeses-gold rounded-full animate-spin mb-4"></div>
+          <p class="text-gray-500 font-medium text-sm tracking-widest uppercase animate-pulse">Distribütörler Yükleniyor...</p>
+        </div>
+
+        <div *ngIf="!isLoading">
+          <!-- Result count -->
+          <div class="mb-8 pb-4 border-b border-gray-200/50 flex justify-between items-center animate-fade-in">
+            <p class="text-gray-500 text-sm font-medium">Toplam <span class="text-beeses-dark font-bold">{{ filteredDistributors.length }}</span> distribütör bulundu.</p>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="filteredDistributors.length === 0" class="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100 animate-fade-in">
+            <lucide-icon name="search-x" class="w-12 h-12 text-gray-300 mx-auto mb-4"></lucide-icon>
+            <h3 class="text-xl font-bold text-beeses-dark mb-2">Distribütör Bulunamadı</h3>
+            <p class="text-gray-500">Arama kriterlerinize uygun distribütör bulunamadı.</p>
+            <button (click)="searchQuery=''; filterByCountry(null)" class="mt-6 px-6 py-2 bg-beeses-gold text-white rounded-full text-sm font-bold hover:bg-beeses-dark transition-colors">Filtreleri Temizle</button>
+          </div>
+
+          <!-- Grid -->
+          <div *ngIf="filteredDistributors.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            
+            <!-- Distributor Card -->
+            <div *ngFor="let d of filteredDistributors" 
+               class="distributor-card group bg-white rounded-2xl overflow-hidden shadow-[0_5px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 flex flex-col animate-fade-in">
+              
+              <!-- Header Area -->
+              <div class="p-6 flex items-center gap-4 border-b border-gray-50">
+                <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center p-2 border border-gray-100">
+                  <img [src]="d.image" [alt]="d.name" class="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500">
+                </div>
+                <div>
+                  <div class="px-2 py-0.5 bg-beeses-gold/10 text-beeses-gold text-[9px] font-bold tracking-widest uppercase rounded inline-block mb-1">
+                    {{ d.country }}
+                  </div>
+                  <h3 class="text-lg font-bold text-beeses-dark group-hover:text-beeses-gold transition-colors leading-tight">{{ d.name }}</h3>
+                </div>
+              </div>
+
+              <!-- Info Area -->
+              <div class="p-6 space-y-4 flex-1">
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-beeses-gold">
+                    <lucide-icon name="map-pin" class="w-4 h-4"></lucide-icon>
+                  </div>
+                  <div>
+                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Adres</h4>
+                    <p class="text-xs text-gray-600 leading-relaxed font-light line-clamp-3">{{ d.address }}</p>
+                  </div>
+                </div>
+
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-beeses-gold">
+                    <lucide-icon name="phone" class="w-4 h-4"></lucide-icon>
+                  </div>
+                  <div>
+                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Telefon</h4>
+                    <p class="text-xs text-beeses-dark font-medium">{{ d.phone }}</p>
+                  </div>
+                </div>
+
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-beeses-gold">
+                    <lucide-icon name="mail" class="w-4 h-4"></lucide-icon>
+                  </div>
+                  <div>
+                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">E-Posta</h4>
+                    <a [href]="'mailto:' + d.email" class="text-xs text-beeses-dark font-medium hover:text-beeses-gold transition-colors">{{ d.email }}</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Bottom Action -->
+              <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-100 flex justify-center">
+                <a [href]="'https://maps.google.com/?q=' + d.address" target="_blank" 
+                   class="w-full py-2 bg-beeses-dark hover:bg-beeses-gold text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
+                  HARİTADA GÖR <lucide-icon name="external-link" class="w-3.5 h-3.5"></lucide-icon>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      
+    </div>
+  </div>
+</section>

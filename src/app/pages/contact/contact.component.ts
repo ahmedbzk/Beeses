@@ -25,6 +25,7 @@ export class ContactComponent {
       name: ['', Validators.required],
       surname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      subject: ['ses', Validators.required],
       message: ['', [Validators.required, Validators.minLength(10)]]
     });
   }

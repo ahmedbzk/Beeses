@@ -8,21 +8,29 @@ import { AboutComponent } from './pages/corporate/components/about/about.compone
 import { SssComponent } from './pages/corporate/components/sss/sss.component';
 import { ReferencesComponent } from './pages/corporate/components/references/references.component';
 import { TeamComponent } from './pages/corporate/components/team/team.component';
+import { DistributorsComponent } from './pages/distributors/distributors.component';
+
+import { InnovationComponent } from './pages/products/innovation/innovation.component';
+import { CertificatesComponent } from './pages/corporate/components/certificates/certificates.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent }, 
-    { 
-      path: 'corporate', 
-      children: [
-        { path: '', component: CorporateComponent },
-        { path: 'components/about', component: AboutComponent },
-        { path: 'components/sss', component: SssComponent },
-        { path: 'components/references', component: ReferencesComponent },
-        { path: 'components/team', component: TeamComponent }
-      ]
-    }, 
-    { path: 'products', component: ProductsComponent }, 
-    { path: 'products/:id', component: ProductDetailComponent },
-    { path: 'contact', component: ContactComponent }, 
-    { path: '**', redirectTo: '' }  
+  { path: '', component: HomeComponent },
+  {
+    path: 'corporate',
+    children: [
+      { path: '', component: CorporateComponent },
+      { path: 'components/about', component: AboutComponent },
+      { path: 'components/sss', component: SssComponent },
+      { path: 'components/certificates', component: CertificatesComponent },
+      // { path: 'components/references', component: ReferencesComponent },
+      // { path: 'components/team', component: TeamComponent }
+    ]
+  },
+  { path: 'products', component: ProductsComponent },
+  { path: 'products/innovation', component: InnovationComponent },
+  { path: 'products/:id', component: ProductDetailComponent },
+  { path: 'distributors', component: DistributorsComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: 'header-demo', loadComponent: () => import('./pages/header-demo/header-demo.component').then(m => m.HeaderDemoComponent) },
+  { path: '**', redirectTo: '' }
 ];

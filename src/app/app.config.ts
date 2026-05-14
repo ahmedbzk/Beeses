@@ -1,6 +1,6 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { ChevronLeft, Search, ChevronRight, Award, Speaker, ChevronUp, Mail, Instagram, Facebook, Twitter, Youtube, Hand, ShieldCheck, Cpu, Layers, Settings, Shield, Phone, Music, Briefcase, Home, X, ArrowRight, Menu, ChevronDown, LucideAngularModule, MapPin, Headphones, Sliders, Zap, MessageCircle, LayoutGrid, CheckCircle, FileText, ExternalLink } from 'lucide-angular';
+import { ChevronLeft, Search, ChevronRight, Award, Speaker, ChevronUp, Mail, Instagram, Facebook, Twitter, Youtube, Hand, ShieldCheck, Cpu, Layers, Settings, Shield, Phone, Music, Briefcase, Home, X, ArrowRight, Menu, ChevronDown, LucideAngularModule, MapPin, Headphones, Sliders, Zap, MessageCircle, LayoutGrid, CheckCircle, FileText, ExternalLink, Leaf, Flag, AudioWaveform, Calendar } from 'lucide-angular';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideAnimationsAsync(),
     importProvidersFrom(
-      LucideAngularModule.pick({ ChevronLeft, Search, ChevronRight, Award, Speaker, ChevronDown, ChevronUp, Menu, ArrowRight, X, Music, Briefcase, Home, Phone, Cpu, Layers, Settings, Shield, ShieldCheck, Hand, Youtube, Facebook, Twitter, Instagram, Mail, MapPin, Headphones, Sliders, Zap, MessageCircle, LayoutGrid, CheckCircle, FileText, ExternalLink })
+      LucideAngularModule.pick({ ChevronLeft, Search, ChevronRight, Award, Speaker, ChevronDown, ChevronUp, Menu, ArrowRight, X, Music, Briefcase, Home, Phone, Cpu, Layers, Settings, Shield, ShieldCheck, Hand, Youtube, Facebook, Twitter, Instagram, Mail, MapPin, Headphones, Sliders, Zap, MessageCircle, LayoutGrid, CheckCircle, FileText, ExternalLink, Leaf, Flag, AudioWaveform, Calendar })
     )
   ]
 };

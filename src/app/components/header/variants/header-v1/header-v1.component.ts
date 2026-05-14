@@ -1,21 +1,20 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule } from 'lucide-angular'; 
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-header-v1',
   standalone: true,
-  imports: [CommonModule, RouterModule, LucideAngularModule], 
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  imports: [CommonModule, RouterModule, LucideAngularModule],
+  templateUrl: './header-v1.component.html',
+  styleUrl: './header-v1.component.scss'
 })
-export class HeaderComponent {
+export class HeaderV1Component {
   isSideMenuOpen = false;
   isScrolled = false;
   isLangDropdownOpen = false;
 
-  // Mobil Accordion Durumları
   isMobileKurumsalOpen = false;
   isMobileUrunlerOpen = false;
 
@@ -30,9 +29,8 @@ export class HeaderComponent {
     this.isScrolled = window.scrollY > 50;
   }
 
-  toggleSideMenu() { 
-    this.isSideMenuOpen = !this.isSideMenuOpen; 
-    // Menü kapandığında alt sekmeleri de sıfırlayalım
+  toggleSideMenu() {
+    this.isSideMenuOpen = !this.isSideMenuOpen;
     if(!this.isSideMenuOpen) {
       this.isMobileKurumsalOpen = false;
       this.isMobileUrunlerOpen = false;
@@ -41,23 +39,20 @@ export class HeaderComponent {
 
   toggleLangDropdown() { this.isLangDropdownOpen = !this.isLangDropdownOpen; }
   
-  // Accordion Tetikleyicileri
   toggleMobileKurumsal(event: Event) {
-  event.stopPropagation(); // Tıklamanın dışarı sızmasını engeller
-  this.isMobileKurumsalOpen = !this.isMobileKurumsalOpen;
-  // Biri açılınca diğerinin kapanması stabiliteyi artırır
-  if (this.isMobileKurumsalOpen) this.isMobileUrunlerOpen = false;
-}
-
-toggleMobileUrunler(event: Event) {
-  event.stopPropagation();
-  this.isMobileUrunlerOpen = !this.isMobileUrunlerOpen;
-  if (this.isMobileUrunlerOpen) this.isMobileKurumsalOpen = false;
-}
-
-  changeLang(lang: any) { 
-    this.currentLang = lang; 
-    this.isLangDropdownOpen = false;
+    event.stopPropagation();
+    this.isMobileKurumsalOpen = !this.isMobileKurumsalOpen;
+    if (this.isMobileKurumsalOpen) this.isMobileUrunlerOpen = false;
   }
 
+  toggleMobileUrunler(event: Event) {
+    event.stopPropagation();
+    this.isMobileUrunlerOpen = !this.isMobileUrunlerOpen;
+    if (this.isMobileUrunlerOpen) this.isMobileKurumsalOpen = false;
+  }
+
+  changeLang(lang: any) {
+    this.currentLang = lang;
+    this.isLangDropdownOpen = false;
+  }
 }
