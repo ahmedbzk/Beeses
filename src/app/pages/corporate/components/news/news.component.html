@@ -61,7 +61,7 @@
         <!-- Image Container -->
         <div class="relative h-56 overflow-hidden shrink-0">
           <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-          <img [src]="item.image || 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop'" [alt]="item.title" 
+          <img [src]="getImageUrl(item.image)" [alt]="item.title" 
                class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
           
           <!-- Category Badge -->
@@ -127,7 +127,7 @@
     
     <!-- Hero Image in Modal -->
     <div class="relative h-64 sm:h-80 w-full shrink-0">
-      <img [src]="selectedNews.image || 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop'" [alt]="selectedNews.title" 
+      <img [src]="getImageUrl(selectedNews.image)" [alt]="selectedNews.title" 
            class="w-full h-full object-cover">
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
       

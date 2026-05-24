@@ -4,6 +4,11 @@ header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 require_once '../db.php';
 
 $id = $_GET['id'] ?? null;
@@ -14,6 +19,19 @@ if (!$id) {
 }
 
 try {
+    // Görsel dosyasını silmek için önce haberi çekelim
+    $selectStmt = $pdo->prepare("SELECT image FROM news WHERE id = ?");
+    $selectStmt->execute([$id]);
+    $newsItem = $selectStmt->fetch();
+    
+    if ($newsItem && !empty($newsItem['image'])) {
+        $image = $newsItem['image'];
+        // Yalnızca bizim yüklediğimiz ve var olan görselleri siliyoruz
+        if (strpos($image, 'uploads/news/') === 0 && file_exists('../' . $image)) {
+            unlink('../' . $image);
+        }
+    }
+
     $stmt = $pdo->prepare("DELETE FROM news WHERE id = ?");
     $stmt->execute([$id]);
     echo json_encode(["success" => true, "message" => "Haber başarıyla silindi."]);

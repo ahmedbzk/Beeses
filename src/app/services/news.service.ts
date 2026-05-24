@@ -31,11 +31,11 @@ export class NewsService {
     return this.http.get<any>(`${this.apiUrl}/get-latest-news.php`);
   }
 
-  addNews(data: News): Observable<any> {
+  addNews(data: FormData): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/add-news.php`, data);
   }
 
-  updateNews(data: News): Observable<any> {
+  updateNews(data: FormData): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/update-news.php`, data);
   }
 

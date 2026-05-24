@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { NewsService, News } from '../../../services/news.service';
 import { AlertService } from '../../../services/alert.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-news-admin',
@@ -104,7 +105,7 @@ import { AlertService } from '../../../services/alert.service';
               <!-- Image Preview -->
               <td class="px-6 py-4">
                 <div class="w-16 h-10 rounded overflow-hidden bg-gray-100 border border-gray-200 shrink-0">
-                  <img [src]="item.image || 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop'" 
+                  <img [src]="getImageUrl(item.image)" 
                        class="w-full h-full object-cover">
                 </div>
               </td>
@@ -198,9 +199,20 @@ import { AlertService } from '../../../services/alert.service';
           </div>
 
           <div>
-            <!-- Image URL -->
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Görsel URL / Yolu *</label>
-            <input type="text" [(ngModel)]="formData.image" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Görsel linki veya dosya yolu (Örn: https://images.unsplash.com/...)">
+            <!-- Image File Upload -->
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Haber Görseli *</label>
+            <div class="flex items-center gap-4 bg-gray-50 border border-gray-200 rounded-xl p-3">
+              <input type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden" #fileInput>
+              <button type="button" (click)="fileInput.click()" class="px-4 py-2 bg-beeses-gold/10 text-beeses-gold hover:bg-beeses-gold hover:text-white rounded-lg text-xs font-bold transition-all cursor-pointer">
+                Görsel Seç
+              </button>
+              <span class="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-xs">
+                {{ selectedFile ? selectedFile.name : (editingItem ? 'Mevcut görseli koru' : 'Dosya seçilmedi') }}
+              </span>
+              <div *ngIf="imagePreviewUrl || formData.image" class="w-12 h-12 rounded overflow-hidden border border-gray-200 shrink-0 ml-auto bg-white">
+                <img [src]="imagePreviewUrl ? imagePreviewUrl : getImageUrl(formData.image)" class="w-full h-full object-cover">
+              </div>
+            </div>
           </div>
 
           <!-- Summary -->
@@ -223,7 +235,7 @@ import { AlertService } from '../../../services/alert.service';
           </button>
           
           <button (click)="saveNews()" 
-                  [disabled]="!formData.title || !formData.category || !formData.image || !formData.summary || !formData.content" 
+                  [disabled]="!formData.title || !formData.category || (!selectedFile && !formData.image) || !formData.summary || !formData.content" 
                   class="px-5 py-2.5 rounded-xl bg-beeses-gold hover:bg-beeses-dark text-white font-bold text-sm transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
             Kaydet
           </button>
@@ -270,9 +282,12 @@ import { AlertService } from '../../../services/alert.service';
 export class NewsAdminComponent implements OnInit {
   private newsService = inject(NewsService);
   private alertService = inject(AlertService);
+  apiUrl = environment.apiUrl;
 
   news: (News & { selected?: boolean })[] = [];
   isLoading = true;
+  selectedFile: File | null = null;
+  imagePreviewUrl: string | null = null;
 
   // Filter & Search states
   searchQuery = '';
@@ -430,10 +445,34 @@ export class NewsAdminComponent implements OnInit {
     this.showModal = false;
     this.editingItem = null;
     this.formData = {};
+    this.selectedFile = null;
+    this.imagePreviewUrl = null;
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreviewUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) {
+      return 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop';
+    }
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+    return `${this.apiUrl}/${imagePath}`;
   }
 
   saveNews() {
-    if (!this.formData.title || !this.formData.category || !this.formData.image || !this.formData.summary || !this.formData.content) return;
+    if (!this.formData.title || !this.formData.category || (!this.selectedFile && !this.formData.image) || !this.formData.summary || !this.formData.content) return;
 
     const isEdit = !!(this.editingItem && this.editingItem.id);
     const title = isEdit ? 'Güncellemeyi Onayla' : 'Yeni Haber Ekle';
@@ -447,8 +486,26 @@ export class NewsAdminComponent implements OnInit {
   }
 
   executeSave() {
+    const formDataPayload = new FormData();
+    if (this.formData.id) {
+      formDataPayload.append('id', String(this.formData.id));
+    }
+    formDataPayload.append('title', this.formData.title || '');
+    formDataPayload.append('category', this.formData.category || '');
+    formDataPayload.append('summary', this.formData.summary || '');
+    formDataPayload.append('content', this.formData.content || '');
+    if (this.formData.news_date) {
+      formDataPayload.append('news_date', this.formData.news_date);
+    }
+    if (this.formData.image) {
+      formDataPayload.append('image', this.formData.image);
+    }
+    if (this.selectedFile) {
+      formDataPayload.append('image_file', this.selectedFile);
+    }
+
     if (this.editingItem && this.editingItem.id) {
-      this.newsService.updateNews(this.formData as News).subscribe({
+      this.newsService.updateNews(formDataPayload).subscribe({
         next: (res) => {
           if (res.success) {
             this.alertService.showSuccess('Haber başarıyla güncellendi.');
@@ -461,7 +518,7 @@ export class NewsAdminComponent implements OnInit {
         error: () => this.alertService.showError('Güncellenirken bir hata oluştu.')
       });
     } else {
-      this.newsService.addNews(this.formData as News).subscribe({
+      this.newsService.addNews(formDataPayload).subscribe({
         next: (res) => {
           if (res.success) {
             this.alertService.showSuccess('Haber başarıyla eklendi.');

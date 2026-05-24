@@ -2,39 +2,35 @@
   position: relative;
   transition: all 0.3s ease;
   white-space: nowrap;
-  color: rgba(0, 0, 0, 0.85); /* Net okunabilir koyu başlık rengi */
+  color: rgba(0, 0, 0, 0.85);
+  /* Net okunabilir koyu başlık rengi */
 
   &:hover {
-    color: #fff; /* Üzerine gelince beyaz */
+    color: #fff;
+    /* Üzerine gelince beyaz */
   }
 }
 
-// Premium Logo Kapsülü (Gold zemin üzerinde şık kontrast siyah kutu)
-.logo-capsule {
-  background: rgba(17, 17, 17, 0.98); /* Şık koyu siyah */
-  padding: 10px 24px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+.v7-header-bg {
+  background-color: #FFD700;
+}
 
-  &:hover {
-    background: #000000;
-    border-color: rgba(181, 129, 49, 0.45); /* Gold sınır çizgisi hoverda parlar */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-    transform: scale(1.03);
+.v7-header-bg-scrolled {
+  background-color: #FFD700;
+}
+
+.v7-logo-shadow {
+  // Logonun harflerinin dışına doğru 360 derece yayılan (dışa doğru) gölge / halo efekti
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.4));
+  transition: all 0.5s ease-in-out;
+}
+
+.group:hover {
+  .v7-logo-shadow {
+    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.55));
+    transform: scale(1.05);
   }
 }
-
-.logo-capsule-scrolled {
-  padding: 6px 18px;
-  border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-}
-
 // Premium Koyu Dropdown Tasarımı (Gold zeminle mükemmel kontrast)
 .v7-dropdown-creative {
   position: absolute;
@@ -42,10 +38,12 @@
   left: 50%;
   transform: translateX(-50%) translateY(15px);
   min-width: 240px;
-  background: #111111; /* Derin siyah arka plan */
+  background: #111111;
+  /* Derin siyah arka plan */
   padding: 1rem;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
-  border: 1px solid rgba(181, 129, 49, 0.25); /* Gold sınır çizgisi */
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(181, 129, 49, 0.25);
+  /* Gold sınır çizgisi */
   border-radius: 24px;
   opacity: 0;
   visibility: hidden;
@@ -58,7 +56,8 @@
     padding: 12px 20px;
     font-size: 10px;
     font-weight: 800;
-    color: rgba(255, 255, 255, 0.7); /* Beyazımsı gri */
+    color: rgba(255, 255, 255, 0.7);
+    /* Beyazımsı gri */
     transition: all 0.3s ease;
     border-radius: 14px;
     position: relative;
@@ -68,25 +67,27 @@
     letter-spacing: normal;
 
     &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: 4px;
-        height: 0;
-        background: #b58131; /* Gold sol çizgi */
-        transform: translateY(-50%);
-        transition: height 0.3s ease;
-        border-radius: 0 4px 4px 0;
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 4px;
+      height: 0;
+      background: #b58131;
+      /* Gold sol çizgi */
+      transform: translateY(-50%);
+      transition: height 0.3s ease;
+      border-radius: 0 4px 4px 0;
     }
 
     &:hover {
       background: rgba(255, 255, 255, 0.03);
-      color: #b58131; /* Gold metin rengi */
+      color: #b58131;
+      /* Gold metin rengi */
       padding-left: 28px;
-      
+
       &::before {
-          height: 60%;
+        height: 60%;
       }
     }
   }
@@ -106,7 +107,7 @@
   min-width: 160px;
   background: #111111;
   padding: 0.75rem;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(181, 129, 49, 0.2);
   border-radius: 20px;
   opacity: 0;
@@ -136,25 +137,25 @@
     letter-spacing: normal;
 
     &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: 4px;
-        height: 0;
-        background: #b58131;
-        transform: translateY(-50%);
-        transition: height 0.3s ease;
-        border-radius: 0 4px 4px 0;
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 4px;
+      height: 0;
+      background: #b58131;
+      transform: translateY(-50%);
+      transition: height 0.3s ease;
+      border-radius: 0 4px 4px 0;
     }
 
     &:hover {
       background: rgba(255, 255, 255, 0.03);
       color: #b58131;
       padding-left: 24px;
-      
+
       &::before {
-          height: 60%;
+        height: 60%;
       }
     }
   }
@@ -169,7 +170,7 @@
 // İletişime Geç Butonu
 .v7-contact-btn {
   border: 1px solid rgba(0, 0, 0, 0.1);
-  
+
   &:hover {
     border-color: #fff;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
