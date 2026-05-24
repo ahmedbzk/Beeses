@@ -25,6 +25,7 @@ export class ContactComponent {
       name: ['', Validators.required],
       surname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      phone: ['', Validators.required],
       subject: ['ses', Validators.required],
       message: ['', [Validators.required, Validators.minLength(10)]]
     });
@@ -38,7 +39,22 @@ export class ContactComponent {
     }
 
     this.isSubmitting = true;
-    this.contactService.sendMessage(this.contactForm.value).subscribe({
+    
+    // Map the short subject to its full text
+    const subjectMap: Record<string, string> = {
+      'ses': 'Ses Sistemleri',
+      'genel': 'Genel Bilgi',
+      'bayiler': 'Bayilerimiz',
+      'teknik': 'Teknik Destek',
+      'satis': 'Satış Ortaklığı'
+    };
+
+    const formData = { ...this.contactForm.value };
+    if (subjectMap[formData.subject]) {
+      formData.subject = subjectMap[formData.subject];
+    }
+
+    this.contactService.sendMessage(formData).subscribe({
       next: (res) => {
         this.isSubmitting = false;
         this.alertService.showSuccess('Mesajınız başarıyla gönderildi.');

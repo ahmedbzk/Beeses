@@ -1,0 +1,98 @@
+<header class="fixed top-0 left-0 w-full z-[9999] transition-all duration-700 uppercase tracking-[0.15em] font-bold">
+
+  <!-- Dil Çubuğu (Language Bar) -->
+  <div [ngClass]="isScrolled ? 'max-h-0 opacity-0 invisible' : 'max-h-10 opacity-100 py-2 visible'"
+    class="relative z-[120] bg-transparent transition-all duration-700 overflow-visible flex items-center justify-end">
+    <div class="container mx-auto px-4 md:px-12 h-full flex items-center justify-end">
+      <div class="relative group/lang pointer-events-auto">
+        <button (click)="toggleLangDropdown()"
+          class="flex items-center gap-2 text-black/85 hover:text-white transition text-[10px] font-bold outline-none uppercase tracking-widest cursor-pointer">
+          <img [src]="currentLang.flag" class="w-4 h-auto rounded-sm shadow-sm">
+          <span>{{ currentLang.code }}</span>
+          <lucide-icon name="chevron-down" class="w-3 h-3 text-black/60"></lucide-icon>
+        </button>
+
+        <div [ngClass]="{'opacity-100 visible': isLangDropdownOpen, 'opacity-0 invisible': !isLangDropdownOpen}"
+          class="v8-lang-dropdown">
+          <button *ngFor="let lang of languages" (click)="changeLang(lang)">
+            <img [src]="lang.flag" class="w-4 h-auto">
+            <span>{{ lang.name }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ana Header (V8 - Gold Centered with logo_kapali) -->
+  <div
+    [ngClass]="isScrolled ? 'bg-beeses-gold/95 backdrop-blur-lg shadow-xl py-4 border-b border-black/5' : 'bg-beeses-gold py-6 border-b border-black/5'"
+    class="relative z-[100] transition-all duration-700 ease-in-out flex items-center">
+    <div class="container mx-auto px-4 md:px-12 flex items-center justify-between w-full">
+
+      <!-- Left Menu -->
+      <nav class="hidden lg:flex items-center gap-10 flex-1 text-[11px] font-black tracking-widest uppercase">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+          class="v8-link-new cursor-pointer">ANA SAYFA</a>
+
+        <div class="relative group/v8 flex items-center py-4 cursor-pointer">
+          <span class="v8-link-new flex items-center gap-1.5">
+            KURUMSAL <lucide-icon name="chevron-down" class="w-3.5 h-3.5 text-black/55"></lucide-icon>
+          </span>
+          <div class="v8-dropdown-creative">
+            <a routerLink="/corporate/components/about" class="cursor-pointer">Hakkımızda</a>
+            <a routerLink="/corporate/components/news" class="cursor-pointer">Haberler & Duyurular</a>
+            <a routerLink="/corporate/components/certificates" class="cursor-pointer">Sertifikalar</a>
+            <a routerLink="/corporate/components/sss" class="cursor-pointer">S.S.S</a>
+          </div>
+        </div>
+
+        <div class="relative group/v8 flex items-center py-4 cursor-pointer">
+          <span class="v8-link-new flex items-center gap-1.5">
+            ÜRÜNLERİMİZ <lucide-icon name="chevron-down" class="w-3.5 h-3.5 text-black/55"></lucide-icon>
+          </span>
+          <div class="v8-dropdown-creative">
+            <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }" class="cursor-pointer">SQL SERİSİ</a>
+            <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }" class="cursor-pointer">OF SERİSİ</a>
+            <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }" class="cursor-pointer">PETEK
+              SERİSİ</a>
+            <div class="h-px bg-white/10 my-2"></div>
+            <a routerLink="/products/innovation" class="text-beeses-gold cursor-pointer font-black">İNOVASYON &
+              GELECEK</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Center Logo -->
+      <div class="flex-shrink-0 px-8">
+        <a routerLink="/" class="group cursor-pointer block relative flex items-center justify-center">
+          <div class="logo-dark-glow-aura"></div>
+          <img src="assets/logo_acik2.png" alt="Beeses Audio"
+            [ngClass]="isScrolled ? 'h-12 md:h-14 logo-scrolled-glow' : 'h-16 md:h-18 logo-glow'"
+            class="w-auto relative z-10 transition-all duration-700 ease-in-out">
+        </a>
+      </div>
+
+      <!-- Right Menu -->
+      <nav
+        class="hidden lg:flex items-center justify-end gap-10 flex-1 text-[11px] font-black tracking-widest uppercase">
+        <a routerLink="/distributors" class="v8-link-new cursor-pointer">DİSTRİBÜTÖRLERİMİZ</a>
+
+        <div class="relative group/v8 flex items-center py-4 cursor-pointer">
+          <span class="v8-link-new flex items-center gap-1.5">
+            BİZE ULAŞIN <lucide-icon name="chevron-down" class="w-3.5 h-3.5 text-black/55"></lucide-icon>
+          </span>
+          <div class="v8-dropdown-creative">
+            <a routerLink="/contact" class="cursor-pointer">Talep Formu</a>
+            <a routerLink="/warranty" class="cursor-pointer">Garanti Başlangıcı</a>
+          </div>
+        </div>
+
+        <a href="mailto:info@iotek.com.tr?subject=Beeses Audio İletişim"
+          class="v8-contact-btn flex items-center gap-2 px-6 py-3 bg-black hover:bg-white hover:text-black text-white rounded-full transition-all duration-500 shadow-xl shadow-black/20 cursor-pointer">
+          <lucide-icon name="mail" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+          <span class="text-[10px] font-black uppercase">İLETİŞİME GEÇ</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>

@@ -18,6 +18,7 @@ export class HeaderComponent {
   // Mobil Accordion Durumları
   isMobileKurumsalOpen = false;
   isMobileUrunlerOpen = false;
+  isMobileIletisimOpen = false;
 
   currentLang = { code: 'TR', name: 'Turkish', flag: 'assets/flags/turkey.png' };
   languages = [
@@ -36,6 +37,7 @@ export class HeaderComponent {
     if(!this.isSideMenuOpen) {
       this.isMobileKurumsalOpen = false;
       this.isMobileUrunlerOpen = false;
+      this.isMobileIletisimOpen = false;
     }
   }
 
@@ -52,7 +54,19 @@ export class HeaderComponent {
 toggleMobileUrunler(event: Event) {
   event.stopPropagation();
   this.isMobileUrunlerOpen = !this.isMobileUrunlerOpen;
-  if (this.isMobileUrunlerOpen) this.isMobileKurumsalOpen = false;
+  if (this.isMobileUrunlerOpen) {
+    this.isMobileKurumsalOpen = false;
+    this.isMobileIletisimOpen = false;
+  }
+}
+
+toggleMobileIletisim(event: Event) {
+  event.stopPropagation();
+  this.isMobileIletisimOpen = !this.isMobileIletisimOpen;
+  if (this.isMobileIletisimOpen) {
+    this.isMobileKurumsalOpen = false;
+    this.isMobileUrunlerOpen = false;
+  }
 }
 
   changeLang(lang: any) { 

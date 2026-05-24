@@ -43,6 +43,7 @@
           </span>
           <div class="dropdown-menu">
             <a routerLink="/corporate/components/about">Hakkımızda</a>
+            <a routerLink="/corporate/components/news">Haberler & Duyurular</a>
             <a routerLink="/corporate/components/certificates">Sertifikalar</a>
             <!-- <a routerLink="/corporate/components/team">Ekibimiz</a> -->
             <a routerLink="/corporate/components/sss">Sıkça Sorulan Sorular</a>
@@ -63,7 +64,15 @@
         </div>
 
         <a routerLink="/distributors" routerLinkActive="active" class="nav-link">DİSTRİBÜTÖRLERİMİZ</a>
-        <a routerLink="/contact" routerLinkActive="active" class="nav-link">BİZE ULAŞIN</a>
+        <div class="relative group/nav">
+          <span class="nav-link flex items-center gap-1 cursor-default">
+            BİZE ULAŞIN <lucide-icon name="chevron-down" class="w-3 h-3 opacity-50"></lucide-icon>
+          </span>
+          <div class="dropdown-menu">
+            <a routerLink="/contact">Talep Formu</a>
+            <a routerLink="/warranty">Garanti Başlangıcı</a>
+          </div>
+        </div>
       </nav>
 
       <div class="flex items-center gap-3 md:gap-4 flex-shrink-0">
@@ -120,6 +129,7 @@
 
           <div class="mobile-sub-menu" [ngClass]="{'open': isMobileKurumsalOpen}">
             <a routerLink="/corporate/components/about" (click)="toggleSideMenu()">HAKKIMIZDA</a>
+            <a routerLink="/corporate/components/news" (click)="toggleSideMenu()">HABERLER & DUYURULAR</a>
             <a routerLink="/corporate/components/certificates" (click)="toggleSideMenu()">SERTİFİKALAR</a>
             <!-- <a routerLink="/corporate/components/team" (click)="toggleSideMenu()">EKİBİMİZ</a> -->
             <a routerLink="/corporate/components/sss" (click)="toggleSideMenu()">S.S.S</a>
@@ -146,7 +156,20 @@
         </div>
 
         <a routerLink="/distributors" (click)="toggleSideMenu()" class="mobile-main-link">DİSTRİBÜTÖRLERİMİZ</a>
-        <a routerLink="/contact" (click)="toggleSideMenu()" class="mobile-main-link">BİZE ULAŞIN</a>
+        
+        <div class="flex flex-col">
+          <div (click)="toggleMobileIletisim($event)" class="mobile-main-link flex justify-between items-center w-full cursor-pointer">
+            <span class="flex-grow">BİZE ULAŞIN</span>
+            <button class="p-2 -mr-2">
+              <lucide-icon [name]="isMobileIletisimOpen ? 'chevron-up' : 'chevron-down'"
+                class="w-5 h-5 opacity-40"></lucide-icon>
+            </button>
+          </div>
+          <div class="mobile-sub-menu" [ngClass]="{'open': isMobileIletisimOpen}">
+            <a routerLink="/contact" (click)="toggleSideMenu()">TALEP FORMU</a>
+            <a routerLink="/warranty" (click)="toggleSideMenu()">GARANTİ BAŞLANGICI</a>
+          </div>
+        </div>
       </nav>
 
       <div class="mt-auto pt-10">

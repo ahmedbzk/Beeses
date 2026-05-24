@@ -4,20 +4,15 @@ import { RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
-  selector: 'app-header-v4',
+  selector: 'app-header-v7',
   standalone: true,
   imports: [CommonModule, RouterModule, LucideAngularModule],
-  templateUrl: './header-v4.component.html',
-  styleUrl: './header-v4.component.scss'
+  templateUrl: './header-v7.component.html',
+  styleUrl: './header-v7.component.scss'
 })
-export class HeaderV4Component {
+export class HeaderV7Component {
   isScrolled = false;
   isLangDropdownOpen = false;
-  isSearchActive = false;
- 
-  toggleSearch() {
-    this.isSearchActive = !this.isSearchActive;
-  }
 
   currentLang = { code: 'TR', name: 'Turkish', flag: 'assets/flags/turkey.png' };
   languages = [
@@ -27,10 +22,12 @@ export class HeaderV4Component {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    this.isScrolled = window.scrollY > 20;
+    this.isScrolled = window.scrollY > 50;
   }
 
-  toggleLangDropdown() { this.isLangDropdownOpen = !this.isLangDropdownOpen; }
+  toggleLangDropdown() {
+    this.isLangDropdownOpen = !this.isLangDropdownOpen;
+  }
 
   changeLang(lang: any) {
     this.currentLang = lang;

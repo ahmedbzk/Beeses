@@ -110,18 +110,28 @@
               <!-- Header Area -->
               <div class="p-6 flex items-center gap-4 border-b border-gray-50">
                 <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center p-2 border border-gray-100">
-                  <img [src]="d.image" [alt]="d.name" class="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500">
+                  <img src="assets/logo.png" [alt]="d.company_name" class="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500">
                 </div>
                 <div>
                   <div class="px-2 py-0.5 bg-beeses-gold/10 text-beeses-gold text-[9px] font-bold tracking-widest uppercase rounded inline-block mb-1">
                     {{ d.country }}
                   </div>
-                  <h3 class="text-lg font-bold text-beeses-dark group-hover:text-beeses-gold transition-colors leading-tight">{{ d.name }}</h3>
+                  <h3 class="text-lg font-bold text-beeses-dark group-hover:text-beeses-gold transition-colors leading-tight">{{ d.company_name }}</h3>
                 </div>
               </div>
 
               <!-- Info Area -->
               <div class="p-6 space-y-4 flex-1">
+                <div class="flex gap-3" *ngIf="d.representative">
+                  <div class="w-8 h-8 shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-beeses-gold">
+                    <lucide-icon name="user" class="w-4 h-4"></lucide-icon>
+                  </div>
+                  <div>
+                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Temsilci</h4>
+                    <p class="text-xs text-beeses-dark font-medium">{{ d.representative }}</p>
+                  </div>
+                </div>
+
                 <div class="flex gap-3">
                   <div class="w-8 h-8 shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-beeses-gold">
                     <lucide-icon name="map-pin" class="w-4 h-4"></lucide-icon>
@@ -132,7 +142,7 @@
                   </div>
                 </div>
 
-                <div class="flex gap-3">
+                <div class="flex gap-3" *ngIf="d.phone">
                   <div class="w-8 h-8 shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-beeses-gold">
                     <lucide-icon name="phone" class="w-4 h-4"></lucide-icon>
                   </div>
@@ -142,7 +152,7 @@
                   </div>
                 </div>
 
-                <div class="flex gap-3">
+                <div class="flex gap-3" *ngIf="d.email">
                   <div class="w-8 h-8 shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-beeses-gold">
                     <lucide-icon name="mail" class="w-4 h-4"></lucide-icon>
                   </div>
@@ -153,12 +163,31 @@
                 </div>
               </div>
               
-              <!-- Bottom Action -->
-              <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-100 flex justify-center">
-                <a [href]="'https://maps.google.com/?q=' + d.address" target="_blank" 
-                   class="w-full py-2 bg-beeses-dark hover:bg-beeses-gold text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
-                  HARİTADA GÖR <lucide-icon name="external-link" class="w-3.5 h-3.5"></lucide-icon>
+              <!-- Bottom Action - Social Media Links -->
+              <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-100 flex justify-center gap-4">
+                <a *ngIf="d.website" [href]="d.website" target="_blank" 
+                   class="w-9 h-9 bg-beeses-dark hover:bg-beeses-gold text-white rounded-full transition-all duration-300 flex items-center justify-center shadow-sm"
+                   title="Web Sitesi">
+                  <lucide-icon name="globe" class="w-4 h-4"></lucide-icon>
                 </a>
+                <a *ngIf="d.instagram" [href]="d.instagram" target="_blank" 
+                   class="w-9 h-9 bg-beeses-dark hover:bg-beeses-gold text-white rounded-full transition-all duration-300 flex items-center justify-center shadow-sm"
+                   title="Instagram">
+                  <lucide-icon name="instagram" class="w-4 h-4"></lucide-icon>
+                </a>
+                <a *ngIf="d.facebook" [href]="d.facebook" target="_blank" 
+                   class="w-9 h-9 bg-beeses-dark hover:bg-beeses-gold text-white rounded-full transition-all duration-300 flex items-center justify-center shadow-sm"
+                   title="Facebook">
+                  <lucide-icon name="facebook" class="w-4 h-4"></lucide-icon>
+                </a>
+                <a *ngIf="d.youtube" [href]="d.youtube" target="_blank" 
+                   class="w-9 h-9 bg-beeses-dark hover:bg-beeses-gold text-white rounded-full transition-all duration-300 flex items-center justify-center shadow-sm"
+                   title="YouTube">
+                  <lucide-icon name="youtube" class="w-4 h-4"></lucide-icon>
+                </a>
+                <div *ngIf="!d.website && !d.instagram && !d.facebook && !d.youtube" class="text-xs text-gray-400 font-medium py-2">
+                  Sosyal medya bilgisi bulunmuyor.
+                </div>
               </div>
             </div>
 

@@ -6,6 +6,8 @@ import { HeaderV3Component } from '../../components/header/variants/header-v3/he
 import { HeaderV4Component } from '../../components/header/variants/header-v4/header-v4.component';
 import { HeaderV5Component } from '../../components/header/variants/header-v5/header-v5.component';
 import { HeaderV6Component } from '../../components/header/variants/header-v6/header-v6.component';
+import { HeaderV7Component } from '../../components/header/variants/header-v7/header-v7.component';
+import { HeaderV8Component } from '../../components/header/variants/header-v8/header-v8.component';
 
 @Component({
   selector: 'app-header-demo',
@@ -17,10 +19,12 @@ import { HeaderV6Component } from '../../components/header/variants/header-v6/he
     HeaderV3Component, 
     HeaderV4Component, 
     HeaderV5Component, 
-    HeaderV6Component
+    HeaderV6Component,
+    HeaderV7Component,
+    HeaderV8Component
   ],
   template: `
-    <div class="min-h-screen transition-colors duration-500 overflow-x-hidden" [ngClass]="activeHeader === 4 ? 'bg-[#0a0a0a]' : 'bg-gray-100'">
+    <div class="min-h-screen transition-colors duration-500 overflow-x-hidden bg-gray-100">
       
       <!-- Variant Selector -->
       <div class="fixed top-1/2 left-6 -translate-y-1/2 z-[10000] flex flex-col gap-3 p-4 bg-white/80 backdrop-blur-xl border border-black/5 shadow-2xl rounded-[32px]">
@@ -32,7 +36,7 @@ import { HeaderV6Component } from '../../components/header/variants/header-v6/he
           <div *ngIf="activeHeader === v.id" class="w-1.5 h-1.5 bg-beeses-gold rounded-full"></div>
         </button>
       </div>
-
+ 
       <!-- Header Render -->
       <app-header-v1 *ngIf="activeHeader === 1"></app-header-v1>
       <app-header-v2 *ngIf="activeHeader === 2"></app-header-v2>
@@ -40,35 +44,34 @@ import { HeaderV6Component } from '../../components/header/variants/header-v6/he
       <app-header-v4 *ngIf="activeHeader === 4"></app-header-v4>
       <app-header-v5 *ngIf="activeHeader === 5"></app-header-v5>
       <app-header-v6 *ngIf="activeHeader === 6"></app-header-v6>
-
+      <app-header-v7 *ngIf="activeHeader === 7"></app-header-v7>
+      <app-header-v8 *ngIf="activeHeader === 8"></app-header-v8>
+ 
       <!-- Main Content (Simplified) -->
       <div class="pt-60 md:pt-80 px-4 md:px-20 pb-20">
         <div class="max-w-6xl mx-auto">
           
           <div class="mb-20 text-center">
             <span class="text-beeses-gold text-xs font-black tracking-[0.5em] uppercase mb-4 block">Beeses Audio Design Lab</span>
-            <h1 class="text-6xl md:text-9xl font-black tracking-tighter mb-8"
-                [ngClass]="activeHeader === 4 ? 'text-white' : 'text-black'">
+            <h1 class="text-6xl md:text-9xl font-black tracking-tighter mb-8 text-black">
                 VARIANT 0{{ activeHeader }}
             </h1>
-            <p class="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium"
-               [ngClass]="activeHeader === 4 ? 'text-white/50' : 'text-gray-500'">
+            <p class="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium text-gray-500">
                 {{ variants[activeHeader - 1].desc }}
             </p>
           </div>
-
+ 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div class="aspect-[4/3] md:aspect-square bg-beeses-gold rounded-[60px] flex flex-col items-center justify-center text-white shadow-3xl group cursor-pointer overflow-hidden">
                 <p class="text-6xl md:text-7xl font-black mb-4 group-hover:scale-110 transition-transform tracking-tighter">PREMIUM</p>
                 <p class="text-[10px] font-black tracking-[0.5em] opacity-60">AUDIO SOLUTIONS</p>
             </div>
-            <div class="aspect-[4/3] md:aspect-square rounded-[60px] flex flex-col items-center justify-center border transition-all duration-700"
-                 [ngClass]="activeHeader === 4 ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-gray-200 text-black shadow-2xl shadow-black/5'">
+            <div class="aspect-[4/3] md:aspect-square rounded-[60px] flex flex-col items-center justify-center border transition-all duration-700 bg-white border-gray-200 text-black shadow-2xl shadow-black/5">
                 <p class="text-6xl md:text-7xl font-black mb-4 tracking-tighter">FUTURE</p>
                 <p class="text-[10px] font-black tracking-[0.5em] opacity-40">TECHNOLOGY</p>
             </div>
           </div>
-
+ 
         </div>
       </div>
     </div>
@@ -80,8 +83,10 @@ export class HeaderDemoComponent {
     { id: 1, name: 'V1: Gold Bold', desc: 'Altın arka plan, siyah logo ve tam genişlikli kurumsal menü yapısı.' },
     { id: 2, name: 'V2: Centered Lacivert', desc: 'Beyaz arka plan, merkezde lacivert logo ve dengeli split menü yerleşimi.' },
     { id: 3, name: 'V3: Centered Off-White', desc: 'Kırık beyaz doku, merkezde siyah logo ve minimalist başlık detayları.' },
-    { id: 4, name: 'V4: Floating Glass', desc: 'Buzlu cam efektli, yüzen modern tasarım. Artık kusursuz çalışan dropdown yapısı ile.' },
-    { id: 5, name: 'V5: Gold Centered', desc: 'Altın arka plan üzerine merkez siyah logo ve split menü düzeni.' },
-    { id: 6, name: 'V6: Creative Soft', desc: 'Orijinal logolu merkez yapı ve modern, animasyonlu dropdown deneyimi.' }
+    { id: 4, name: 'V4: Koyu Ortalanmış (Sade)', desc: 'Koyu premium arka plan, merkezde parıldayan logo ve split menü düzeni (İletişime geç butonsuz).' },
+    { id: 5, name: 'V5: Koyu Ortalanmış', desc: 'Koyu premium arka plan, merkezde parıldayan logo ve split menü yerleşimi.' },
+    { id: 6, name: 'V6: Creative Soft', desc: 'Orijinal logolu merkez yapı ve modern, animasyonlu dropdown deneyimi.' },
+    { id: 7, name: 'V7: Gold Creative Split', desc: 'Altın arka plan, açık logo (logo_acik.png), koyu kontrast başlıklar ve modern dropdown deneyimi.' },
+    { id: 8, name: 'V8: Gold Creative Closed', desc: 'Altın arka plan, kapalı logo (logo_kapali.png), koyu kontrast başlıklar ve modern dropdown deneyimi.' }
   ];
 }

@@ -1,51 +1,55 @@
-.v5-link-new {
+.v7-link-new {
   position: relative;
   transition: all 0.3s ease;
   white-space: nowrap;
-  color: rgba(255, 255, 255, 0.88); /* Parlak kırık beyaz */
+  color: rgba(0, 0, 0, 0.85); /* Net okunabilir koyu başlık rengi */
 
   &:hover {
-    color: #b58131; /* Gold */
+    color: #fff; /* Üzerine gelince beyaz */
   }
 }
 
-// Logo Parlama Efektleri (Glow Effects)
-.logo-glow {
-  filter: drop-shadow(0 0 10px rgba(181, 129, 49, 0.3));
-  transition: all 0.7s ease-in-out;
-}
+// Premium Logo Kapsülü (Gold zemin üzerinde şık kontrast siyah kutu)
+.logo-capsule {
+  background: rgba(17, 17, 17, 0.98); /* Şık koyu siyah */
+  padding: 10px 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
-.logo-scrolled-glow {
-  filter: drop-shadow(0 0 16px rgba(181, 129, 49, 0.95)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.15));
-  transition: all 0.7s ease-in-out;
-}
-
-.group:hover {
-  .logo-glow {
-    filter: drop-shadow(0 0 20px rgba(181, 129, 49, 0.85));
-    transform: scale(1.05);
-  }
-  
-  .logo-scrolled-glow {
-    filter: drop-shadow(0 0 24px rgba(181, 129, 49, 1.0)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
-    transform: scale(1.05);
+  &:hover {
+    background: #000000;
+    border-color: rgba(181, 129, 49, 0.45); /* Gold sınır çizgisi hoverda parlar */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    transform: scale(1.03);
   }
 }
 
-.v5-dropdown-creative {
+.logo-capsule-scrolled {
+  padding: 6px 18px;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+// Premium Koyu Dropdown Tasarımı (Gold zeminle mükemmel kontrast)
+.v7-dropdown-creative {
   position: absolute;
   top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(15px);
   min-width: 240px;
-  background: white; /* Birebir V6 beyaz arka planı */
+  background: #111111; /* Derin siyah arka plan */
   padding: 1rem;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.06); /* Birebir V6 gölgesi */
-  border: 1px solid #f0f0f0; /* Birebir V6 sınır çizgisi */
+  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  border: 1px solid rgba(181, 129, 49, 0.25); /* Gold sınır çizgisi */
   border-radius: 24px;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Birebir V6 animasyonu */
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 100;
   margin-top: 0.25rem;
 
@@ -54,14 +58,14 @@
     padding: 12px 20px;
     font-size: 10px;
     font-weight: 800;
-    color: #555; /* Daha belirgin okunabilir yazı rengi */
+    color: rgba(255, 255, 255, 0.7); /* Beyazımsı gri */
     transition: all 0.3s ease;
     border-radius: 14px;
     position: relative;
     overflow: hidden;
     text-align: left;
     text-transform: uppercase;
-    letter-spacing: normal; /* Harfler arasındaki geniş boşluğu normale indirge */
+    letter-spacing: normal;
 
     &::before {
         content: '';
@@ -70,15 +74,15 @@
         left: 0;
         width: 4px;
         height: 0;
-        background: #b58131;
+        background: #b58131; /* Gold sol çizgi */
         transform: translateY(-50%);
         transition: height 0.3s ease;
         border-radius: 0 4px 4px 0;
     }
 
     &:hover {
-      background: #fcfcfc;
-      color: #000;
+      background: rgba(255, 255, 255, 0.03);
+      color: #b58131; /* Gold metin rengi */
       padding-left: 28px;
       
       &::before {
@@ -88,21 +92,22 @@
   }
 }
 
-.group\/v5:hover .v5-dropdown-creative {
+.group\/v7:hover .v7-dropdown-creative {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
-.v5-lang-dropdown {
+// Dil Dropdown Menüsü
+.v7-lang-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
   min-width: 160px;
-  background: white; /* Beyaz arka plan */
+  background: #111111;
   padding: 0.75rem;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.06);
-  border: 1px solid #f0f0f0;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  border: 1px solid rgba(181, 129, 49, 0.2);
   border-radius: 20px;
   opacity: 0;
   visibility: hidden;
@@ -119,7 +124,7 @@
     padding: 10px 16px;
     font-size: 10px;
     font-weight: 800;
-    color: #555; /* Belirgin gri yazı rengi */
+    color: rgba(255, 255, 255, 0.7);
     transition: all 0.3s ease;
     border-radius: 12px;
     position: relative;
@@ -128,7 +133,7 @@
     border: none;
     cursor: pointer;
     text-transform: uppercase;
-    letter-spacing: normal; /* Harfler arasındaki geniş boşluğu normale indirge */
+    letter-spacing: normal;
 
     &::before {
         content: '';
@@ -137,15 +142,15 @@
         left: 0;
         width: 4px;
         height: 0;
-        background: #b58131; /* Gold sol çizgi */
+        background: #b58131;
         transform: translateY(-50%);
         transition: height 0.3s ease;
         border-radius: 0 4px 4px 0;
     }
 
     &:hover {
-      background: #fcfcfc;
-      color: #000;
+      background: rgba(255, 255, 255, 0.03);
+      color: #b58131;
       padding-left: 24px;
       
       &::before {
@@ -155,8 +160,18 @@
   }
 }
 
-.group\/lang:hover .v5-lang-dropdown {
+.group\/lang:hover .v7-lang-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+}
+
+// İletişime Geç Butonu
+.v7-contact-btn {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    border-color: #fff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  }
 }

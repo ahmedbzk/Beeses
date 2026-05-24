@@ -30,7 +30,7 @@ import { FormsModule } from '@angular/forms';
 export class DistributorsComponent implements OnInit {
   distributors: Distributor[] = [];
   filteredDistributors: Distributor[] = [];
-  countries: string[] = ['Tayvan', 'Amerika', 'Almanya', 'İran', 'Türkiye'];
+  countries: string[] = [];
   
   selectedCountry: string | null = null;
   searchQuery: string = '';
@@ -41,14 +41,27 @@ export class DistributorsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Ülkeleri alfabetik sıralayalım
-    this.countries.sort((a, b) => a.localeCompare(b, 'tr'));
+    this.distributorService.getDistributors().subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.distributors = res.data;
+          
+          // Ülkeleri dinamik olarak çekelim ve sıralayalım
+          const countrySet = new Set<string>();
+          this.distributors.forEach(d => {
+            if (d.country) countrySet.add(d.country);
+          });
+          this.countries = Array.from(countrySet).sort((a, b) => a.localeCompare(b, 'tr'));
 
-    setTimeout(() => {
-      this.distributors = this.distributorService.getDistributors();
-      this.applyFilters();
-      this.isLoading = false;
-    }, 800);
+          this.applyFilters();
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching distributors:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
   filterByCountry(country: string | null): void {
@@ -70,9 +83,10 @@ export class DistributorsComponent implements OnInit {
     if (this.searchQuery && this.searchQuery.trim() !== '') {
       const q = this.searchQuery.toLowerCase();
       result = result.filter(d => 
-        d.name.toLowerCase().includes(q) || 
-        d.country.toLowerCase().includes(q) ||
-        d.address.toLowerCase().includes(q)
+        (d.company_name || '').toLowerCase().includes(q) || 
+        (d.representative || '').toLowerCase().includes(q) || 
+        (d.country || '').toLowerCase().includes(q) ||
+        (d.address || '').toLowerCase().includes(q)
       );
     }
 
