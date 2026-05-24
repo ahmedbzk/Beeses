@@ -207,7 +207,6 @@ import { forkJoin } from 'rxjs';
 
             <div class="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between text-xs text-gray-400 font-medium">
               <span>* Sadece en yoğun ilk 4 ülke listelenmiştir.</span>
-              <a routerLink="/admin/dashboard/distributors" class="text-beeses-gold font-bold hover:underline">Tümünü Yönet &rarr;</a>
             </div>
           </div>
 
@@ -272,7 +271,6 @@ import { forkJoin } from 'rxjs';
                 <lucide-icon name="mail" class="w-5 h-5 text-blue-500"></lucide-icon>
                 Son Gelen Mesajlar
               </h3>
-              <a routerLink="/admin/dashboard/contacts" class="text-xs text-beeses-gold font-bold hover:underline">Tümü &rarr;</a>
             </div>
             
             <div class="overflow-x-auto">
