@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -29,18 +29,26 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private location: Location,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    // Sayfa henüz yüklenirken veya yenilenirken ilk andan itibaren URL kontrolünü yap
+    this.checkIfDemoPage(this.location.path());
+  }
 
   ngOnInit() {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      this.isDemoPage = event.url.includes('header-demo');
+      this.checkIfDemoPage(event.url);
       
       if (isPlatformBrowser(this.platformId)) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
+  }
+
+  private checkIfDemoPage(url: string) {
+    this.isDemoPage = url.includes('header-demo') || url.includes('/admin');
   }
 }
