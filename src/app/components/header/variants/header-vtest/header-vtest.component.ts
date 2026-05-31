@@ -20,6 +20,9 @@ export class HeaderVtestComponent {
   @Input() btnBgColor: string = '#000000';
   @Input() btnHoverBgColor: string = '#1f2937';
   @Input() btnTextColor: string = '#ffffff';
+  @Input() btnIconColor: string = '#B58131';
+  @Input() headerBgColor: string = '#B58131';
+  @Input() headerLinkColor: string = '#ffffff';
 
   isBtnHovered: boolean = false;
   isSideMenuOpen = false;

@@ -59,7 +59,10 @@ import { HeaderVtestComponent } from '../../components/header/variants/header-vt
                         [headerPadding]="selectedPadding"
                         [btnBgColor]="selectedBtnBgColor"
                         [btnHoverBgColor]="selectedBtnHoverBgColor"
-                        [btnTextColor]="selectedBtnTextColor"></app-header-vtest>
+                        [btnTextColor]="selectedBtnTextColor"
+                        [btnIconColor]="selectedBtnIconColor"
+                        [headerBgColor]="selectedHeaderBgColor"
+                        [headerLinkColor]="selectedHeaderLinkColor"></app-header-vtest>
 
  
       <!-- Main Content (Simplified) -->
@@ -130,6 +133,34 @@ import { HeaderVtestComponent } from '../../components/header/variants/header-vt
                   </div>
                 </div>
 
+                <!-- Header Arka Plan Rengi -->
+                <div>
+                  <label class="block text-[9px] font-black text-gray-400 uppercase tracking-widest mb-3">Header Arka Plan Rengi</label>
+                  <div class="flex items-center gap-3">
+                    <div class="relative w-8 h-8 rounded-lg overflow-hidden border border-gray-100 shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300">
+                      <input type="color" [(ngModel)]="selectedHeaderBgColor" class="absolute inset-0 w-full h-full p-0 border-0 cursor-pointer scale-150">
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-[8px] font-bold text-gray-400">HEX Kodu</span>
+                      <span class="font-mono text-xs font-black text-black">{{ selectedHeaderBgColor }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Header Menü Link Rengi -->
+                <div>
+                  <label class="block text-[9px] font-black text-gray-400 uppercase tracking-widest mb-3">Menü Yazı Rengi</label>
+                  <div class="flex items-center gap-3">
+                    <div class="relative w-8 h-8 rounded-lg overflow-hidden border border-gray-100 shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300">
+                      <input type="color" [(ngModel)]="selectedHeaderLinkColor" class="absolute inset-0 w-full h-full p-0 border-0 cursor-pointer scale-150">
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-[8px] font-bold text-gray-400">HEX Kodu</span>
+                      <span class="font-mono text-xs font-black text-black">{{ selectedHeaderLinkColor }}</span>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- İletişim Butonu Ayarları -->
                 <div class="pt-4 border-t border-gray-100 space-y-4">
                   <h5 class="text-[9px] font-black text-black uppercase tracking-widest mb-1">İletişim Butonu</h5>
@@ -152,11 +183,21 @@ import { HeaderVtestComponent } from '../../components/header/variants/header-vt
                     </div>
                   </div>
 
-                  <div>
-                    <label class="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Yazı Rengi</label>
-                    <div class="flex items-center gap-1.5">
-                      <input type="color" [(ngModel)]="selectedBtnTextColor" class="w-7 h-7 rounded-lg overflow-hidden border border-gray-100 cursor-pointer">
-                      <span class="font-mono text-[9px] font-black text-black leading-none">{{ selectedBtnTextColor }}</span>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Yazı Rengi</label>
+                      <div class="flex items-center gap-1.5">
+                        <input type="color" [(ngModel)]="selectedBtnTextColor" class="w-7 h-7 rounded-lg overflow-hidden border border-gray-100 cursor-pointer">
+                        <span class="font-mono text-[9px] font-black text-black leading-none">{{ selectedBtnTextColor }}</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label class="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">İkon Rengi</label>
+                      <div class="flex items-center gap-1.5">
+                        <input type="color" [(ngModel)]="selectedBtnIconColor" class="w-7 h-7 rounded-lg overflow-hidden border border-gray-100 cursor-pointer">
+                        <span class="font-mono text-[9px] font-black text-black leading-none">{{ selectedBtnIconColor }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -235,6 +276,9 @@ export class HeaderDemoComponent {
   selectedBtnBgColor: string = '#000000';
   selectedBtnHoverBgColor: string = '#1f2937';
   selectedBtnTextColor: string = '#ffffff';
+  selectedBtnIconColor: string = '#b58131';
+  selectedHeaderBgColor: string = '#b58131';
+  selectedHeaderLinkColor: string = '#ffffff';
   presetColors: string[] = ['#ffb84d', '#b58131', '#000000', '#ffffff', '#dc2626', '#2563eb', '#16a34a'];
   shadowPresets: string[] = ['#ffffff', '#000000', '#b58131', '#ffc107', '#ff5722'];
   
