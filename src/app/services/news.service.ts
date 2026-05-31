@@ -7,12 +7,14 @@ export interface News {
   id?: number;
   title: string;
   summary: string;
-  content: string;
+  content?: string;
   category: string;
   image: string;
+  sections?: { title?: string; text: string; image: string; }[];
   news_date: string;
   formatted_date?: string;
   created_at?: string;
+  selected?: boolean; // Admin checkbox helper
 }
 
 @Injectable({
@@ -25,6 +27,10 @@ export class NewsService {
 
   getNews(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/get-news.php`);
+  }
+
+  getNewsById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/get-news-detail.php?id=${id}`);
   }
 
   getLatestNews(): Observable<any> {

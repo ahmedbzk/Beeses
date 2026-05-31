@@ -64,7 +64,7 @@
            [ngClass]="{'search-active': isSearchActive}">
         <a routerLink="/" class="group cursor-pointer">
           <img src="assets/logo.png" alt="Beeses Audio" 
-               [ngClass]="isScrolled ? 'h-12 md:h-14 logo-scrolled-glow' : 'h-16 md:h-18 logo-glow'"
+               [ngClass]="isScrolled ? 'h-[53px] md:h-[62px] logo-scrolled-glow' : 'h-[70px] md:h-[80px] logo-glow'"
                class="w-auto transition-all duration-700 ease-in-out">
         </a>
       </div>
@@ -81,7 +81,8 @@
                   </span>
                   <div class="v5-dropdown-creative">
                       <a routerLink="/contact" class="cursor-pointer">Talep Formu</a>
-                      <a routerLink="/warranty" class="cursor-pointer">Garanti Başlangıcı</a>
+                      <a routerLink="/contact/warranty-query" class="cursor-pointer">Garanti Sorgulama</a>
+                      <a routerLink="/contact/warranty" class="cursor-pointer">Garanti Başvurusu</a>
                   </div>
               </div>
           </div>

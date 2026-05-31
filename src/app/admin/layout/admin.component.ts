@@ -91,7 +91,7 @@ import { LucideAngularModule } from 'lucide-angular';
                 Sertifikalar
               </span>
               <span class="text-[8px] bg-white/10 text-beeses-gold px-1.5 py-0.5 rounded-full font-bold ml-auto transition-all"
-                    [ngClass]="isSidebarCollapsed ? 'lg:hidden' : 'inline-block'">YAKINDA</span>
+                    [ngClass]="isSidebarCollapsed ? 'lg:hidden' : 'inline-block'">KAPALI</span>
             </a>
             <a (click)="$event.preventDefault()" 
                class="flex items-center rounded-xl text-white/30 font-medium text-sm transition-all border border-transparent cursor-not-allowed duration-500"
@@ -102,7 +102,7 @@ import { LucideAngularModule } from 'lucide-angular';
                 Sıkça Sorulan S.
               </span>
               <span class="text-[8px] bg-white/10 text-beeses-gold px-1.5 py-0.5 rounded-full font-bold ml-auto transition-all"
-                    [ngClass]="isSidebarCollapsed ? 'lg:hidden' : 'inline-block'">YAKINDA</span>
+                    [ngClass]="isSidebarCollapsed ? 'lg:hidden' : 'inline-block'">KAPALI</span>
             </a>
           </div>
 
@@ -140,16 +140,14 @@ import { LucideAngularModule } from 'lucide-angular';
                  [ngClass]="isSidebarCollapsed ? 'lg:max-h-0 lg:opacity-0 lg:mb-0 lg:pointer-events-none mb-1.5' : 'max-h-6 opacity-100 mb-1.5'">
               <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.15em] px-3.5">Distribütör Yönetimi</p>
             </div>
-            <a (click)="$event.preventDefault()" 
-               class="flex items-center rounded-xl text-white/30 font-medium text-sm transition-all border border-transparent cursor-not-allowed duration-500"
+            <a routerLink="/admin/dashboard/distributors" routerLinkActive="bg-white/10 text-beeses-gold border-white/10 shadow-sm" 
+               class="flex items-center rounded-xl text-white/50 hover:text-white font-medium text-sm transition-all border border-transparent duration-500"
                [ngClass]="isSidebarCollapsed ? 'lg:justify-center lg:p-2.5 lg:gap-0 px-3.5 py-2.5 gap-3' : 'px-3.5 py-2.5 gap-3'">
               <lucide-icon name="globe" class="w-5 h-5 shrink-0"></lucide-icon>
               <span class="transition-all duration-500 overflow-hidden whitespace-nowrap"
-                    [ngClass]="isSidebarCollapsed ? 'lg:max-w-0 lg:opacity-0 lg:pointer-events-none' : 'max-w-[120px] opacity-100'">
+                    [ngClass]="isSidebarCollapsed ? 'lg:max-w-0 lg:opacity-0 lg:pointer-events-none' : 'max-w-[200px] opacity-100'">
                 Distribütör Listesi
               </span>
-              <span class="text-[8px] bg-white/10 text-beeses-gold px-1.5 py-0.5 rounded-full font-bold ml-auto transition-all"
-                    [ngClass]="isSidebarCollapsed ? 'lg:hidden' : 'inline-block'">KAPALI</span>
             </a>
           </div>
 
@@ -168,7 +166,26 @@ import { LucideAngularModule } from 'lucide-angular';
                 Ürün Kataloğu
               </span>
               <span class="text-[8px] bg-white/10 text-beeses-gold px-1.5 py-0.5 rounded-full font-bold ml-auto transition-all"
-                    [ngClass]="isSidebarCollapsed ? 'lg:hidden' : 'inline-block'">YAKINDA</span>
+                    [ngClass]="isSidebarCollapsed ? 'lg:hidden' : 'inline-block'">KAPALI</span>
+            </a>
+          </div>
+
+          <!-- BÜLTEN YÖNETİMİ -->
+          <div class="space-y-1">
+            <div class="transition-all duration-500 overflow-hidden whitespace-nowrap"
+                 [ngClass]="isSidebarCollapsed ? 'lg:max-h-0 lg:opacity-0 lg:mb-0 lg:pointer-events-none mb-1.5' : 'max-h-6 opacity-100 mb-1.5'">
+              <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.15em] px-3.5">Bülten Yönetimi</p>
+            </div>
+            <a (click)="$event.preventDefault()"
+               class="flex items-center rounded-xl text-white/30 font-medium text-sm transition-all border border-transparent cursor-not-allowed duration-500"
+               [ngClass]="isSidebarCollapsed ? 'lg:justify-center lg:p-2.5 lg:gap-0 px-3.5 py-2.5 gap-3' : 'px-3.5 py-2.5 gap-3'">
+              <lucide-icon name="bell" class="w-5 h-5 shrink-0"></lucide-icon>
+              <span class="transition-all duration-500 overflow-hidden whitespace-nowrap"
+                    [ngClass]="isSidebarCollapsed ? 'lg:max-w-0 lg:opacity-0 lg:pointer-events-none' : 'max-w-[200px] opacity-100'">
+                Aboneler & Bülten
+              </span>
+              <span class="text-[8px] bg-white/10 text-beeses-gold px-1.5 py-0.5 rounded-full font-bold ml-auto transition-all"
+                    [ngClass]="isSidebarCollapsed ? 'lg:hidden' : 'inline-block'">KAPALI</span>
             </a>
           </div>
         </nav>

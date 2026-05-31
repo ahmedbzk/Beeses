@@ -31,6 +31,10 @@ export class HeaderV2Component {
 
   toggleSideMenu() {
     this.isSideMenuOpen = !this.isSideMenuOpen;
+    if(!this.isSideMenuOpen) {
+      this.isMobileKurumsalOpen = false;
+      this.isMobileUrunlerOpen = false;
+    }
   }
 
   toggleLangDropdown() { this.isLangDropdownOpen = !this.isLangDropdownOpen; }
@@ -38,11 +42,13 @@ export class HeaderV2Component {
   toggleMobileKurumsal(event: Event) {
     event.stopPropagation();
     this.isMobileKurumsalOpen = !this.isMobileKurumsalOpen;
+    if (this.isMobileKurumsalOpen) this.isMobileUrunlerOpen = false;
   }
 
   toggleMobileUrunler(event: Event) {
     event.stopPropagation();
     this.isMobileUrunlerOpen = !this.isMobileUrunlerOpen;
+    if (this.isMobileUrunlerOpen) this.isMobileKurumsalOpen = false;
   }
 
   changeLang(lang: any) {

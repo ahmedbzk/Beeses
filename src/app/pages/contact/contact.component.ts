@@ -43,6 +43,7 @@ export class ContactComponent {
     // Map the short subject to its full text
     const subjectMap: Record<string, string> = {
       'ses': 'Ses Sistemleri',
+      'garanti': 'Garanti Başvurusu',
       'genel': 'Genel Bilgi',
       'bayiler': 'Bayilerimiz',
       'teknik': 'Teknik Destek',

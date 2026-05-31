@@ -1,0 +1,107 @@
+<header class="fixed top-0 left-0 w-full z-[9999] transition-all duration-700 uppercase tracking-[0.15em] font-bold">
+  
+  <!-- Dil Çubuğu -->
+  <div [ngClass]="isScrolled ? 'max-h-0 opacity-0 invisible' : 'max-h-10 opacity-100 py-2 visible'"
+    class="relative z-[120] bg-transparent transition-all duration-700 overflow-visible flex items-center justify-end">
+    <div class="container mx-auto px-4 md:px-12 h-full flex items-center justify-end">
+      <div class="relative group/lang pointer-events-auto">
+        <button (click)="toggleLangDropdown()"
+          class="flex items-center gap-2 text-beeses-dark hover:text-beeses-gold transition text-[10px] font-bold outline-none uppercase tracking-widest cursor-pointer">
+          <img [src]="currentLang.flag" class="w-4 h-auto rounded-sm shadow-sm">
+          <span>{{ currentLang.code }}</span>
+          <lucide-icon name="chevron-down" class="w-3 h-3 text-beeses-dark/70 group-hover/lang:text-beeses-gold transition"></lucide-icon>
+        </button>
+
+        <div [ngClass]="{'opacity-100 visible': isLangDropdownOpen, 'opacity-0 invisible': !isLangDropdownOpen}"
+          class="vtest-lang-dropdown">
+          <button *ngFor="let lang of languages" (click)="changeLang(lang)">
+            <img [src]="lang.flag" class="w-4 h-auto">
+            <span>{{ lang.name }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ana Header (Gold Centered) -->
+  <div [ngClass]="isScrolled ? 'bg-beeses-gold/95 backdrop-blur-lg shadow-xl' : 'bg-beeses-gold'"
+       [style.paddingTop.px]="isScrolled ? headerPadding * 0.65 : headerPadding"
+       [style.paddingBottom.px]="isScrolled ? headerPadding * 0.65 : headerPadding"
+       class="relative z-[100] transition-all duration-700 ease-in-out border-b border-black/5 flex items-center">
+    <div class="container mx-auto px-4 md:px-12 flex items-center justify-between w-full">
+      
+      <!-- Left Menu -->
+      <nav class="hidden lg:flex items-center gap-10 flex-1 font-black tracking-widest text-white uppercase"
+           [style.fontSize.px]="menuFontSize">
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="vtest-link-new cursor-pointer">ANA SAYFA</a>
+          
+          <div class="relative group/vtest flex items-center py-4 cursor-pointer">
+              <span class="vtest-link-new flex items-center gap-1.5">
+                  KURUMSAL <lucide-icon name="chevron-down" class="w-3.5 h-3.5 text-white/55"></lucide-icon>
+              </span>
+              <div class="vtest-dropdown-creative">
+                  <a routerLink="/corporate/components/about" class="cursor-pointer">Hakkımızda</a>
+                  <a routerLink="/corporate/components/news" class="cursor-pointer">Haberler & Duyurular</a>
+                  <a routerLink="/corporate/components/certificates" class="cursor-pointer">Sertifikalar</a>
+                  <a routerLink="/corporate/components/sss" class="cursor-pointer">S.S.S</a>
+              </div>
+          </div>
+
+          <div class="relative group/vtest flex items-center py-4 cursor-pointer">
+              <span class="vtest-link-new flex items-center gap-1.5">
+                  ÜRÜNLERİMİZ <lucide-icon name="chevron-down" class="w-3.5 h-3.5 text-white/55"></lucide-icon>
+              </span>
+              <div class="vtest-dropdown-creative">
+                  <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }" class="cursor-pointer">SQL SERİSİ</a>
+                  <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }" class="cursor-pointer">OF SERİSİ</a>
+                  <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }" class="cursor-pointer">PETEK SERİSİ</a>
+                  <div class="h-px bg-gray-100 my-2"></div>
+                  <a routerLink="/products/innovation" class="text-beeses-gold cursor-pointer">İNOVASYON & GELECEK</a>
+              </div>
+          </div>
+      </nav>
+
+      <!-- Center Logo with Custom Dynamic Color Mask and Outer Shadow (Non-expanding Header) -->
+      <div class="flex-shrink-0 px-8 relative flex items-center justify-center"
+           [style.height.px]="isScrolled ? 48 : 60"
+           [style.width.px]="(isScrolled ? logoSize * 0.775 : logoSize) * 2.25 + 40">
+        <a routerLink="/" class="group cursor-pointer block z-10 absolute top-1/2 -translate-y-1/2"
+           [style.filter]="hasShadow ? 'drop-shadow(0px 0px 12px ' + shadowColor + ')' : 'none'">
+          <div [style.backgroundColor]="logoColor" 
+               [style.height.px]="isScrolled ? logoSize * 0.775 : logoSize"
+               [style.width.px]="(isScrolled ? logoSize * 0.775 : logoSize) * 2.25"
+               class="transition-all duration-700 ease-in-out vtest-logo-mask"
+               style="mask: url('assets/logo.png') no-repeat center; mask-size: contain; -webkit-mask: url('assets/logo.png') no-repeat center; -webkit-mask-size: contain;">
+          </div>
+        </a>
+      </div>
+
+      <!-- Right Menu -->
+      <nav class="hidden lg:flex items-center justify-end gap-10 flex-1 font-black tracking-widest text-white uppercase"
+           [style.fontSize.px]="menuFontSize">
+          <a routerLink="/distributors" class="vtest-link-new cursor-pointer">DİSTRİBÜTÖRLERİMİZ</a>
+          
+          <div class="relative group/vtest flex items-center py-4 cursor-pointer">
+              <span class="vtest-link-new flex items-center gap-1.5">
+                  BİZE ULAŞIN <lucide-icon name="chevron-down" class="w-3.5 h-3.5 text-white/55"></lucide-icon>
+              </span>
+              <div class="vtest-dropdown-creative">
+                  <a routerLink="/contact" class="cursor-pointer">Talep Formu</a>
+                  <a routerLink="/contact/warranty-query" class="cursor-pointer">Garanti Sorgulama</a>
+                  <a routerLink="/contact/warranty" class="cursor-pointer">Garanti Başvurusu</a>
+              </div>
+          </div>
+
+          <a href="mailto:info@iotek.com.tr" 
+             (mouseenter)="isBtnHovered = true"
+             (mouseleave)="isBtnHovered = false"
+             [style.backgroundColor]="isBtnHovered ? btnHoverBgColor : btnBgColor"
+             [style.color]="btnTextColor"
+             class="flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-500 shadow-xl shadow-black/20 cursor-pointer">
+              <lucide-icon name="mail" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+              <span class="text-[10px] font-black uppercase">İLETİŞİME GEÇ</span>
+          </a>
+      </nav>
+    </div>
+  </div>
+</header>

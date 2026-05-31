@@ -70,7 +70,8 @@
           </span>
           <div class="dropdown-menu">
             <a routerLink="/contact">Talep Formu</a>
-            <a routerLink="/warranty">Garanti Başlangıcı</a>
+            <a routerLink="/contact/warranty-query">Garanti Sorgulama</a>
+            <a routerLink="/contact/warranty">Garanti Başvurusu</a>
           </div>
         </div>
       </nav>
@@ -167,7 +168,8 @@
           </div>
           <div class="mobile-sub-menu" [ngClass]="{'open': isMobileIletisimOpen}">
             <a routerLink="/contact" (click)="toggleSideMenu()">TALEP FORMU</a>
-            <a routerLink="/warranty" (click)="toggleSideMenu()">GARANTİ BAŞLANGICI</a>
+            <a routerLink="/contact/warranty-query" (click)="toggleSideMenu()">GARANTİ SORGULAMA</a>
+            <a routerLink="/contact/warranty" (click)="toggleSideMenu()">GARANTİ BAŞVURUSU</a>
           </div>
         </div>
       </nav>

@@ -11,8 +11,13 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrl: './header-v3.component.scss'
 })
 export class HeaderV3Component {
+  isSideMenuOpen = false;
   isScrolled = false;
   isLangDropdownOpen = false;
+
+  isMobileKurumsalOpen = false;
+  isMobileUrunlerOpen = false;
+
   currentLang = { code: 'TR', name: 'Turkish', flag: 'assets/flags/turkey.png' };
   languages = [
     { code: 'TR', name: 'Turkish', flag: 'assets/flags/turkey.png' },
@@ -24,6 +29,30 @@ export class HeaderV3Component {
     this.isScrolled = window.scrollY > 50;
   }
 
+  toggleSideMenu() {
+    this.isSideMenuOpen = !this.isSideMenuOpen;
+    if(!this.isSideMenuOpen) {
+      this.isMobileKurumsalOpen = false;
+      this.isMobileUrunlerOpen = false;
+    }
+  }
+
   toggleLangDropdown() { this.isLangDropdownOpen = !this.isLangDropdownOpen; }
-  changeLang(lang: any) { this.currentLang = lang; this.isLangDropdownOpen = false; }
+  
+  toggleMobileKurumsal(event: Event) {
+    event.stopPropagation();
+    this.isMobileKurumsalOpen = !this.isMobileKurumsalOpen;
+    if (this.isMobileKurumsalOpen) this.isMobileUrunlerOpen = false;
+  }
+
+  toggleMobileUrunler(event: Event) {
+    event.stopPropagation();
+    this.isMobileUrunlerOpen = !this.isMobileUrunlerOpen;
+    if (this.isMobileUrunlerOpen) this.isMobileKurumsalOpen = false;
+  }
+
+  changeLang(lang: any) {
+    this.currentLang = lang;
+    this.isLangDropdownOpen = false;
+  }
 }

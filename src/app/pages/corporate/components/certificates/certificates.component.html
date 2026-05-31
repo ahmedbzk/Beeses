@@ -39,7 +39,11 @@
           {{ cert.description }}
         </p>
         
-        <button class="flex items-center gap-3 text-[11px] font-black text-beeses-dark tracking-[0.2em] uppercase hover:text-beeses-gold transition-colors pt-6 border-t border-gray-50 w-full justify-center">
+        <button (click)="openCertificate(cert.file_path)"
+                [disabled]="!cert.file_path"
+                [class.opacity-40]="!cert.file_path"
+                [class.cursor-not-allowed]="!cert.file_path"
+                class="flex items-center gap-3 text-[11px] font-black text-beeses-dark tracking-[0.2em] uppercase hover:text-beeses-gold transition-colors pt-6 border-t border-gray-50 w-full justify-center cursor-pointer">
           <span>BELGEYİ GÖRÜNTÜLE</span>
           <lucide-icon name="external-link" class="w-4 h-4"></lucide-icon>
         </button>

@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { ProductService, Product } from '../../services/product.service';
+import { NewsletterService } from '../../services/newsletter.service';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-products',
@@ -13,6 +15,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './products.component.scss'
 })
 export class ProductsComponent implements OnInit {
+  private productService = inject(ProductService);
+  private newsletterService = inject(NewsletterService);
+  private route = inject(ActivatedRoute);
+
   products: Product[] = [];
   filteredProducts: Product[] = [];
   categories: string[] = [];
@@ -21,32 +27,46 @@ export class ProductsComponent implements OnInit {
   searchQuery: string = '';
   isLoading: boolean = true;
   isFilterOpen: boolean = false;
+  apiUrl = environment.apiUrl;
 
-  constructor(
-    private productService: ProductService,
-    private route: ActivatedRoute
-  ) {}
+  // Newsletter
+  newsletterEmail: string = '';
+  newsletterLoading: boolean = false;
+  newsletterSuccess: boolean = false;
+  newsletterError: string = '';
 
   ngOnInit(): void {
-    // Verilerin yüklenmesini simüle etmek için kısa bir gecikme
-    setTimeout(() => {
-      this.products = this.productService.getProducts();
-      this.categories = this.productService.getCategories();
-      
-      this.route.queryParams.subscribe(params => {
-        if (params['category']) {
-          this.selectedCategory = params['category'];
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
+    this.productService.getProducts().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.products = response.data;
+          // Extract unique categories
+          const catSet = new Set(this.products.map(p => p.category));
+          this.categories = Array.from(catSet);
+
+          this.route.queryParams.subscribe(params => {
+            if (params['category']) {
+              this.selectedCategory = params['category'];
+            }
+            this.applyFilters();
+            this.isLoading = false;
+          });
         }
-        this.applyFilters();
+      },
+      error: (err) => {
+        console.error('Urunler yuklenirken hata:', err);
         this.isLoading = false;
-      });
-    }, 800);
+      }
+    });
   }
 
   filterByCategory(category: string | null): void {
     this.selectedCategory = category;
     this.applyFilters();
-    // Mobilde kategori seçilince menüyü kapat
     if (window.innerWidth < 1024) {
       this.isFilterOpen = false;
     }
@@ -74,4 +94,34 @@ export class ProductsComponent implements OnInit {
   toggleFilter(): void {
     this.isFilterOpen = !this.isFilterOpen;
   }
+
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('assets/')) {
+      return imagePath;
+    }
+    return `${this.apiUrl}/${imagePath}`;
+  }
+
+  subscribeNewsletter(): void {
+    if (!this.newsletterEmail || this.newsletterLoading) return;
+    this.newsletterLoading = true;
+    this.newsletterError = '';
+
+    this.newsletterService.subscribe(this.newsletterEmail).subscribe({
+      next: (res) => {
+        this.newsletterLoading = false;
+        if (res.success) {
+          this.newsletterSuccess = true;
+        } else {
+          this.newsletterError = res.message || 'Bir hata oluştu. Lütfen tekrar deneyin.';
+        }
+      },
+      error: () => {
+        this.newsletterLoading = false;
+        this.newsletterError = 'Sunucu bağlantısı kurulamadı. Lütfen daha sonra tekrar deneyin.';
+      }
+    });
+  }
 }
+

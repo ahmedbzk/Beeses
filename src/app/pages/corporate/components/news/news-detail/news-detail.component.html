@@ -1,0 +1,224 @@
+<!-- Loading State -->
+<div *ngIf="isLoading" class="min-h-screen flex flex-col items-center justify-center bg-beeses-silver">
+  <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-beeses-gold mb-4"></div>
+  <p class="text-gray-500 text-sm font-semibold tracking-widest uppercase animate-pulse">Haber Yükleniyor...</p>
+</div>
+
+<!-- Main Detail Content -->
+<div *ngIf="!isLoading && news" class="min-h-screen bg-beeses-silver animate-fade-in">
+  
+  <!-- Hero Banner (Kept exactly as approved layout) -->
+  <section class="relative w-full min-h-[420px] md:min-h-[480px] flex flex-col justify-between overflow-hidden bg-beeses-dark border-none pt-28 md:pt-36">
+    <div class="absolute inset-0 w-full h-full">
+      <img [src]="getImageUrl(news.image)" [alt]="news.title" class="w-full h-full object-cover opacity-50" />
+      <div class="absolute inset-0 bg-gradient-to-t from-beeses-dark via-beeses-dark/60 to-transparent"></div>
+    </div>
+    
+    <!-- Top Bar with Back Button aligned with content container -->
+    <div class="relative z-20 w-full container mx-auto px-6 md:px-12 max-w-5xl pt-4">
+      <a routerLink="/corporate/components/news" 
+         class="inline-flex items-center gap-2 px-5 py-2.5 bg-black/40 hover:bg-beeses-gold text-white hover:text-black font-bold text-xs uppercase tracking-wider rounded-xl backdrop-blur-md transition-all duration-300 shadow-lg cursor-pointer">
+        <lucide-icon name="chevron-left" class="w-4 h-4"></lucide-icon>
+        Haber Listesine Dön
+      </a>
+    </div>
+
+    <!-- Banner Details -->
+    <div class="relative z-10 container mx-auto px-6 md:px-12 max-w-5xl pb-12 mt-auto">
+      <span class="px-4 py-1.5 bg-beeses-gold text-black text-[10px] font-black tracking-widest uppercase rounded-sm mb-4 inline-block shadow-lg">
+        {{ news.category }}
+      </span>
+      <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-wide uppercase leading-tight max-w-4xl">
+        {{ news.title }}
+      </h1>
+      <div class="flex flex-wrap items-center gap-6 mt-6 text-gray-300 text-xs font-semibold tracking-wider">
+        <div class="flex items-center gap-2">
+          <lucide-icon name="calendar" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+          <span>{{ news.formatted_date || news.news_date }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Body Content (Premium Light Theme Overlapping Redesign) -->
+  <section class="w-full py-16 md:py-24 bg-beeses-silver text-gray-800">
+    <div class="container mx-auto px-6 md:px-12 max-w-5xl relative z-10 space-y-24">
+      
+      <!-- Summary/Quote box -->
+      <div class="relative max-w-4xl mx-auto py-10 px-8 sm:px-16 bg-white border-l-4 border-beeses-gold rounded-r-3xl shadow-xl">
+        <span class="absolute top-4 left-6 text-beeses-gold/10 font-serif text-[100px] leading-none select-none">“</span>
+        <p class="text-lg sm:text-xl md:text-2xl text-beeses-dark font-serif italic font-medium leading-relaxed relative z-10">
+          {{ news.summary }}
+        </p>
+      </div>
+
+      <!-- Dynamic Editorial Sections (Overlapping Layout) -->
+      <div class="space-y-24 md:space-y-32">
+        <div *ngFor="let sec of news.sections; let i = index" class="editorial-section animate-on-scroll">
+          
+          <!-- Layout A: Cinematic Banner (Section 3 - index 2, if both text and image are present) -->
+          <div *ngIf="i === 2 && sec.text && sec.image" class="space-y-8 bg-white rounded-3xl p-6 md:p-10 shadow-xl border border-gray-100/50">
+            <div *ngIf="sec.title" class="mb-6">
+              <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">03 / AŞAMA DETAYI</span>
+              <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
+              <div class="w-12 h-1 bg-beeses-gold mt-3 rounded-full"></div>
+            </div>
+            
+            <div class="group relative w-full overflow-hidden rounded-2xl shadow-lg cursor-pointer aspect-[21/9]" (click)="openLightbox(sec.image)">
+              <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+              <img [src]="getImageUrl(sec.image)" class="w-full h-full object-cover transform group-hover:scale-[1.02] transition-transform duration-700">
+              <div class="absolute bottom-4 right-4 z-20 bg-black/60 px-4 py-2 rounded-xl text-white text-xs font-semibold backdrop-blur-sm flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                <lucide-icon name="search" class="w-4 h-4 text-beeses-gold"></lucide-icon> Büyüt
+              </div>
+            </div>
+            
+            <div class="text-gray-600 text-base sm:text-lg leading-relaxed font-light text-justify columns-1 md:columns-2 gap-8 whitespace-pre-wrap mt-6">
+              {{ sec.text }}
+            </div>
+          </div>
+
+          <!-- Layout B: Standard/Alternating Overlapping Grids (If both text and image, and NOT Section 3) -->
+          <div *ngIf="(i !== 2 || !sec.text || !sec.image) && sec.text && sec.image">
+            
+            <!-- Even Index: Text Left Overlapping Image Right -->
+            <div *ngIf="i % 2 === 0" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <!-- Text Card -->
+              <div class="lg:col-span-7 bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 z-10 lg:-mr-16 relative">
+                <div *ngIf="sec.title" class="mb-4">
+                  <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }} / AŞAMA DETAYI</span>
+                  <h3 class="text-xl sm:text-2xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
+                  <div class="w-12 h-0.5 bg-beeses-gold mt-2 rounded-full"></div>
+                </div>
+                <p class="text-gray-600 text-base sm:text-lg leading-relaxed font-light text-justify whitespace-pre-wrap">
+                  {{ sec.text }}
+                </p>
+              </div>
+              <!-- Image -->
+              <div class="lg:col-span-5 relative group overflow-hidden rounded-3xl shadow-xl aspect-[4/3] cursor-pointer bg-white border border-gray-100" (click)="openLightbox(sec.image)">
+                <img [src]="getImageUrl(sec.image)" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors flex items-center justify-center">
+                  <lucide-icon name="search" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100"></lucide-icon>
+                </div>
+              </div>
+            </div>
+
+            <!-- Odd Index: Image Left Overlapped by Text Right -->
+            <div *ngIf="i % 2 !== 0" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <!-- Image on Left -->
+              <div class="lg:col-span-5 lg:order-1 order-2 relative group overflow-hidden rounded-3xl shadow-xl aspect-[4/3] cursor-pointer bg-white border border-gray-100" (click)="openLightbox(sec.image)">
+                <img [src]="getImageUrl(sec.image)" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors flex items-center justify-center">
+                  <lucide-icon name="search" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100"></lucide-icon>
+                </div>
+              </div>
+              <!-- Text Card on Right -->
+              <div class="lg:col-span-7 lg:order-2 order-1 bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 z-10 lg:-ml-16 relative">
+                <div *ngIf="sec.title" class="mb-4">
+                  <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }} / AŞAMA DETAYI</span>
+                  <h3 class="text-xl sm:text-2xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
+                  <div class="w-12 h-0.5 bg-beeses-gold mt-2 rounded-full"></div>
+                </div>
+                <p class="text-gray-600 text-base sm:text-lg leading-relaxed font-light text-justify whitespace-pre-wrap">
+                  {{ sec.text }}
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Layout C: Text Only -->
+          <div *ngIf="sec.text && !sec.image" class="max-w-4xl mx-auto bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100">
+            <div *ngIf="sec.title" class="mb-6">
+              <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }} / AŞAMA DETAYI</span>
+              <h3 class="text-xl sm:text-2xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
+              <div class="w-12 h-0.5 bg-beeses-gold mt-2 rounded-full"></div>
+            </div>
+            <p class="text-gray-600 text-base sm:text-lg leading-relaxed font-light text-justify whitespace-pre-wrap" [ngClass]="{'drop-cap': i === 0}">
+              {{ sec.text }}
+            </p>
+          </div>
+
+          <!-- Layout D: Image Only -->
+          <div *ngIf="!sec.text && sec.image" class="max-w-4xl mx-auto bg-white rounded-3xl p-6 shadow-xl border border-gray-100">
+            <div *ngIf="sec.title" class="mb-6">
+              <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }} / AŞAMA DETAYI</span>
+              <h3 class="text-xl sm:text-2xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
+              <div class="w-12 h-0.5 bg-beeses-gold mt-2 rounded-full"></div>
+            </div>
+            <div class="group relative rounded-2xl overflow-hidden shadow-lg aspect-[16/9] cursor-pointer bg-gray-50 border border-gray-100" (click)="openLightbox(sec.image)">
+              <img [src]="getImageUrl(sec.image)" class="w-full h-full object-cover transform group-hover:scale-[1.03] transition-transform duration-500">
+              <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors flex items-center justify-center">
+                <lucide-icon name="search" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100"></lucide-icon>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Other News Section -->
+  <section *ngIf="otherNews.length > 0" class="py-16 border-t border-gray-200 bg-white">
+    <div class="container mx-auto px-6 md:px-12 max-w-5xl">
+      <h2 class="text-2xl font-black text-black tracking-wider uppercase mb-10 text-center">
+        DİĞER <span class="text-beeses-gold">HABERLER & DUYURULAR</span>
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div *ngFor="let item of otherNews" 
+             [routerLink]="['/corporate/components/news', item.id]"
+             class="group relative bg-beeses-silver border border-gray-200 rounded-2xl overflow-hidden hover:border-beeses-gold/50 transition-all duration-500 hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-2xl flex flex-col h-full">
+          
+          <!-- Image Container -->
+          <div class="relative h-48 overflow-hidden shrink-0">
+            <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img [src]="getImageUrl(item.image)" [alt]="item.title" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
+            <div class="absolute top-4 left-4 z-20">
+              <span class="px-3 py-1 bg-beeses-gold text-black text-[9px] font-black tracking-widest uppercase rounded-sm shadow-lg">
+                {{ item.category }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="p-6 flex flex-col flex-grow bg-white">
+            <div class="flex items-center gap-2 text-gray-500 text-[10px] font-semibold tracking-wider mb-2">
+              <lucide-icon name="calendar" class="w-3.5 h-3.5"></lucide-icon>
+              {{ item.formatted_date || item.news_date }}
+            </div>
+            
+            <h3 class="text-md font-bold text-black mb-2 leading-tight tracking-wide group-hover:text-beeses-gold transition-colors duration-300 line-clamp-2">
+              {{ item.title }}
+            </h3>
+            
+            <p class="text-gray-500 text-xs leading-relaxed line-clamp-2 flex-grow mb-4">
+              {{ item.summary }}
+            </p>
+            
+            <div class="flex items-center gap-2 text-beeses-gold text-[10px] font-black tracking-widest uppercase mt-auto pt-3 border-t border-gray-50 group/link">
+              <span>OKU</span>
+              <lucide-icon name="arrow-right" class="w-3.5 h-3.5 transform group-hover/link:translate-x-1 transition-transform duration-300"></lucide-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Lightbox Modal -->
+<div *ngIf="selectedLightboxImage" 
+     class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm animate-fade-in"
+     (click)="closeLightbox()">
+  <!-- Close Button -->
+  <button class="absolute top-6 right-6 text-white hover:text-beeses-gold transition-colors p-2 cursor-pointer z-50">
+    <lucide-icon name="x" class="w-8 h-8"></lucide-icon>
+  </button>
+  
+  <div class="relative max-w-5xl max-h-[90vh] flex items-center justify-center" (click)="$event.stopPropagation()">
+    <img [src]="getImageUrl(selectedLightboxImage)" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-white/10">
+  </div>
+</div>

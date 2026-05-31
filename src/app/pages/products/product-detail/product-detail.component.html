@@ -78,13 +78,13 @@
         <!-- Title Area -->
         <div class="mb-8 border-b border-gray-800 pb-8">
           <h2 class="text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-beeses-gold mb-4 flex items-center gap-2">
-            <div class="w-8 h-[1px] bg-beeses-gold"></div> ODYOFİL SERİSİ
+            <div class="w-8 h-[1px] bg-beeses-gold"></div> {{ product.category }}
           </h2>
           <h1 class="text-4xl md:text-5xl font-light text-white mb-6 tracking-tight leading-[1.1]">
             {{ product.name }}
           </h1>
           <p class="text-sm md:text-base font-bold text-gray-400 tracking-wider">
-            Odyofil Amplifikatör 
+            {{ product.shortDescription }}
             <ng-container *ngIf="product.specs && product.specs.length > 0">| {{ product.specs[0].value }}</ng-container>
             <ng-container *ngIf="product.specs && product.specs.length > 1">| {{ product.specs[1].value }}</ng-container>
           </p>
@@ -93,7 +93,7 @@
         <!-- Description -->
         <div class="mb-12 text-gray-400 font-light leading-relaxed text-sm md:text-base">
           <p [class.line-clamp-3]="!isDescriptionExpanded" class="transition-all duration-500 text-justify pr-4">
-            {{ product.shortDescription }} Detaylı mühendislik ve üstün bileşen kalitesi sayesinde benzersiz bir ses deneyimi yaşatır. Her bir detayı, yüksek çözünürlüklü ve doğal bir ses performansı için optimize edilmiştir.
+            {{ product.description }}
           </p>
           <button (click)="toggleDescription()" class="mt-4 flex items-center gap-2 text-[11px] font-bold text-beeses-gold hover:text-white uppercase tracking-[0.2em] transition-colors">
             {{ isDescriptionExpanded ? 'DAHA AZ GÖSTER' : 'DEVAMINI OKU' }}

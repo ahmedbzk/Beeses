@@ -2,52 +2,73 @@
   position: relative;
   transition: all 0.3s ease;
   white-space: nowrap;
+  color: #fff;
 
   &:hover {
-    color: #fff;
+    color: #000;
   }
 }
 
-.v1-dropdown-simple {
+.v1-dropdown-creative {
   position: absolute;
   top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(15px);
-  min-width: 220px;
-  background: black;
+  min-width: 240px;
+  background: white;
   padding: 1rem;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.3);
-  border-radius: 15px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  border-radius: 24px;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.4s ease;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 100;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  margin-top: 0.25rem;
 
   a {
     display: block;
-    padding: 10px 15px;
+    padding: 12px 20px;
     font-size: 10px;
     font-weight: 800;
-    color: rgba(255,255,255,0.6);
-    text-align: center;
-    transition: all 0.2s ease;
-    border-radius: 8px;
+    color: #555;
+    transition: all 0.3s ease;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    text-align: left;
     text-transform: uppercase;
+    letter-spacing: normal;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 4px;
+        height: 0;
+        background: #b58131;
+        transform: translateY(-50%);
+        transition: height 0.3s ease;
+        border-radius: 0 4px 4px 0;
+    }
 
     &:hover {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
+      background: #fcfcfc;
+      color: #000;
+      padding-left: 28px;
+      
+      &::before {
+          height: 60%;
+      }
     }
   }
 }
 
-.group:hover .v1-dropdown-simple {
+.group\/v1:hover .v1-dropdown-creative {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(5px);
+  transform: translateX(-50%) translateY(0);
 }
 
 .v1-logo-shadow {
@@ -57,4 +78,71 @@
   &:hover {
     filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 1));
   }
+}
+
+.v1-lang-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 160px;
+  background: white;
+  padding: 0.75rem;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  border-radius: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(15px);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 130;
+  margin-top: 0.25rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #555;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: normal;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 4px;
+        height: 0;
+        background: #b58131;
+        transform: translateY(-50%);
+        transition: height 0.3s ease;
+        border-radius: 0 4px 4px 0;
+    }
+
+    &:hover {
+      background: #fcfcfc;
+      color: #000;
+      padding-left: 24px;
+      
+      &::before {
+          height: 60%;
+      }
+    }
+  }
+}
+
+.group\/lang:hover .v1-lang-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }

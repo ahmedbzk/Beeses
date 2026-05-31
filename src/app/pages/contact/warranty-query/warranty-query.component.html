@@ -1,0 +1,223 @@
+<section class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
+  <!-- Background Image with Overlay -->
+  <div class="absolute inset-0 w-full h-full">
+    <img src="assets/backgrounds/bg1.jpg" alt="Warranty Query Hero" class="w-full h-full object-cover opacity-60" />
+    <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/95 via-beeses-dark/70 to-beeses-silver"></div>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-6 md:pb-12">
+    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">Garanti Sorgulama</span>
+    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">GARANTİ DURUMU</h1>
+    <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
+    <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
+      Cihazınızın seri numarasını girerek garanti geçerlilik durumunu ve kalan süresini anında sorgulayabilirsiniz.
+    </p>
+  </div>
+</section>
+
+<!-- Content Section -->
+<section class="relative w-full bg-beeses-silver py-16 overflow-hidden -mt-px min-h-[500px]">
+  <div class="contact-bg-text">BEESES</div>
+  <div class="px-4 md:px-8 max-w-4xl mx-auto relative z-10">
+    
+    <!-- Form Card -->
+    <div class="bg-white border border-gray-200 shadow-2xl rounded-2xl p-8 md:p-10 mb-10 transition-all duration-300">
+      <h2 class="text-2xl font-bold text-beeses-dark mb-6 text-center">Garanti Bilgilerini Sorgula</h2>
+      
+      <form [formGroup]="queryForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          
+          <!-- Serial Number Input -->
+          <div class="space-y-2">
+            <label for="serial_number" class="block text-sm font-bold text-beeses-dark">Ürün Seri Numarası *</label>
+            <div class="relative">
+              <input type="text" id="serial_number" formControlName="serial_number" (input)="onSerialNumberInput($event)"
+                class="w-full pl-10 pr-4 h-[46px] rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors font-mono uppercase"
+                [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': queryForm.get('serial_number')?.invalid && queryForm.get('serial_number')?.touched}"
+                placeholder="ÖRN: 440011112222" maxlength="12">
+              <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+                <lucide-icon name="hash" class="w-4 h-4"></lucide-icon>
+              </div>
+            </div>
+            <p *ngIf="queryForm.get('serial_number')?.touched && queryForm.get('serial_number')?.errors?.['required']"
+              class="text-red-500 text-xs mt-1 font-medium">
+              Seri numarası alanı zorunludur.
+            </p>
+            <p *ngIf="queryForm.get('serial_number')?.touched && (queryForm.get('serial_number')?.errors?.['minlength'] || queryForm.get('serial_number')?.errors?.['maxlength'])"
+              class="text-red-500 text-xs mt-1 font-medium">
+              Seri numarası 10 ile 12 hane arasında olmalıdır.
+            </p>
+          </div>
+
+          <!-- Captcha Box and Input -->
+          <div class="space-y-2">
+            <label for="captcha_input" class="block text-sm font-bold text-beeses-dark">Güvenlik Kodu *</label>
+            <div class="flex items-center gap-3">
+              <!-- Styled Captcha Display -->
+              <div class="captcha-box flex items-center justify-center select-none bg-beeses-dark text-beeses-gold font-bold tracking-widest text-lg rounded-lg border border-beeses-gold/30 w-32 h-[46px] px-3 font-mono relative overflow-hidden flex-shrink-0">
+                <span class="rotate-[-6deg] inline-block tracking-[0.2em] transform scale-110 italic">{{ captchaCode }}</span>
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#B58131_1px,transparent_1px)] [background-size:8px_8px]"></div>
+              </div>
+              
+              <!-- Refresh button -->
+              <button type="button" (click)="generateCaptcha()" class="h-[46px] w-[46px] flex items-center justify-center bg-gray-100 hover:bg-gray-200 border border-gray-200 text-gray-600 rounded-lg hover:text-beeses-gold transition-colors cursor-pointer flex-shrink-0" title="Kodu Yenile">
+                <lucide-icon name="refresh-cw" class="w-4 h-4"></lucide-icon>
+              </button>
+
+              <!-- Captcha input -->
+              <input type="text" id="captcha_input" formControlName="captcha_input"
+                class="flex-1 min-w-0 px-4 h-[46px] py-0 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors font-mono uppercase text-center"
+                [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': queryForm.get('captcha_input')?.invalid && queryForm.get('captcha_input')?.touched}"
+                placeholder="Kodu girin">
+            </div>
+            <p *ngIf="queryForm.get('captcha_input')?.invalid && queryForm.get('captcha_input')?.touched"
+              class="text-red-500 text-xs mt-1 font-medium">
+              Güvenlik kodunu girmelisiniz.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="isSubmitting"
+          class="w-full py-4 px-6 rounded-lg bg-beeses-gold hover:bg-beeses-dark hover:text-beeses-gold text-white font-bold tracking-wider uppercase text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg cursor-pointer">
+          <lucide-icon *ngIf="!isSubmitting" name="search" class="w-5 h-5"></lucide-icon>
+          <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-3 h-5 w-5 text-current"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+          {{ isSubmitting ? 'SORGULANIYOR...' : 'GARANTİ SORGULA' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Error Message Alert -->
+    <div *ngIf="errorMessage && !isSubmitting" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl flex items-start gap-3 animate-fade-in shadow-md mb-8">
+      <lucide-icon name="alert-triangle" class="w-5 h-5 mt-0.5 flex-shrink-0 text-red-500"></lucide-icon>
+      <div>
+        <p class="font-bold text-sm">Hata</p>
+        <p class="text-xs mt-1 leading-relaxed text-red-600">{{ errorMessage }}</p>
+      </div>
+    </div>
+
+    <!-- Info Message Alert (Pending/Rejected info) -->
+    <div *ngIf="infoMessage" 
+         class="px-6 py-5 rounded-xl flex items-start gap-4 animate-fade-in shadow-md mb-8 border transition-all"
+         [ngClass]="{
+           'bg-red-50 border-red-200 text-red-800': queryStatus === 'rejected',
+           'bg-yellow-50 border-yellow-200 text-yellow-800': queryStatus === 'pending'
+         }">
+      <lucide-icon name="info" 
+                   class="w-5 h-5 flex-shrink-0 mt-0.5"
+                   [ngClass]="queryStatus === 'rejected' ? 'text-red-500' : 'text-yellow-600'"></lucide-icon>
+      <div class="flex-grow">
+        <p class="font-bold text-sm uppercase tracking-wider mb-1" [ngClass]="queryStatus === 'rejected' ? 'text-red-900' : 'text-yellow-900'">Başvuru Durumu</p>
+        <p class="text-xs leading-relaxed font-semibold">{{ infoMessage }}</p>
+        
+        <!-- İletişime Geç Butonu (Sadece Reddedilen Durumda) -->
+        <button *ngIf="queryStatus === 'rejected'" 
+                (click)="navigateToContact()" 
+                class="mt-4 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-black transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer w-max uppercase tracking-widest hover:-translate-y-0.5 transform">
+          <lucide-icon name="mail" class="w-4 h-4"></lucide-icon> İletişime Geç
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Display -->
+    <div *ngIf="result" class="bg-white border border-gray-200 shadow-2xl rounded-2xl overflow-hidden animate-fade-in">
+      <div class="bg-beeses-dark p-6 border-b border-beeses-gold/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <lucide-icon name="shield-check" class="w-5 h-5 text-beeses-gold"></lucide-icon>
+          Garanti Sorgulama Sonucu
+        </h3>
+        
+        <!-- Status Badge -->
+        <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-md animate-pulse"
+              [ngClass]="{
+                'bg-green-500 text-white': result.status === 'active',
+                'bg-gray-500 text-white': result.status === 'passive'
+              }">
+          <span class="w-2 h-2 rounded-full bg-white"></span>
+          {{ result.status === 'active' ? 'AKTİF' : 'PASİF (SÜRESİ DOLMUŞ)' }}
+        </span>
+      </div>
+
+      <div class="p-6 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          
+          <!-- Product Image -->
+          <div class="md:col-span-4 flex justify-center">
+            <div class="relative bg-gray-50 p-4 rounded-2xl border border-gray-100 shadow-inner group">
+              <img [src]="result.product_image.startsWith('assets') ? result.product_image : apiUrl + '/' + result.product_image" 
+                   [alt]="result.product_name"
+                   class="max-h-[160px] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                   onerror="this.src='assets/logo.png'">
+            </div>
+          </div>
+
+          <!-- Warranty Details -->
+          <div class="md:col-span-8 space-y-6">
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Ürün Modeli</p>
+                <p class="text-lg font-bold text-beeses-dark">{{ result.product_name }}</p>
+              </div>
+              
+              <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Seri Numarası</p>
+                <p class="text-sm font-mono font-bold text-beeses-gold tracking-wider bg-beeses-dark/5 px-3 py-1 rounded-md w-max">{{ result.serial_number | uppercase }}</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 pt-4 border-t border-gray-100">
+              <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Garanti Başlangıcı</p>
+                <div class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <lucide-icon name="calendar-days" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+                  {{ result.start_date | date:'dd.MM.yyyy' }}
+                </div>
+              </div>
+
+              <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Garanti Bitişi</p>
+                <div class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <lucide-icon name="calendar-check" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+                  {{ result.end_date | date:'dd.MM.yyyy' }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Bar & Remaining Days -->
+            <div class="pt-6 border-t border-gray-100">
+              <div class="text-center text-xs font-bold mb-2">
+                <span class="text-gray-400 uppercase tracking-widest">Garanti Süreci</span>
+              </div>
+              
+              <!-- Premium Progress Bar -->
+              <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden border border-gray-200/50 shadow-inner">
+                <div class="h-full rounded-full transition-all duration-1000 shadow-md"
+                     [ngClass]="{
+                       'bg-gradient-to-r from-beeses-gold to-yellow-500 shadow-beeses-gold/20': result.status === 'active',
+                       'bg-gray-400': result.status === 'passive'
+                     }"
+                     [style.width.%]="getWarrantyProgress(result.start_date, result.end_date)">
+                </div>
+              </div>
+              <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wider">
+                <span>0 Ay</span>
+                <span>12 Ay</span>
+                <span>24 Ay</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

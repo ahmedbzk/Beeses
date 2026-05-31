@@ -12,7 +12,9 @@ import { DistributorsComponent } from './pages/distributors/distributors.compone
 
 import { CertificatesComponent } from './pages/corporate/components/certificates/certificates.component';
 import { NewsListComponent } from './pages/corporate/components/news/news.component';
-import { WarrantyComponent } from './pages/warranty/warranty.component';
+import { NewsDetailComponent } from './pages/corporate/components/news/news-detail/news-detail.component';
+import { WarrantyComponent } from './pages/contact/warranty/warranty.component';
+import { WarrantyQueryComponent } from './pages/contact/warranty-query/warranty-query.component';
 import { InnovationComponent } from './pages/products/innovation/innovation.component';
 
 export const routes: Routes = [
@@ -25,6 +27,7 @@ export const routes: Routes = [
       { path: 'components/sss', component: SssComponent },
       { path: 'components/certificates', component: CertificatesComponent },
       { path: 'components/news', component: NewsListComponent },
+      { path: 'components/news/:id', component: NewsDetailComponent },
       // { path: 'components/references', component: ReferencesComponent },
       // { path: 'components/team', component: TeamComponent }
     ]
@@ -33,8 +36,14 @@ export const routes: Routes = [
   { path: 'products/innovation', component: InnovationComponent },
   { path: 'products/:id', component: ProductDetailComponent },
   { path: 'distributors', component: DistributorsComponent },
-  { path: 'contact', component: ContactComponent },
-  { path: 'warranty', component: WarrantyComponent },
+  {
+    path: 'contact',
+    children: [
+      { path: '', component: ContactComponent },
+      { path: 'warranty', component: WarrantyComponent },
+      { path: 'warranty-query', component: WarrantyQueryComponent }
+    ]
+  },
   { path: 'admin', loadChildren: () => import('./admin/admin.routes').then(m => m.adminRoutes) },
   { path: 'header-demo', loadComponent: () => import('./pages/header-demo/header-demo.component').then(m => m.HeaderDemoComponent) },
   { path: '**', redirectTo: '' }

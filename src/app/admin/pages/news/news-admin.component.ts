@@ -11,7 +11,7 @@ import { environment } from '../../../../environments/environment';
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule],
   template: `
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden font-sans">
       <!-- Header -->
       <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50/50">
         <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
@@ -166,9 +166,9 @@ import { environment } from '../../../../environments/environment';
 
     <!-- Add/Edit Modal -->
     <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-sm animate-fade-in">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-100">
         <!-- Modal Header -->
-        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 font-bold">
           <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
             <lucide-icon name="file-text" class="w-5 h-5 text-beeses-gold"></lucide-icon>
             {{ editingItem ? 'Haber Düzenle' : 'Yeni Haber Ekle' }}
@@ -179,32 +179,33 @@ import { environment } from '../../../../environments/environment';
         </div>
 
         <!-- Modal Body -->
-        <div class="p-6 overflow-y-auto flex-grow space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-6 overflow-y-auto flex-grow space-y-5">
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Title -->
             <div class="md:col-span-2">
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Başlık *</label>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Haber Başlığı *</label>
               <input type="text" [(ngModel)]="formData.title" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Haber başlığı yazın...">
+            </div>
+            
+            <!-- Category -->
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Kategori *</label>
+              <select [(ngModel)]="formData.category" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all cursor-pointer">
+                <option value="Haber">Haber</option>
+                <option value="Duyuru">Duyuru</option>
+                <option value="Etkinlik">Etkinlik</option>
+              </select>
             </div>
           </div>
 
           <div>
-            <!-- Category -->
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Kategori *</label>
-            <select [(ngModel)]="formData.category" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all cursor-pointer">
-              <option value="Haber">Haber</option>
-              <option value="Duyuru">Duyuru</option>
-              <option value="Etkinlik">Etkinlik</option>
-            </select>
-          </div>
-
-          <div>
-            <!-- Image File Upload -->
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Haber Görseli *</label>
+            <!-- Image File Upload (Cover) -->
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Ana Kapak Görseli *</label>
             <div class="flex items-center gap-4 bg-gray-50 border border-gray-200 rounded-xl p-3">
               <input type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden" #fileInput>
               <button type="button" (click)="fileInput.click()" class="px-4 py-2 bg-beeses-gold/10 text-beeses-gold hover:bg-beeses-gold hover:text-white rounded-lg text-xs font-bold transition-all cursor-pointer">
-                Görsel Seç
+                Kapak Seç
               </button>
               <span class="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-xs">
                 {{ selectedFile ? selectedFile.name : (editingItem ? 'Mevcut görseli koru' : 'Dosya seçilmedi') }}
@@ -218,14 +219,63 @@ import { environment } from '../../../../environments/environment';
           <!-- Summary -->
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Kısa Özet *</label>
-            <textarea [(ngModel)]="formData.summary" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Ana sayfada ve kart listesinde görünecek kısa özet metni..."></textarea>
+            <textarea [(ngModel)]="formData.summary" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Haber kartı listesinde görünecek kısa giriş metni..."></textarea>
           </div>
 
-          <!-- Content -->
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Detaylı İçerik *</label>
-            <textarea [(ngModel)]="formData.content" rows="6" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Detay pop-up modunda görünecek uzun haber içeriği..."></textarea>
+          <!-- Editorial Stages/Sections (4 Tabs) -->
+          <div class="border-t border-gray-100 pt-5">
+            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Haber Aşamaları / Bölümleri (İç İçe Metin & Görsel)</label>
+            
+            <!-- Stage Tabs -->
+            <div class="flex border-b border-gray-200 mb-4 bg-gray-50/50 rounded-t-xl overflow-hidden">
+              <button *ngFor="let tabIdx of [0, 1, 2, 3]" type="button"
+                      (click)="activeSectionTab = tabIdx"
+                      [class]="activeSectionTab === tabIdx ? 'border-beeses-gold text-beeses-gold bg-white' : 'border-transparent text-gray-500 hover:text-beeses-dark hover:bg-gray-50/30'"
+                      class="flex-1 px-4 py-3 border-b-2 font-bold text-xs uppercase tracking-wider outline-none cursor-pointer transition-all">
+                Aşama {{ tabIdx + 1 }}
+              </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div *ngFor="let tabIdx of [0, 1, 2, 3]">
+              <div *ngIf="activeSectionTab === tabIdx" class="space-y-4 animate-fade-in p-2">
+                <!-- Section Title -->
+                <div>
+                  <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Aşama {{ tabIdx + 1 }} Başlığı</label>
+                  <input type="text" [(ngModel)]="sectionTitles[tabIdx]" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Aşama {{ tabIdx + 1 }} başlığını buraya yazın...">
+                </div>
+
+                <!-- Section Text -->
+                <div>
+                  <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Aşama {{ tabIdx + 1 }} Metin İçeriği</label>
+                  <textarea [(ngModel)]="sectionTexts[tabIdx]" rows="4" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Aşama {{ tabIdx + 1 }} metnini buraya yazın..."></textarea>
+                </div>
+                
+                <!-- Section Image File Upload -->
+                <div>
+                  <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Aşama {{ tabIdx + 1 }} Görseli (İsteğe Bağlı)</label>
+                  <div class="flex items-center gap-4 bg-gray-50 border border-gray-200 rounded-xl p-3">
+                    <input type="file" (change)="onSectionFileSelected($event, tabIdx)" accept="image/*" class="hidden" #secFileInput>
+                    <button type="button" (click)="secFileInput.click()" class="px-4 py-2 bg-beeses-gold/10 text-beeses-gold hover:bg-beeses-gold hover:text-white rounded-lg text-xs font-bold transition-all cursor-pointer">
+                      Görsel Seç
+                    </button>
+                    <button *ngIf="getSectionSlotImage(tabIdx)" type="button" (click)="removeSectionImage(tabIdx)" class="px-3 py-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5">
+                      <lucide-icon name="trash" class="w-3.5 h-3.5"></lucide-icon>
+                      Görseli Sil
+                    </button>
+                    <span class="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-xs" *ngIf="!getSectionSlotImage(tabIdx)">
+                      Görsel yüklenmedi
+                    </span>
+                    <div *ngIf="getSectionSlotImage(tabIdx) as imgUrl" class="w-12 h-12 rounded overflow-hidden border border-gray-200 shrink-0 ml-auto bg-white">
+                      <img [src]="imgUrl" class="w-full h-full object-cover">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
+
         </div>
 
         <!-- Modal Footer -->
@@ -235,7 +285,7 @@ import { environment } from '../../../../environments/environment';
           </button>
           
           <button (click)="saveNews()" 
-                  [disabled]="!formData.title || !formData.category || (!selectedFile && !formData.image) || !formData.summary || !formData.content" 
+                  [disabled]="!formData.title || !formData.category || (!selectedFile && !formData.image) || !formData.summary" 
                   class="px-5 py-2.5 rounded-xl bg-beeses-gold hover:bg-beeses-dark text-white font-bold text-sm transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
             Kaydet
           </button>
@@ -247,7 +297,7 @@ import { environment } from '../../../../environments/environment';
     <div *ngIf="showConfirmModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-sm animate-fade-in">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col transform scale-100 transition-all duration-300">
         <!-- Header -->
-        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 font-bold">
           <h2 class="text-md font-bold text-beeses-dark flex items-center gap-2">
             <lucide-icon [name]="confirmModalType === 'danger' ? 'trash' : 'check'" 
                          [class]="confirmModalType === 'danger' ? 'w-5 h-5 text-red-500' : 'w-5 h-5 text-beeses-gold'"></lucide-icon>
@@ -288,6 +338,14 @@ export class NewsAdminComponent implements OnInit {
   isLoading = true;
   selectedFile: File | null = null;
   imagePreviewUrl: string | null = null;
+
+  // Tabbed editorial section stage selection
+  activeSectionTab = 0;
+  sectionTitles: string[] = ['', '', '', ''];
+  sectionTexts: string[] = ['', '', '', ''];
+  sectionFiles: (File | null)[] = [null, null, null, null];
+  sectionPreviews: (string | null)[] = [null, null, null, null];
+  existingSectionImages: (string | null)[] = [null, null, null, null];
 
   // Filter & Search states
   searchQuery = '';
@@ -412,32 +470,43 @@ export class NewsAdminComponent implements OnInit {
 
   openAddModal() {
     this.editingItem = null;
-    
-    // Get local date-time formatted as YYYY-MM-DDTHH:MM
-    const now = new Date();
-    const tzOffset = now.getTimezoneOffset() * 60000;
-    const localISOTime = (new Date(now.getTime() - tzOffset)).toISOString().slice(0, 16);
+    this.selectedFile = null;
+    this.imagePreviewUrl = null;
+    this.activeSectionTab = 0;
+
+    // Reset sekmeli haber yapılandırması
+    this.sectionTitles = ['', '', '', ''];
+    this.sectionTexts = ['', '', '', ''];
+    this.sectionFiles = [null, null, null, null];
+    this.sectionPreviews = [null, null, null, null];
+    this.existingSectionImages = [null, null, null, null];
 
     this.formData = {
       title: '',
       category: 'Haber',
       image: '',
-      summary: '',
-      content: ''
+      summary: ''
     };
     this.showModal = true;
   }
 
   openEditModal(item: News) {
     this.editingItem = item;
-    
-    // Format existing news_date from "YYYY-MM-DD HH:MM:SS" into "YYYY-MM-DDTHH:MM" format
-    let dateStr = item.news_date;
-    if (dateStr) {
-      dateStr = dateStr.replace(' ', 'T').substring(0, 16);
-    }
+    this.selectedFile = null;
+    this.imagePreviewUrl = null;
+    this.activeSectionTab = 0;
 
-    this.formData = { ...item, news_date: dateStr };
+    // Reset files and previews
+    this.sectionFiles = [null, null, null, null];
+    this.sectionPreviews = [null, null, null, null];
+
+    // Populate from section data
+    const currentSections = item.sections && Array.isArray(item.sections) ? item.sections : [];
+    this.sectionTitles = Array.from({ length: 4 }, (_, idx) => currentSections[idx]?.title || '');
+    this.sectionTexts = Array.from({ length: 4 }, (_, idx) => currentSections[idx]?.text || '');
+    this.existingSectionImages = Array.from({ length: 4 }, (_, idx) => currentSections[idx]?.image || null);
+
+    this.formData = { ...item };
     this.showModal = true;
   }
 
@@ -447,6 +516,12 @@ export class NewsAdminComponent implements OnInit {
     this.formData = {};
     this.selectedFile = null;
     this.imagePreviewUrl = null;
+    this.sectionTitles = ['', '', '', ''];
+    this.sectionTexts = ['', '', '', ''];
+    this.sectionFiles = [null, null, null, null];
+    this.sectionPreviews = [null, null, null, null];
+    this.existingSectionImages = [null, null, null, null];
+    this.activeSectionTab = 0;
   }
 
   onFileSelected(event: any) {
@@ -461,18 +536,42 @@ export class NewsAdminComponent implements OnInit {
     }
   }
 
+  onSectionFileSelected(event: any, idx: number) {
+    const file = event.target.files[0];
+    if (file) {
+      this.sectionFiles[idx] = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.sectionPreviews[idx] = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  getSectionSlotImage(idx: number): string | null {
+    if (this.sectionPreviews[idx]) return this.sectionPreviews[idx];
+    if (this.existingSectionImages[idx]) return this.getImageUrl(this.existingSectionImages[idx]!);
+    return null;
+  }
+
+  removeSectionImage(idx: number) {
+    this.sectionFiles[idx] = null;
+    this.sectionPreviews[idx] = null;
+    this.existingSectionImages[idx] = null;
+  }
+
   getImageUrl(imagePath: string | undefined): string {
     if (!imagePath) {
       return 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop';
     }
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('assets/')) {
       return imagePath;
     }
     return `${this.apiUrl}/${imagePath}`;
   }
 
   saveNews() {
-    if (!this.formData.title || !this.formData.category || (!this.selectedFile && !this.formData.image) || !this.formData.summary || !this.formData.content) return;
+    if (!this.formData.title || !this.formData.category || (!this.selectedFile && !this.formData.image) || !this.formData.summary) return;
 
     const isEdit = !!(this.editingItem && this.editingItem.id);
     const title = isEdit ? 'Güncellemeyi Onayla' : 'Yeni Haber Ekle';
@@ -493,15 +592,22 @@ export class NewsAdminComponent implements OnInit {
     formDataPayload.append('title', this.formData.title || '');
     formDataPayload.append('category', this.formData.category || '');
     formDataPayload.append('summary', this.formData.summary || '');
-    formDataPayload.append('content', this.formData.content || '');
-    if (this.formData.news_date) {
-      formDataPayload.append('news_date', this.formData.news_date);
-    }
+    
     if (this.formData.image) {
       formDataPayload.append('image', this.formData.image);
     }
     if (this.selectedFile) {
       formDataPayload.append('image_file', this.selectedFile);
+    }
+
+    // Append sections payload
+    for (let i = 0; i < 4; i++) {
+      formDataPayload.append('section_title_' + i, this.sectionTitles[i] || '');
+      formDataPayload.append('section_text_' + i, this.sectionTexts[i] || '');
+      formDataPayload.append('section_existing_image_' + i, this.existingSectionImages[i] || '');
+      if (this.sectionFiles[i]) {
+        formDataPayload.append('section_image_file_' + i, this.sectionFiles[i]!);
+      }
     }
 
     if (this.editingItem && this.editingItem.id) {

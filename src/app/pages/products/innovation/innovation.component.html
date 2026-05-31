@@ -80,6 +80,7 @@
     <!-- Bülten Kayıt -->
     <div class="mt-24 p-12 bg-beeses-dark rounded-[40px] text-center space-y-8 relative overflow-hidden">
       <div class="absolute top-0 right-0 w-64 h-64 bg-beeses-gold/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+      <div class="absolute bottom-0 left-0 w-48 h-48 bg-beeses-gold/5 rounded-full blur-3xl -ml-24 -mb-24"></div>
       
       <div class="relative z-10 space-y-4">
         <h2 class="text-3xl md:text-4xl font-black text-white tracking-tight">GELECEĞİ KAÇIRMAYIN</h2>
@@ -88,13 +89,38 @@
         </p>
       </div>
 
-      <div class="relative z-10 flex flex-col sm:flex-row gap-4 max-w-lg mx-auto pt-4">
-        <input type="email" placeholder="E-POSTA ADRESİNİZ" 
-               class="flex-grow px-8 py-5 bg-white/5 border border-white/10 text-white rounded-2xl focus:outline-none focus:border-beeses-gold transition-colors text-xs font-bold tracking-widest">
-        <button class="px-10 py-5 bg-beeses-gold text-white hover:bg-white hover:text-beeses-dark transition-all duration-500 rounded-2xl text-xs font-black tracking-widest shadow-xl shadow-beeses-gold/20">
-          KAYDOL
-        </button>
+      <!-- Başarı Mesajı -->
+      <div *ngIf="newsletterSuccess" class="relative z-10 max-w-md mx-auto animate-fade-in">
+        <div class="flex items-center gap-4 bg-green-500/10 border border-green-500/30 rounded-2xl p-5">
+          <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center shrink-0">
+            <lucide-icon name="check-circle" class="w-6 h-6 text-green-400"></lucide-icon>
+          </div>
+          <div class="text-left">
+            <p class="text-green-300 font-bold text-sm">Aboneliğiniz Onaylandı! 🎉</p>
+            <p class="text-green-400/70 text-xs mt-0.5">Yeni ürün duyurularında sizi haberdar edeceğiz.</p>
+          </div>
+        </div>
       </div>
+
+      <!-- Hata Mesajı -->
+      <div *ngIf="newsletterError" class="relative z-10 max-w-md mx-auto animate-fade-in">
+        <div class="flex items-center gap-4 bg-red-500/10 border border-red-500/30 rounded-2xl p-4">
+          <lucide-icon name="x" class="w-5 h-5 text-red-400 shrink-0"></lucide-icon>
+          <p class="text-red-300 font-bold text-sm text-left">{{ newsletterError }}</p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form *ngIf="!newsletterSuccess" (ngSubmit)="subscribeNewsletter()" class="relative z-10 flex flex-col sm:flex-row gap-4 max-w-lg mx-auto pt-4">
+        <input type="email" [(ngModel)]="newsletterEmail" name="newsletterEmail"
+               placeholder="E-POSTA ADRESİNİZ" required [disabled]="newsletterLoading"
+               class="flex-grow px-8 py-5 bg-white/5 border border-white/10 text-white rounded-2xl focus:outline-none focus:border-beeses-gold transition-colors text-xs font-bold tracking-widest disabled:opacity-50">
+        <button type="submit" [disabled]="newsletterLoading || !newsletterEmail"
+                class="inline-flex items-center justify-center gap-2 px-10 py-5 bg-beeses-gold text-white hover:bg-white hover:text-beeses-dark transition-all duration-500 rounded-2xl text-xs font-black tracking-widest shadow-xl shadow-beeses-gold/20 disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
+          <lucide-icon *ngIf="newsletterLoading" name="loader" class="w-4 h-4 animate-spin"></lucide-icon>
+          {{ newsletterLoading ? 'KAYDEDİLİYOR...' : 'KAYDOL' }}
+        </button>
+      </form>
     </div>
   </div>
 </section>

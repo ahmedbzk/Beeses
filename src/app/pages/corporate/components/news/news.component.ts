@@ -28,10 +28,6 @@ export class NewsListComponent implements OnInit {
   currentPage = 1;
   pageSize = 6;
 
-  // Selected News for Detail Modal
-  selectedNews: News | null = null;
-  showDetailModal = false;
-
   ngOnInit() {
     this.loadNews();
   }
@@ -83,21 +79,11 @@ export class NewsListComponent implements OnInit {
     this.currentPage = 1;
   }
 
-  openDetail(item: News) {
-    this.selectedNews = item;
-    this.showDetailModal = true;
-  }
-
-  closeDetail() {
-    this.selectedNews = null;
-    this.showDetailModal = false;
-  }
-
   getImageUrl(imagePath: string | undefined): string {
     if (!imagePath) {
       return 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop';
     }
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('assets/')) {
       return imagePath;
     }
     return `${environment.apiUrl}/${imagePath}`;

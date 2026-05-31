@@ -1,15 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
+import { FormsModule } from '@angular/forms';
+import { NewsletterService } from '../../../services/newsletter.service';
 
 @Component({
   selector: 'app-innovation',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, FormsModule],
   templateUrl: './innovation.component.html',
   styleUrl: './innovation.component.scss'
 })
 export class InnovationComponent {
+  private newsletterService = inject(NewsletterService);
+
+  // Newsletter state
+  newsletterEmail: string = '';
+  newsletterLoading: boolean = false;
+  newsletterSuccess: boolean = false;
+  newsletterError: string = '';
+
+  subscribeNewsletter(): void {
+    if (!this.newsletterEmail || this.newsletterLoading) return;
+    this.newsletterLoading = true;
+    this.newsletterError = '';
+
+    this.newsletterService.subscribe(this.newsletterEmail).subscribe({
+      next: (res) => {
+        this.newsletterLoading = false;
+        if (res.success) {
+          this.newsletterSuccess = true;
+        } else {
+          this.newsletterError = res.message || 'Bir hata oluştu.';
+        }
+      },
+      error: () => {
+        this.newsletterLoading = false;
+        this.newsletterError = 'Sunucu bağlantısı kurulamadı.';
+      }
+    });
+  }
+
   upcomingProducts = [
     {
       id: 1,

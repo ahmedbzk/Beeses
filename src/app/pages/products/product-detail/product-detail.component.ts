@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { ProductService, Product } from '../../../services/product.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-product-detail',
@@ -12,45 +13,58 @@ import { ProductService, Product } from '../../../services/product.service';
   styleUrl: './product-detail.component.scss'
 })
 export class ProductDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private productService = inject(ProductService);
+
   product: Product | undefined;
   isLoading: boolean = true;
-  activeTab: string = 'specs'; // Renamed from activeAccordion for tab functionality
-  // Description State
+  activeTab: string = 'specs'; 
   isDescriptionExpanded: boolean = false;
   
-  // Gallery & Zoom State
   selectedImage: string = '';
   selectedIndex: number = 0;
   isModalOpen: boolean = false;
   zoomPosition: { x: number, y: number } = { x: 50, y: 50 };
   isZooming: boolean = false;
-
-  constructor(
-    private route: ActivatedRoute,
-    private productService: ProductService
-  ) {}
+  apiUrl = environment.apiUrl;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.isLoading = true;
-      const id = params.get('id');
+      const slug = params.get('id');
       
-      // Simulating network delay
-      setTimeout(() => {
-        if (id) {
-          this.product = this.productService.getProductById(id);
-          if (this.product) {
-            if (this.product.images && this.product.images.length > 0) {
-              this.selectedImage = this.product.images[0];
-              this.selectedIndex = 0;
-            } else {
-              this.selectedImage = this.product.image;
-              this.selectedIndex = 0;
+      if (slug) {
+        this.productService.getProductBySlug(slug).subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.product = response.data;
+              if (this.product) {
+                // Map all local/uploaded image URLs
+                if (this.product.images && this.product.images.length > 0) {
+                  this.product.images = this.product.images.map(img => this.getImageUrl(img));
+                  this.selectedImage = this.product.images[0];
+                  this.selectedIndex = 0;
+                } else {
+                  this.product.image = this.getImageUrl(this.product.image);
+                  this.selectedImage = this.product.image;
+                  this.selectedIndex = 0;
+                }
+
+                if (this.product.pdfUrl) {
+                  this.product.pdfUrl = this.getImageUrl(this.product.pdfUrl);
+                }
+              }
             }
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error('Urun detaylari yuklenirken hata:', err);
+            this.isLoading = false;
           }
-        }
+        });
+      } else {
         this.isLoading = false;
-      }, 600);
+      }
     });
   }
 
@@ -105,4 +119,13 @@ export class ProductDetailComponent implements OnInit {
   onMouseLeave(): void {
     this.isZooming = false;
   }
+
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('assets/')) {
+      return imagePath;
+    }
+    return `${this.apiUrl}/${imagePath}`;
+  }
 }
+

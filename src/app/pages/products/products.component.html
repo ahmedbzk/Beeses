@@ -104,7 +104,7 @@
           <div *ngIf="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             
             <!-- Product Card -->
-            <a *ngFor="let product of filteredProducts" [routerLink]="['/products', product.id]" 
+            <a *ngFor="let product of filteredProducts" [routerLink]="['/products', product.slug]" 
                class="group bg-white rounded-2xl overflow-hidden shadow-[0_5px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 flex flex-col cursor-pointer animate-fade-in">
               
               <!-- Image Area -->
@@ -114,7 +114,7 @@
                   {{ product.category }}
                 </div>
                 
-                <img [src]="product.image" [alt]="product.name" class="max-w-full max-h-full object-contain filter drop-shadow-xl transition-transform duration-700 group-hover:scale-110">
+                <img [src]="getImageUrl(product.image)" [alt]="product.name" class="max-w-full max-h-full object-contain filter drop-shadow-xl transition-transform duration-700 group-hover:scale-110">
                 
                 <!-- Hover Overlay -->
                 <div class="absolute inset-0 bg-beeses-dark/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -141,5 +141,115 @@
       </div>
       
     </div>
+  </div>
+</section>
+
+<!-- ===== BÜLTEN ABONELIK BÖLÜMÜ - CARD TASARIM ===== -->
+<section class="bg-beeses-silver py-16 md:py-24">
+  <div class="container mx-auto px-4 md:px-8 lg:px-12">
+
+    <!-- Floating Card -->
+    <div class="relative max-w-4xl mx-auto rounded-[2.5rem] overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.18)]">
+
+      <!-- Arka plan: koyu + gold gradyan -->
+      <div class="absolute inset-0 bg-beeses-dark"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-beeses-dark via-[#1c1810] to-beeses-dark"></div>
+
+      <!-- Dekoratif daireler -->
+      <div class="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-beeses-gold/10 blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-beeses-gold/8 blur-3xl pointer-events-none"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border border-beeses-gold/5 pointer-events-none"></div>
+      <div class="absolute top-1/2 right-0 -translate-y-1/2 w-px h-3/4 bg-gradient-to-b from-transparent via-beeses-gold/20 to-transparent pointer-events-none"></div>
+
+      <!-- İçerik -->
+      <div class="relative z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 p-10 md:p-14 lg:p-16">
+
+        <!-- Sol: Metin -->
+        <div class="flex-1 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 bg-beeses-gold/15 border border-beeses-gold/25 rounded-full px-4 py-1.5 mb-5">
+            <lucide-icon name="bell" class="w-3.5 h-3.5 text-beeses-gold"></lucide-icon>
+            <span class="text-beeses-gold text-[10px] font-black tracking-[0.35em] uppercase">Bülten</span>
+          </div>
+
+          <h2 class="text-3xl md:text-4xl font-black text-white leading-tight mb-4">
+            Yeni Ürünleri<br>
+            <span class="text-beeses-gold">İlk Siz Keşfedin</span>
+          </h2>
+
+          <p class="text-white/45 text-sm md:text-base leading-relaxed max-w-sm">
+            Yeni lansmanlar, özel koleksiyonlar ve ses dünyasındaki gelişmeler için bültenimize abone olun.
+          </p>
+
+          <!-- Güven rozetleri -->
+          <div class="mt-6 flex flex-wrap gap-4 justify-center lg:justify-start">
+            <div class="flex items-center gap-1.5 text-white/30 text-xs">
+              <lucide-icon name="shield-check" class="w-3.5 h-3.5 text-beeses-gold/50"></lucide-icon>
+              <span>Spam yok</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-white/30 text-xs">
+              <lucide-icon name="x" class="w-3.5 h-3.5 text-beeses-gold/50"></lucide-icon>
+              <span>İstediğin zaman çık</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sağ: Form -->
+        <div class="flex-1 w-full max-w-md">
+
+          <!-- Başarı Mesajı -->
+          <div *ngIf="newsletterSuccess" class="animate-fade-in">
+            <div class="flex items-center gap-4 bg-green-500/10 border border-green-500/25 rounded-2xl p-6">
+              <div class="w-14 h-14 rounded-2xl bg-green-500/15 flex items-center justify-center shrink-0">
+                <lucide-icon name="check-circle" class="w-7 h-7 text-green-400"></lucide-icon>
+              </div>
+              <div>
+                <p class="text-green-300 font-bold">Aboneliğiniz Onaylandı! 🎉</p>
+                <p class="text-green-400/60 text-xs mt-1">Yeni ürün duyurularında sizi haberdar edeceğiz.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form -->
+          <form *ngIf="!newsletterSuccess" (ngSubmit)="subscribeNewsletter()" class="space-y-3">
+            <!-- E-posta input -->
+            <div class="relative">
+              <lucide-icon name="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-beeses-dark/40 pointer-events-none"></lucide-icon>
+              <input
+                type="email"
+                [(ngModel)]="newsletterEmail"
+                name="newsletterEmail"
+                placeholder="ornek@eposta.com"
+                required
+                [disabled]="newsletterLoading"
+                class="w-full bg-white border border-white/12 rounded-xl py-4 pr-4 text-black placeholder-gray-400 text-sm focus:outline-none focus:border-beeses-gold/60 focus:ring-2 focus:ring-beeses-gold/15 transition-all disabled:opacity-50"
+                style="padding-left: 3.25rem;"
+              />
+            </div>
+
+            <!-- Hata Mesajı -->
+            <div *ngIf="newsletterError" class="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 animate-fade-in">
+              <lucide-icon name="x" class="w-4 h-4 text-red-400 shrink-0"></lucide-icon>
+              <p class="text-red-300 text-xs font-medium">{{ newsletterError }}</p>
+            </div>
+
+            <!-- Buton -->
+            <button
+              type="submit"
+              [disabled]="newsletterLoading || !newsletterEmail"
+              class="w-full inline-flex items-center justify-center gap-2 bg-beeses-gold hover:bg-yellow-500 text-beeses-dark font-black text-sm tracking-wider uppercase px-6 py-4 rounded-xl transition-all duration-300 shadow-[0_8px_24px_rgba(181,129,49,0.35)] hover:shadow-[0_12px_32px_rgba(181,129,49,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <lucide-icon *ngIf="!newsletterLoading" name="bell" class="w-4 h-4"></lucide-icon>
+              <lucide-icon *ngIf="newsletterLoading" name="loader" class="w-4 h-4 animate-spin"></lucide-icon>
+              <span>{{ newsletterLoading ? 'Kaydediliyor...' : 'Abone Ol' }}</span>
+            </button>
+          </form>
+
+        </div>
+      </div>
+
+      <!-- Alt altın çizgi -->
+      <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-beeses-gold/40 to-transparent"></div>
+    </div>
+
   </div>
 </section>

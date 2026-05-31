@@ -55,7 +55,7 @@
     <!-- News Grid -->
     <div *ngIf="!isLoading && filteredNews.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div *ngFor="let item of paginatedNews" 
-           (click)="openDetail(item)"
+           [routerLink]="['/corporate/components/news', item.id]"
            class="group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-beeses-gold/50 transition-all duration-500 hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-2xl flex flex-col h-full">
         
         <!-- Image Container -->
@@ -121,56 +121,4 @@
   </div>
 </section>
 
-<!-- Premium Detail Modal -->
-<div *ngIf="showDetailModal && selectedNews" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-md animate-fade-in">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85vh] overflow-y-auto flex flex-col transform scale-100 transition-all duration-300">
-    
-    <!-- Hero Image in Modal -->
-    <div class="relative h-64 sm:h-80 w-full shrink-0">
-      <img [src]="getImageUrl(selectedNews.image)" [alt]="selectedNews.title" 
-           class="w-full h-full object-cover">
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-      
-      <!-- Close Button -->
-      <button (click)="closeDetail()" class="absolute top-4 right-4 bg-black/50 text-white hover:bg-black/80 transition-colors p-2 rounded-full z-20 cursor-pointer">
-        <lucide-icon name="x" class="w-5 h-5"></lucide-icon>
-      </button>
-
-      <!-- Modal Title -->
-      <div class="absolute bottom-6 left-6 right-6 text-white z-10">
-        <span class="px-3 py-1 bg-beeses-gold text-black text-[10px] font-black tracking-widest uppercase rounded-sm mb-3 inline-block">
-          {{ selectedNews.category }}
-        </span>
-        <h2 class="text-xl sm:text-3xl font-black tracking-wide uppercase leading-tight">
-          {{ selectedNews.title }}
-        </h2>
-      </div>
-    </div>
-
-    <!-- Modal Body -->
-    <div class="p-8 space-y-6">
-      <div class="flex items-center gap-2 text-gray-500 text-xs font-semibold tracking-wider pb-4 border-b border-gray-100">
-        <lucide-icon name="calendar" class="w-4 h-4 text-beeses-gold"></lucide-icon>
-        Yayınlanma Tarihi: {{ selectedNews.formatted_date || selectedNews.news_date }}
-      </div>
-
-      <!-- Summary (Highlight) -->
-      <p class="text-lg text-beeses-dark font-semibold leading-relaxed border-l-4 border-beeses-gold pl-4 bg-gray-50 py-3 rounded-r-xl">
-        {{ selectedNews.summary }}
-      </p>
-
-      <!-- Content -->
-      <div class="text-gray-600 text-sm sm:text-base leading-relaxed whitespace-pre-wrap font-light text-justify">
-        {{ selectedNews.content || 'Bu haber için detaylı içerik girilmemiştir.' }}
-      </div>
-    </div>
-
-    <!-- Modal Footer -->
-    <div class="px-8 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
-      <button (click)="closeDetail()" class="px-6 py-3 bg-beeses-dark hover:bg-beeses-gold text-white font-bold rounded-xl text-xs uppercase tracking-wider transition-colors cursor-pointer">
-        Kapat
-      </button>
-    </div>
-
-  </div>
-</div>
+<!-- Detail modal removed, navigation shifted to full-page routing -->
