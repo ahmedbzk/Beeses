@@ -1,0 +1,321 @@
+<div class="p-6">
+  
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in">
+    
+    <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50/50">
+      <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
+        <lucide-icon name="flask-conical" class="w-5 h-5 text-beeses-gold"></lucide-icon>
+        İnovasyon & Gelecek
+      </h2>
+      <button (click)="loadInnovations()" class="flex items-center gap-2 text-sm text-gray-500 hover:text-beeses-gold transition-colors font-medium whitespace-nowrap cursor-pointer">
+        <lucide-icon name="refresh-cw" class="w-4 h-4"></lucide-icon> Yenile
+      </button>
+    </div>
+
+    
+    <div class="p-6 border-b border-gray-100 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
+        
+        <select [(ngModel)]="selectedStatus" (ngModelChange)="applyFilters()" class="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-beeses-gold focus:border-beeses-gold block p-2.5 outline-none cursor-pointer h-10 min-w-[150px]">
+          <option value="">Tüm Kategoriler</option>
+          <option value="Prototip Test Ediliyor">Prototip Test Ediliyor</option>
+          <option value="Geliştirme Aşamasında">Geliştirme Aşamasında</option>
+          <option value="Planlama Aşamasında">Planlama Aşamasında</option>
+        </select>
+
+        
+        <div class="relative w-full lg:w-64">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <lucide-icon name="search" class="w-4 h-4 text-gray-400"></lucide-icon>
+          </div>
+          <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" class="bg-white border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-beeses-gold focus:border-beeses-gold block w-full pl-10 p-2.5 outline-none h-10 transition-colors" placeholder="Proje adı veya alt başlık ile ara...">
+        </div>
+      </div>
+
+      <button (click)="openModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full lg:w-auto justify-center">
+        <lucide-icon name="plus" class="w-4 h-4"></lucide-icon> Yeni Proje Ekle
+      </button>
+    </div>
+
+    
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-gray-600">
+        <thead class="bg-beeses-dark text-beeses-gold font-bold uppercase text-[10px] tracking-[0.15em] border-b-2 border-beeses-gold shadow-sm">
+          <tr>
+            <th class="px-6 py-4 w-16 text-center">ID</th>
+            <th class="px-6 py-4 w-24">Görsel</th>
+            <th class="px-6 py-4">Proje Bilgisi</th>
+            <th class="px-6 py-4">Kategori Durumu</th>
+            <th class="px-6 py-4">Lansman Tarihi</th>
+            <th class="px-6 py-5 text-center w-36 rounded-tr-xl">İşlem</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 bg-white">
+          <tr *ngFor="let item of filteredInnovations; let i = index" 
+              class="transition-colors hover:bg-beeses-gold/5" 
+              [ngClass]="i % 2 === 0 ? 'bg-white' : 'bg-gray-50/40'">
+            
+            <td class="px-6 py-4 text-center font-semibold text-beeses-dark">{{ item.id }}</td>
+            
+            <td class="px-6 py-4">
+              <div class="w-16 h-12 rounded overflow-hidden bg-gray-50 border border-gray-100 flex items-center justify-center p-1">
+                <img *ngIf="item.image" [src]="getImageUrl(item.image)" class="max-w-full max-h-full object-contain">
+                <lucide-icon *ngIf="!item.image" name="image" class="w-6 h-6 text-gray-300"></lucide-icon>
+              </div>
+            </td>
+
+            <td class="px-6 py-4">
+              <div class="font-bold text-beeses-dark text-base">{{ item.title }}</div>
+              <div class="text-xs text-gray-400 mt-0.5">{{ item.subtitle }}</div>
+            </td>
+            
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2.5 py-1 bg-beeses-gold/10 text-beeses-gold text-xs font-bold rounded-full">
+                {{ item.status }}
+              </span>
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap text-gray-500 font-medium">
+              {{ item.launchDate }}
+            </td>
+
+            <td class="px-6 py-4">
+              <div class="flex items-center justify-center gap-2">
+                <button (click)="openModal(item)" class="w-8 h-8 rounded-lg bg-gray-50 hover:bg-beeses-gold/10 text-gray-500 hover:text-beeses-gold border border-gray-200 hover:border-beeses-gold/30 flex items-center justify-center transition-colors">
+                  <lucide-icon name="edit" class="w-4 h-4"></lucide-icon>
+                </button>
+                <button (click)="deleteItem(item.id!)" class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 flex items-center justify-center transition-colors">
+                  <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      
+      <div *ngIf="filteredInnovations.length === 0" class="text-center py-20 bg-white">
+        <lucide-icon name="inbox" class="w-12 h-12 text-gray-300 mx-auto mb-3"></lucide-icon>
+        <p class="text-gray-500">Kriterlere uygun proje bulunamadı.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" (click)="closeModal()"></div>
+  <div class="bg-gray-50 rounded-3xl w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl relative z-10 flex flex-col">
+    
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 shrink-0 bg-white">
+      <h3 class="text-xl font-bold text-gray-900">{{ editingItem?.id ? 'Projeyi Düzenle' : 'Yeni Proje Ekle' }}</h3>
+      <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+        <lucide-icon name="x" class="w-5 h-5"></lucide-icon>
+      </button>
+    </div>
+    
+    
+    <div class="p-8 overflow-y-auto flex-1 bg-gray-50">
+      
+      
+      <div class="flex gap-4 mb-8">
+        <div (click)="activeTab = 'tr'" 
+             class="flex-1 p-4 rounded-xl border-2 transition-all cursor-pointer flex items-center gap-3 bg-white"
+             [ngClass]="activeTab === 'tr' ? 'border-beeses-gold shadow-md' : 'border-transparent shadow-sm hover:border-gray-200 opacity-70 hover:opacity-100'">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
+               [ngClass]="activeTab === 'tr' ? 'bg-beeses-gold text-white' : 'bg-gray-100 text-gray-500'">TR</div>
+          <div>
+            <h4 class="font-bold text-sm" [ngClass]="activeTab === 'tr' ? 'text-beeses-dark' : 'text-gray-600'">Türkçe İçerik</h4>
+            <p class="text-xs text-gray-400">Türkçe dil alanlarını düzenle</p>
+          </div>
+        </div>
+
+        <div (click)="activeTab = 'en'" 
+             class="flex-1 p-4 rounded-xl border-2 transition-all cursor-pointer flex items-center gap-3 bg-white"
+             [ngClass]="activeTab === 'en' ? 'border-beeses-gold shadow-md' : 'border-transparent shadow-sm hover:border-gray-200 opacity-70 hover:opacity-100'">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
+               [ngClass]="activeTab === 'en' ? 'bg-beeses-gold text-white' : 'bg-gray-100 text-gray-500'">EN</div>
+          <div>
+            <h4 class="font-bold text-sm" [ngClass]="activeTab === 'en' ? 'text-beeses-dark' : 'text-gray-600'">English Content</h4>
+            <p class="text-xs text-gray-400">Edit English language fields</p>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        
+        <div class="col-span-1 space-y-6">
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <h4 class="text-sm font-bold text-beeses-dark mb-4 border-b border-gray-100 pb-2">Genel Ayarlar</h4>
+            
+            <div class="mb-5">
+              <label class="block text-xs font-bold text-gray-500 mb-2">Proje Görseli *</label>
+              <div class="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-lg p-2">
+                <input type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden" #imageInput>
+                <button type="button" (click)="imageInput.click()" class="px-3 py-2 bg-beeses-gold/10 text-beeses-gold hover:bg-beeses-gold hover:text-white rounded-md text-xs font-bold transition-all cursor-pointer">
+                  Görsel Seç
+                </button>
+                <span class="text-[10px] text-gray-500 truncate max-w-[120px]">
+                  {{ selectedFile ? selectedFile.name : (editingItem!.image ? 'Mevcut görsel korunuyor' : 'Dosya seçilmedi') }}
+                </span>
+                <button *ngIf="selectedFile || editingItem!.image" type="button" (click)="clearSelectedFile($event)" class="ml-auto text-red-500 hover:text-red-700 p-1" title="Görseli Kaldır">
+                  <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
+                </button>
+              </div>
+              <div class="mt-3 aspect-video w-full rounded-lg border-2 border-dashed border-gray-200 flex flex-col items-center justify-center bg-gray-50 overflow-hidden relative">
+                <ng-container *ngIf="imagePreviewUrl; else noImage">
+                  <img [src]="imagePreviewUrl" class="w-full h-full object-cover">
+                </ng-container>
+                <ng-template #noImage>
+                  <lucide-icon name="image-plus" class="w-8 h-8 text-gray-300 mb-2"></lucide-icon>
+                  <span class="text-[10px] text-gray-400 font-medium">Görsel Yok</span>
+                </ng-template>
+              </div>
+            </div>
+
+            <div class="mb-5">
+              <label class="block text-xs font-bold text-gray-500 mb-2">Kategori Durumu (Global)</label>
+              <select [(ngModel)]="editingItem!.status" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-beeses-gold transition-colors">
+                <option value="Prototip Test Ediliyor">Prototip Test Ediliyor</option>
+                <option value="Geliştirme Aşamasında">Geliştirme Aşamasında</option>
+                <option value="Planlama Aşamasında">Planlama Aşamasında</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-500 mb-2">Lansman Tarihi</label>
+              <input type="text" [(ngModel)]="editingItem!.launchDate" placeholder="Örn: 2025 Q1" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-beeses-gold transition-colors">
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="col-span-1 lg:col-span-2">
+          
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            
+            <div *ngIf="activeTab === 'tr'" class="space-y-5 animate-fade-in">
+              <div>
+                <label class="block text-sm font-bold text-beeses-dark mb-2">Başlık</label>
+                <input type="text" [(ngModel)]="editingItem!.title" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-beeses-gold focus:bg-white transition-colors">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-bold text-beeses-dark mb-2">Alt Başlık</label>
+                <input type="text" [(ngModel)]="editingItem!.subtitle" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-beeses-gold focus:bg-white transition-colors">
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-beeses-dark mb-2">Açıklama</label>
+                <textarea [(ngModel)]="editingItem!.description" rows="4" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-beeses-gold focus:bg-white transition-colors resize-none"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-beeses-dark mb-2">Öne Çıkan Özellikler</label>
+                <textarea [(ngModel)]="featuresText" rows="3" placeholder="Active DSP Control&#10;Wireless Hi-Fi Connectivity" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-beeses-gold focus:bg-white transition-colors resize-none"></textarea>
+                <p class="text-xs text-gray-400 mt-1.5">Her satıra bir özellik yazın.</p>
+              </div>
+
+              
+              <div class="pt-2 border-t border-gray-100">
+                <div class="flex justify-between items-center mb-3">
+                  <label class="block text-sm font-bold text-beeses-dark flex items-center gap-2">
+                    <lucide-icon name="sliders" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+                    Teknik Özellikler
+                  </label>
+                  <button type="button" (click)="addSpecRow()" class="px-3 py-1.5 bg-beeses-gold/10 text-beeses-gold hover:bg-beeses-gold hover:text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer">
+                    <lucide-icon name="plus" class="w-3.5 h-3.5"></lucide-icon> Satır Ekle
+                  </button>
+                </div>
+                <div class="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                  <div *ngIf="!editingItem!.specs || editingItem!.specs.length === 0" class="text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                    <span class="text-xs text-gray-400">Teknik özellik eklenmemiş.</span>
+                  </div>
+                  <div *ngFor="let spec of editingItem!.specs; let idx = index" class="flex gap-2 items-center bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                    <div class="grid grid-cols-2 gap-2 flex-grow">
+                      <input type="text" [(ngModel)]="spec.name" placeholder="Özellik Adı (ör: Ağırlık)" class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs outline-none focus:border-beeses-gold transition-all font-semibold">
+                      <input type="text" [(ngModel)]="spec.value" placeholder="Değer (ör: 1.2 kg)" class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs outline-none focus:border-beeses-gold transition-all">
+                    </div>
+                    <button type="button" (click)="removeSpecRow(idx)" class="text-red-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition-colors shrink-0">
+                      <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+            <div *ngIf="activeTab === 'en'" class="space-y-5 animate-fade-in">
+              <div>
+                <label class="block text-sm font-bold text-beeses-dark mb-2">Title</label>
+                <input type="text" [(ngModel)]="editingItem!.title_en" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-beeses-gold focus:bg-white transition-colors">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-bold text-beeses-dark mb-2">Subtitle</label>
+                <input type="text" [(ngModel)]="editingItem!.subtitle_en" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-beeses-gold focus:bg-white transition-colors">
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-beeses-dark mb-2">Description</label>
+                <textarea [(ngModel)]="editingItem!.description_en" rows="4" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-beeses-gold focus:bg-white transition-colors resize-none"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-beeses-dark mb-2">Key Features</label>
+                <textarea [(ngModel)]="featuresText_en" rows="3" placeholder="Active DSP Control&#10;Wireless Hi-Fi Connectivity" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-beeses-gold focus:bg-white transition-colors resize-none"></textarea>
+                <p class="text-xs text-gray-400 mt-1.5">Write one feature per line.</p>
+              </div>
+
+              
+              <div class="pt-2 border-t border-gray-100">
+                <div class="flex justify-between items-center mb-3">
+                  <label class="block text-sm font-bold text-beeses-dark flex items-center gap-2">
+                    <lucide-icon name="sliders" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+                    Technical Specs
+                  </label>
+                  <button type="button" (click)="addSpecRow()" class="px-3 py-1.5 bg-beeses-gold/10 text-beeses-gold hover:bg-beeses-gold hover:text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer">
+                    <lucide-icon name="plus" class="w-3.5 h-3.5"></lucide-icon> Add Row
+                  </button>
+                </div>
+                <div class="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                  <div *ngIf="!editingItem!.specs_en || editingItem!.specs_en.length === 0" class="text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                    <span class="text-xs text-gray-400">No technical specs added.</span>
+                  </div>
+                  <div *ngFor="let spec of editingItem!.specs_en; let idx = index" class="flex gap-2 items-center bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                    <div class="grid grid-cols-2 gap-2 flex-grow">
+                      <input type="text" [(ngModel)]="spec.name" placeholder="Spec Name (e.g. Weight)" class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs outline-none focus:border-beeses-gold transition-all font-semibold">
+                      <input type="text" [(ngModel)]="spec.value" placeholder="Value (e.g. 1.2 kg)" class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs outline-none focus:border-beeses-gold transition-all">
+                    </div>
+                    <button type="button" (click)="removeSpecRow(idx)" class="text-red-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition-colors shrink-0">
+                      <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    
+    <div class="p-6 border-t border-gray-200 flex items-center justify-end gap-4 bg-white shrink-0">
+      <button (click)="closeModal()" class="px-6 py-3 text-beeses-dark hover:text-gray-900 bg-transparent rounded-xl text-sm font-medium transition-colors">İptal</button>
+      <button (click)="saveItem()" [disabled]="isSaving" class="px-8 py-3 bg-beeses-gold hover:bg-beeses-dark text-white rounded-xl text-sm font-bold transition-all disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-beeses-gold/20">
+        <lucide-icon *ngIf="isSaving" name="loader" class="w-4 h-4 animate-spin"></lucide-icon>
+        Kaydet
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="notification" class="fixed bottom-6 right-6 z-50 animate-fade-in flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl"
+     [ngClass]="notification.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'">
+  <lucide-icon [name]="notification.type === 'success' ? 'check-circle' : 'alert-circle'" class="w-5 h-5"></lucide-icon>
+  <span class="text-sm font-bold">{{ notification.message }}</span>
+</div>
+

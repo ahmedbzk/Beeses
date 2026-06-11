@@ -50,9 +50,9 @@
           </div>
 
           <div class="relative group/vtest flex items-center py-4 cursor-pointer">
-              <span class="vtest-link-new flex items-center gap-1.5" [style.color]="headerLinkColor">
+              <a routerLink="/products" class="vtest-link-new flex items-center gap-1.5 cursor-pointer" [style.color]="headerLinkColor">
                   ÜRÜNLERİMİZ <lucide-icon name="chevron-down" class="w-3.5 h-3.5" [style.color]="headerLinkColor" style="opacity: 0.55;"></lucide-icon>
-              </span>
+              </a>
               <div class="vtest-dropdown-creative">
                   <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }" class="cursor-pointer">SQL SERİSİ</a>
                   <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }" class="cursor-pointer">OF SERİSİ</a>

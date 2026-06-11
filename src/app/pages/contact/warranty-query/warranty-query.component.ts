@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { environment } from '../../../../environments/environment';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export interface WarrantyDetails {
   product_name: string;
@@ -18,7 +19,7 @@ export interface WarrantyDetails {
 @Component({
   selector: 'app-warranty-query',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, LucideAngularModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, LucideAngularModule, TranslateModule],
   templateUrl: './warranty-query.component.html',
   styleUrl: './warranty-query.component.scss'
 })
@@ -26,6 +27,8 @@ export class WarrantyQueryComponent implements OnInit {
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
   private router = inject(Router);
+  public translate = inject(TranslateService);
+  private cdr = inject(ChangeDetectorRef);
 
   queryForm!: FormGroup;
   captchaCode = '';
@@ -73,7 +76,7 @@ export class WarrantyQueryComponent implements OnInit {
 
     if (this.queryForm.invalid) {
       this.queryForm.markAllAsTouched();
-      this.errorMessage = 'Lütfen tüm alanları doldurun.';
+      this.errorMessage = this.translate.instant('ALERT_ERROR') || 'Lütfen tüm alanları doldurun.';
       return;
     }
 
@@ -81,7 +84,7 @@ export class WarrantyQueryComponent implements OnInit {
     const captcha_input = (this.queryForm.value.captcha_input || '').trim();
 
     if (captcha_input.toUpperCase() !== this.captchaCode) {
-      this.errorMessage = 'Güvenlik kodu eşleşmedi. Lütfen tekrar deneyin.';
+      this.errorMessage = this.translate.instant('ALERT_ERROR') || 'Güvenlik kodu eşleşmedi. Lütfen tekrar deneyin.';
       this.generateCaptcha();
       this.queryForm.patchValue({ captcha_input: '' });
       return;
@@ -104,17 +107,19 @@ export class WarrantyQueryComponent implements OnInit {
             this.infoMessage = res.message;
             this.queryStatus = res.status;
           } else {
-            this.errorMessage = res.message || 'Garanti kaydı bulunamadı.';
+            this.errorMessage = res.message || this.translate.instant('WARRANTY_QUERY_NOT_FOUND');
             this.queryStatus = null;
           }
           this.generateCaptcha();
           this.queryForm.patchValue({ captcha_input: '' });
         }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMessage = 'Sunucuyla bağlantı kurulamadı. Lütfen XAMPP sunucunuzun çalıştığından emin olun.';
+        this.errorMessage = this.translate.instant('ERROR_CONNECTION');
         this.generateCaptcha();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -142,5 +147,20 @@ export class WarrantyQueryComponent implements OnInit {
 
   navigateToContact() {
     this.router.navigate(['/contact']);
+  }
+
+  getImageForProduct(productName: string): string {
+    const defaultImg = 'assets/logo.png';
+    if (!productName) return defaultImg;
+    
+    const name = productName.toUpperCase();
+    if (name.includes('PETEK STEREO')) return 'assets/products/Petek Stereo.png';
+    if (name.includes('PETEK MONO')) return 'assets/products/Petek Mono Block.png';
+    if (name.includes('4200')) return 'assets/products/SQL 4200 Serisi-1.png';
+    if (name.includes('4400')) return 'assets/products/SQL 4400 Serisi-1.png';
+    if (name.includes('OF-1')) return 'assets/products/OF-1 ve BS-O 101.PNG';
+    if (name.includes('OF-2')) return 'assets/products/OF-2 ve BS-O 102.PNG';
+    
+    return defaultImg;
   }
 }

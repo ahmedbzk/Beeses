@@ -21,7 +21,9 @@ export const adminRoutes: Routes = [
       { path: 'certificates', loadComponent: () => import('./pages/certificates/certificates-admin.component').then(m => m.CertificatesAdminComponent) },
       { path: 'faq', loadComponent: () => import('./pages/faq/faq-admin.component').then(m => m.FaqAdminComponent) },
       { path: 'products', loadComponent: () => import('./pages/products/products-admin.component').then(m => m.ProductsAdminComponent) },
-      { path: 'newsletter', loadComponent: () => import('./pages/newsletter/newsletter-admin.component').then(m => m.NewsletterAdminComponent) }
+      { path: 'innovations', loadComponent: () => import('./pages/innovations/innovations-admin.component').then(m => m.InnovationsAdminComponent) },
+      { path: 'newsletter', loadComponent: () => import('./pages/newsletter/newsletter-admin.component').then(m => m.NewsletterAdminComponent) },
+      { path: 'admins', loadComponent: () => import('./pages/admins/admins-admin.component').then(m => m.AdminsAdminComponent) }
     ]
   },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

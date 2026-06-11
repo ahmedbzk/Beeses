@@ -14,6 +14,8 @@ try {
         $prod['images'] = json_decode($prod['images'] ?? '[]', true);
         $prod['specs'] = json_decode($prod['specs'] ?? '[]', true);
         $prod['features'] = json_decode($prod['features'] ?? '[]', true);
+        $prod['specs_en'] = json_decode($prod['specs_en'] ?? '[]', true);
+        $prod['features_en'] = json_decode($prod['features_en'] ?? '[]', true);
     }
 
     echo json_encode(["success" => true, "data" => $products]);

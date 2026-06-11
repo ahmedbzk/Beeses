@@ -23,10 +23,8 @@ import { AlertService } from '../../../services/alert.service';
         </div>
       </div>
 
-      <!-- Toolbar: Search & Filters -->
       <div class="p-6 border-b border-gray-100 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white" *ngIf="!isLoading">
         
-        <!-- Search -->
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
           <select [(ngModel)]="searchField" (change)="currentPage = 1" class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-beeses-gold focus:border-beeses-gold block p-2.5 outline-none cursor-pointer h-10 min-w-[120px]">
             <option value="name">İsim Soyisim</option>
@@ -47,7 +45,6 @@ import { AlertService } from '../../../services/alert.service';
           </div>
         </div>
 
-        <!-- Filter Status & Bulk Actions -->
         <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
           <select [(ngModel)]="filterStatus" (change)="currentPage = 1" class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-beeses-gold focus:border-beeses-gold block p-2.5 outline-none cursor-pointer h-10 min-w-[140px] ml-auto">
             <option value="all">Tüm Durumlar</option>
@@ -136,7 +133,6 @@ import { AlertService } from '../../../services/alert.service';
         </table>
       </div>
 
-      <!-- Pagination -->
       <div class="p-4 border-t border-gray-100 flex items-center justify-between bg-gray-50" *ngIf="!isLoading && filteredContacts.length > 0">
         <span class="text-sm text-gray-600">
           Toplam <strong>{{ filteredContacts.length }}</strong> kayıttan <strong>{{ (currentPage - 1) * pageSize + 1 }}</strong> - <strong>{{ Math.min(currentPage * pageSize, filteredContacts.length) }}</strong> arası gösteriliyor
@@ -155,10 +151,8 @@ import { AlertService } from '../../../services/alert.service';
       </div>
     </div>
 
-    <!-- Detay Modal -->
     <div *ngIf="selectedMessage" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-sm animate-fade-in">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <!-- Modal Header -->
         <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
           <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
             <lucide-icon name="message-square" class="w-5 h-5 text-beeses-gold"></lucide-icon>
@@ -169,7 +163,6 @@ import { AlertService } from '../../../services/alert.service';
           </button>
         </div>
 
-        <!-- Modal Body -->
         <div class="p-6 overflow-y-auto flex-grow space-y-6">
           
           <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
@@ -200,7 +193,7 @@ import { AlertService } from '../../../services/alert.service';
           <div *ngIf="selectedMessage.status !== 'cevaplandi'" class="border-t border-gray-100 pt-6">
              <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Cevap Yaz</p>
              <textarea [(ngModel)]="replyText" rows="4" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Müşteriye gönderilecek cevabı buraya yazın..."></textarea>
-             <p class="text-xs text-gray-400 mt-2">* Gerçek mail entegrasyonu tamamlandığında, buraya yazılan cevap otomatik olarak gönderenin e-posta adresine iletilecektir.</p>
+              <p class="text-xs text-beeses-gold/75 mt-2 font-medium">* Yazdığınız cevap, gönderenin e-posta adresine otomatik olarak iletilecektir.</p>
           </div>
 
           <div *ngIf="selectedMessage.status === 'cevaplandi'" class="border-t border-gray-100 pt-6">
@@ -222,7 +215,6 @@ import { AlertService } from '../../../services/alert.service';
 
         </div>
 
-        <!-- Modal Footer -->
         <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
           <button (click)="closeDetail()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900 font-bold text-sm transition-colors">
             Kapat
@@ -246,14 +238,12 @@ export class ContactsAdminComponent implements OnInit {
   replyText = '';
   isLoading = true;
 
-  // Filter & Search states
   searchQuery = '';
   searchDateStart = '';
   searchDateEnd = '';
   searchField = 'name';
   filterStatus = 'all';
 
-  // Pagination
   currentPage = 1;
   pageSize = 10;
   Math = Math;
@@ -346,7 +336,6 @@ export class ContactsAdminComponent implements OnInit {
     this.selectedMessage = msg;
     this.replyText = '';
     
-    // Eğer yeni mesaj açıldıysa okundu yapalım
     if (msg.status === 'yeni' && msg.id) {
       this.contactService.updateContactStatus(msg.id, 'okundu').subscribe({
         next: (res) => {
@@ -385,8 +374,6 @@ export class ContactsAdminComponent implements OnInit {
     const selectedIds = this.contacts.filter(c => c.selected).map(c => c.id).filter(id => id !== undefined) as number[];
     if (selectedIds.length === 0) return;
 
-    // For simplicity, we loop through updates if backend doesn't support bulk.
-    // Ideally we should update the backend to support bulk status updates.
     let completed = 0;
     selectedIds.forEach(id => {
       this.contactService.updateContactStatus(id, status).subscribe({

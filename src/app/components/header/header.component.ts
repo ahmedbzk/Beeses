@@ -2,11 +2,12 @@ import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular'; 
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, LucideAngularModule], 
+  imports: [CommonModule, RouterModule, LucideAngularModule, TranslateModule], 
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -25,6 +26,25 @@ export class HeaderComponent {
     { code: 'TR', name: 'Turkish', flag: 'assets/flags/turkey.png' },
     { code: 'EN', name: 'English', flag: 'assets/flags/england.png' }
   ];
+
+  constructor(private translate: TranslateService) {
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang) {
+        const found = this.languages.find(l => l.code.toLowerCase() === savedLang.toLowerCase());
+        if (found) {
+          this.currentLang = found;
+          this.translate.use(savedLang.toLowerCase());
+        } else {
+          this.translate.use('tr');
+        }
+      } else {
+        this.translate.use('tr');
+      }
+    } else {
+      this.translate.use('tr');
+    }
+  }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -72,6 +92,10 @@ toggleMobileIletisim(event: Event) {
   changeLang(lang: any) { 
     this.currentLang = lang; 
     this.isLangDropdownOpen = false;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('lang', lang.code.toLowerCase());
+      window.location.reload();
+    }
   }
 
 }

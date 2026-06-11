@@ -5,16 +5,18 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NewsService, News } from '../../../../services/news.service';
 import { environment } from '../../../../../environments/environment';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-news-list',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, RouterLink, FormsModule],
+  imports: [CommonModule, LucideAngularModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './news.component.html',
   styleUrl: './news.component.scss'
 })
 export class NewsListComponent implements OnInit {
   private newsService = inject(NewsService);
+  public translate = inject(TranslateService);
 
   news: News[] = [];
   isLoading = true;
@@ -77,6 +79,16 @@ export class NewsListComponent implements OnInit {
   selectCategory(category: string) {
     this.selectedCategory = category;
     this.currentPage = 1;
+  }
+
+  getCategoryTranslationKey(cat: string): string {
+    switch (cat) {
+      case 'Tümü': return 'NEWS_CAT_ALL';
+      case 'Haber': return 'NEWS_CAT_NEWS';
+      case 'Duyuru': return 'NEWS_CAT_ANNOUNCEMENT';
+      case 'Etkinlik': return 'NEWS_CAT_EVENT';
+      default: return cat;
+    }
   }
 
   getImageUrl(imagePath: string | undefined): string {

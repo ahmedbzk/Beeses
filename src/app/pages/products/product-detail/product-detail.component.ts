@@ -4,17 +4,22 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { ProductService, Product } from '../../../services/product.service';
 import { environment } from '../../../../environments/environment';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss'
 })
 export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
+  public translate = inject(TranslateService);
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
 
   product: Product | undefined;
   isLoading: boolean = true;
@@ -39,7 +44,15 @@ export class ProductDetailComponent implements OnInit {
             if (response.success) {
               this.product = response.data;
               if (this.product) {
-                // Map all local/uploaded image URLs
+                // Update SEO Meta Tags dynamically
+                const pName = this.translate.currentLang === 'en' && this.product.name_en ? this.product.name_en : this.product.name;
+                const pDesc = this.translate.currentLang === 'en' && this.product.shortDescription_en ? this.product.shortDescription_en : this.product.shortDescription;
+                
+                this.titleService.setTitle(`${pName} | Beeses Audio`);
+                this.metaService.updateTag({ name: 'description', content: pDesc || '' });
+                this.metaService.updateTag({ property: 'og:title', content: `${pName} | Beeses Audio` });
+                this.metaService.updateTag({ property: 'og:description', content: pDesc || '' });
+
                 if (this.product.images && this.product.images.length > 0) {
                   this.product.images = this.product.images.map(img => this.getImageUrl(img));
                   this.selectedImage = this.product.images[0];
@@ -53,12 +66,15 @@ export class ProductDetailComponent implements OnInit {
                 if (this.product.pdfUrl) {
                   this.product.pdfUrl = this.getImageUrl(this.product.pdfUrl);
                 }
+                
+                if (this.product.pdfUrl_en) {
+                  this.product.pdfUrl_en = this.getImageUrl(this.product.pdfUrl_en);
+                }
               }
             }
             this.isLoading = false;
           },
-          error: (err) => {
-            console.error('Urun detaylari yuklenirken hata:', err);
+          error: () => {
             this.isLoading = false;
           }
         });
@@ -122,10 +138,31 @@ export class ProductDetailComponent implements OnInit {
 
   getImageUrl(imagePath: string | undefined): string {
     if (!imagePath) return '';
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
     if (imagePath.startsWith('assets/')) {
       return imagePath;
     }
     return `${this.apiUrl}/${imagePath}`;
+  }
+
+  getPdfUrl(): string | undefined {
+    if (!this.product) return undefined;
+    if (this.translate.currentLang === 'en' && this.product.pdfUrl_en) {
+      return this.product.pdfUrl_en;
+    }
+    return this.product.pdfUrl;
+  }
+
+  getCategoryTranslationKey(cat: string | undefined): string {
+    if (!cat) return '';
+    switch (cat) {
+      case 'SQL SERİSİ': return 'HEADER_SQL_SERIES';
+      case 'OF SERİSİ': return 'HEADER_OF_SERIES';
+      case 'PETEK SERİSİ': return 'HEADER_PETEK_SERIES';
+      default: return cat;
+    }
   }
 }
 

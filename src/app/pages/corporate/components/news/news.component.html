@@ -1,15 +1,20 @@
-<section class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
+<section
+  class="relative w-full h-auto flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
   <div class="absolute inset-0 w-full h-full">
     <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
     <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/95 via-beeses-dark/70 to-beeses-silver"></div>
   </div>
-  
-  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-6 md:pb-12">
-    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">Bizden Gelişmeler</span>
-    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">HABERLER & DUYURULAR</h1>
+
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-16 md:pb-20">
+    <span
+      class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">{{
+      'NEWS_PAGE_HERO_TAG' | translate }}</span>
+    <h1
+      class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">
+      {{ 'NEWS_PAGE_HERO_TITLE' | translate }}</h1>
     <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
-    <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
-      Beeses Audio ile ilgili en güncel haberler, etkinlikler ve duyurular
+    <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg mb-8">
+      {{ 'NEWS_PAGE_HERO_DESC' | translate }}
     </p>
   </div>
 </section>
@@ -17,24 +22,24 @@
 <!-- Main News Page Content -->
 <section class="w-full bg-beeses-silver py-16 md:py-24 relative min-h-screen -mt-px">
   <div class="container mx-auto px-6 md:px-12 max-w-7xl relative z-10">
-    
+
     <!-- Filter and Search Bar -->
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-12 border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
+    <div
+      class="bg-white rounded-2xl shadow-xl p-6 mb-12 border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
       <!-- Categories -->
       <div class="flex flex-wrap gap-2 justify-center md:justify-start w-full md:w-auto">
-        <button *ngFor="let cat of categories" 
-                (click)="selectCategory(cat)"
-                [class]="selectedCategory === cat ? 'bg-beeses-gold text-white shadow-lg shadow-beeses-gold/30' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'"
-                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer">
-          {{ cat }}
+        <button *ngFor="let cat of categories" (click)="selectCategory(cat)"
+          [class]="selectedCategory === cat ? 'bg-beeses-gold text-white shadow-lg shadow-beeses-gold/30' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'"
+          class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer">
+          {{ getCategoryTranslationKey(cat) | translate }}
         </button>
       </div>
 
       <!-- Search Box -->
       <div class="relative w-full md:w-80">
         <input type="text" [(ngModel)]="searchQuery" (input)="currentPage = 1"
-               placeholder="Haber veya duyuru ara..." 
-               class="w-full pl-9 pr-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all">
+          [placeholder]="'NEWS_PAGE_SEARCH_PLACEHOLDER' | translate"
+          class="w-full pl-9 pr-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all">
         <lucide-icon name="search" class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></lucide-icon>
       </div>
     </div>
@@ -42,32 +47,34 @@
     <!-- Loading State -->
     <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-20">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-beeses-gold mb-4"></div>
-      <p class="text-gray-500 text-sm font-semibold">Haberler yükleniyor...</p>
+      <p class="text-gray-500 text-sm font-semibold">{{ 'NEWS_PAGE_LOADING' | translate }}</p>
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!isLoading && filteredNews.length === 0" class="text-center py-20 bg-white rounded-2xl border border-gray-200 shadow-md">
+    <div *ngIf="!isLoading && filteredNews.length === 0"
+      class="text-center py-20 bg-white rounded-2xl border border-gray-200 shadow-md">
       <lucide-icon name="file-text" class="w-16 h-16 text-gray-300 mx-auto mb-4"></lucide-icon>
-      <h3 class="text-xl font-bold text-beeses-dark mb-2">Haber Bulunamadı</h3>
-      <p class="text-gray-500 text-sm max-w-md mx-auto">Arama kriterlerinize uygun herhangi bir haber veya duyuru bulunmamaktadır.</p>
+      <h3 class="text-xl font-bold text-beeses-dark mb-2">{{ 'NEWS_PAGE_EMPTY_TITLE' | translate }}</h3>
+      <p class="text-gray-500 text-sm max-w-md mx-auto">{{ 'NEWS_PAGE_EMPTY_DESC' | translate }}</p>
     </div>
 
     <!-- News Grid -->
     <div *ngIf="!isLoading && filteredNews.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div *ngFor="let item of paginatedNews" 
-           [routerLink]="['/corporate/components/news', item.id]"
-           class="group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-beeses-gold/50 transition-all duration-500 hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-2xl flex flex-col h-full">
-        
+      <div *ngFor="let item of paginatedNews" [routerLink]="['/corporate/components/news', item.id]"
+        class="group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-beeses-gold/50 transition-all duration-500 hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-2xl flex flex-col h-full">
+
         <!-- Image Container -->
         <div class="relative h-56 overflow-hidden shrink-0">
-          <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-          <img [src]="getImageUrl(item.image)" [alt]="item.title" 
-               class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
-          
+          <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500 z-10">
+          </div>
+          <img [src]="getImageUrl(item.image)" [alt]="item.title"
+            class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
+
           <!-- Category Badge -->
           <div class="absolute top-4 left-4 z-20">
-            <span class="px-4 py-1.5 bg-beeses-gold text-black text-[10px] font-black tracking-widest uppercase rounded-sm shadow-lg">
-              {{ item.category }}
+            <span
+              class="px-4 py-1.5 bg-beeses-gold text-black text-[10px] font-black tracking-widest uppercase rounded-sm shadow-lg">
+              {{ getCategoryTranslationKey(item.category) | translate }}
             </span>
           </div>
         </div>
@@ -78,19 +85,22 @@
             <lucide-icon name="calendar" class="w-3.5 h-3.5"></lucide-icon>
             {{ item.formatted_date || item.news_date }}
           </div>
-          
-          <h3 class="text-lg font-black text-black mb-3 leading-tight tracking-wide group-hover:text-beeses-gold transition-colors duration-300 line-clamp-2">
-            {{ item.title }}
+
+          <h3
+            class="text-lg font-black text-black mb-3 leading-tight tracking-wide group-hover:text-beeses-gold transition-colors duration-300 line-clamp-2">
+            {{ translate.currentLang === 'en' && item.title_en ? item.title_en : item.title }}
           </h3>
-          
+
           <p class="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
-            {{ item.summary }}
+            {{ translate.currentLang === 'en' && item.summary_en ? item.summary_en : item.summary }}
           </p>
-          
+
           <!-- Read More Link -->
-          <div class="flex items-center gap-2 text-beeses-gold text-xs font-black tracking-widest uppercase mt-auto pt-4 border-t border-gray-100 group/link">
-            <span>DEVAMINI OKU</span>
-            <lucide-icon name="arrow-right" class="w-4 h-4 transform group-hover/link:translate-x-2 transition-transform duration-300"></lucide-icon>
+          <div
+            class="flex items-center gap-2 text-beeses-gold text-xs font-black tracking-widest uppercase mt-auto pt-4 border-t border-gray-100 group/link">
+            <span>{{ 'NEWS_PAGE_READ_MORE' | translate }}</span>
+            <lucide-icon name="arrow-right"
+              class="w-4 h-4 transform group-hover/link:translate-x-2 transition-transform duration-300"></lucide-icon>
           </div>
         </div>
       </div>
@@ -98,22 +108,19 @@
 
     <!-- Pagination Bar -->
     <div *ngIf="!isLoading && totalPages() > 1" class="flex justify-center items-center gap-2 mt-16">
-      <button (click)="currentPage = currentPage - 1" 
-              [disabled]="currentPage === 1"
-              class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center bg-white text-gray-600 hover:bg-gray-50 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <button (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1"
+        class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center bg-white text-gray-600 hover:bg-gray-50 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         <lucide-icon name="chevron-left" class="w-4 h-4"></lucide-icon>
       </button>
 
-      <button *ngFor="let page of getPages()" 
-              (click)="currentPage = page"
-              [class]="currentPage === page ? 'bg-beeses-gold text-white border-beeses-gold shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-black'"
-              class="w-10 h-10 rounded-xl border font-bold text-sm transition-all">
+      <button *ngFor="let page of getPages()" (click)="currentPage = page"
+        [class]="currentPage === page ? 'bg-beeses-gold text-white border-beeses-gold shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-black'"
+        class="w-10 h-10 rounded-xl border font-bold text-sm transition-all">
         {{ page }}
       </button>
 
-      <button (click)="currentPage = currentPage + 1" 
-              [disabled]="currentPage === totalPages()"
-              class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center bg-white text-gray-600 hover:bg-gray-50 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <button (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages()"
+        class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center bg-white text-gray-600 hover:bg-gray-50 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         <lucide-icon name="chevron-right" class="w-4 h-4"></lucide-icon>
       </button>
     </div>

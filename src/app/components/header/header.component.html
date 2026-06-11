@@ -1,21 +1,20 @@
-<header
-  class="fixed top-0 left-0 w-full z-[9999] transition-all duration-700 text-white uppercase tracking-[0.20em] font-medium">
-
+<header class="fixed top-0 left-0 w-full z-[9999] transition-all duration-700 uppercase tracking-[0.15em] font-bold">
+  
+  <!-- Dil Çubuğu (Desktop & Tablet) -->
   <div [ngClass]="isScrolled ? 'lang-bar-hidden' : 'lang-bar-visible'"
-    class="relative z-[60] bg-transparent border-b border-white/5 transition-all duration-700">
-    <div class="container mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-end">
-      <div class="relative group/lang">
+    class="relative z-[120] bg-transparent transition-all duration-700 overflow-visible flex items-center justify-end">
+    <div class="container mx-auto px-4 md:px-8 lg:px-12 h-full flex items-center justify-end">
+      <div class="relative group/lang pointer-events-auto">
         <button (click)="toggleLangDropdown()"
-          class="flex items-center gap-2 hover:text-beeses-gold transition text-[11px] font-bold outline-none">
-          <img [src]="currentLang.flag" class="w-5 h-auto rounded-sm shadow-sm">
+          class="flex items-center gap-2 text-white hover:text-beeses-gold transition text-[10px] font-bold outline-none uppercase tracking-widest cursor-pointer">
+          <img [src]="currentLang.flag" class="w-4 h-auto rounded-sm shadow-sm">
           <span>{{ currentLang.code }}</span>
-          <lucide-icon name="chevron-down" class="w-3.5 h-3.5"></lucide-icon>
+          <lucide-icon name="chevron-down" class="w-3 h-3 text-white transition"></lucide-icon>
         </button>
 
         <div [ngClass]="{'opacity-100 visible': isLangDropdownOpen, 'opacity-0 invisible': !isLangDropdownOpen}"
-          class="absolute right-0 mt-2 w-36 bg-beeses-dark border border-white/10 shadow-xl rounded-sm overflow-hidden z-[110] transition-all duration-300 group-hover/lang:opacity-100 group-hover/lang:visible">
-          <button *ngFor="let lang of languages" (click)="changeLang(lang)"
-            class="flex w-full items-center gap-3 px-4 py-3 hover:bg-white/5 transition text-[10px] font-medium border-b border-white/5 last:border-0 leading-none">
+          class="lang-dropdown">
+          <button *ngFor="let lang of languages" (click)="changeLang(lang)">
             <img [src]="lang.flag" class="w-4 h-auto">
             <span>{{ lang.name }}</span>
           </button>
@@ -24,175 +23,213 @@
     </div>
   </div>
 
-  <div [ngClass]="isScrolled ? 'bg-beeses-dark/95 backdrop-blur-md shadow-lg' : 'bg-beeses-dark'"
-    class="relative z-50 border-b border-white/5 transition-all duration-500">
-    <div class="container mx-auto px-4 md:px-8 lg:px-12 py-4 md:py-5 flex items-center justify-between">
-
-      <a routerLink="/" class="flex items-center flex-shrink-0 group">
-        <img src="assets/logo.png" alt="Beeses Audio"
-          class="h-9 md:h-11 w-auto object-contain transition-transform group-hover:scale-105">
-      </a>
-
-      <nav class="hidden lg:flex items-center gap-10 font-bold flex-grow justify-center pl-10 text-[12px]">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">ANA
-          SAYFA</a>
-
-        <div class="relative group/nav">
-          <span class="nav-link flex items-center gap-1 cursor-default">
-            KURUMSAL <lucide-icon name="chevron-down" class="w-3 h-3 opacity-50"></lucide-icon>
+  <!-- Ana Header (Gold Centered for Desktop / Mobile) -->
+  <div [ngClass]="{'scrolled': isScrolled}" class="header-bar relative z-[100] transition-all duration-500 ease-in-out">
+    <div class="container mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-between w-full">
+      
+      <!-- ================= DESKTOP LAYOUT (lg:flex) ================= -->
+      <!-- Left Menu -->
+      <nav class="hidden lg:flex items-center header-nav flex-grow basis-0 justify-start font-black tracking-widest text-white uppercase">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">{{ 'NAV_HOME' | translate }}</a>
+        
+        <div class="relative group/nav flex items-center py-4 cursor-pointer">
+          <span class="nav-link flex items-center gap-1.5 cursor-default">
+            {{ 'NAV_CORPORATE' | translate }} <lucide-icon name="chevron-down" class="w-3.5 h-3.5 opacity-55"></lucide-icon>
           </span>
           <div class="dropdown-menu">
-            <a routerLink="/corporate/components/about">Hakkımızda</a>
-            <a routerLink="/corporate/components/news">Haberler & Duyurular</a>
-            <a routerLink="/corporate/components/certificates">Sertifikalar</a>
-            <!-- <a routerLink="/corporate/components/team">Ekibimiz</a> -->
-            <a routerLink="/corporate/components/sss">Sıkça Sorulan Sorular</a>
-            <!-- <a routerLink="/corporate/components/references">Referanslarımız</a> -->
+            <a routerLink="/corporate/components/about">{{ 'NAV_ABOUT' | translate }}</a>
+            <a routerLink="/corporate/components/news">{{ 'NAV_NEWS' | translate }}</a>
+            <a routerLink="/corporate/components/certificates">{{ 'NAV_CERTIFICATES' | translate }}</a>
+            <a routerLink="/corporate/components/sss">{{ 'NAV_FAQ' | translate }}</a>
           </div>
         </div>
 
-        <div class="relative group/nav">
-          <a routerLink="/products" routerLinkActive="active" class="nav-link flex items-center gap-1">
-            ÜRÜNLERİMİZ <lucide-icon name="chevron-down" class="w-3 h-3 opacity-50"></lucide-icon>
+        <div class="relative group/nav flex items-center py-4 cursor-pointer">
+          <a routerLink="/products" class="nav-link flex items-center gap-1.5 cursor-pointer">
+            {{ 'NAV_PRODUCTS' | translate }} <lucide-icon name="chevron-down" class="w-3.5 h-3.5 opacity-55"></lucide-icon>
           </a>
           <div class="dropdown-menu">
-            <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }">SQL SERİSİ</a>
-            <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }">OF SERİSİ</a>
-            <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }">PETEK SERİSİ</a>
-            <a routerLink="/products/innovation" class="text-beeses-gold font-black">İNOVASYON & GELECEK</a>
-          </div>
-        </div>
-
-        <a routerLink="/distributors" routerLinkActive="active" class="nav-link">DİSTRİBÜTÖRLERİMİZ</a>
-        <div class="relative group/nav">
-          <span class="nav-link flex items-center gap-1 cursor-default">
-            BİZE ULAŞIN <lucide-icon name="chevron-down" class="w-3 h-3 opacity-50"></lucide-icon>
-          </span>
-          <div class="dropdown-menu">
-            <a routerLink="/contact">Talep Formu</a>
-            <a routerLink="/contact/warranty-query">Garanti Sorgulama</a>
-            <a routerLink="/contact/warranty">Garanti Başvurusu</a>
+            <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }">{{ 'HEADER_SQL_SERIES' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }">{{ 'HEADER_OF_SERIES' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }">{{ 'HEADER_PETEK_SERIES' | translate }}</a>
+            <div class="h-px bg-gray-100 my-2"></div>
+            <a routerLink="/products/innovation" class="text-beeses-gold font-black">{{ 'HEADER_INNOVATION' | translate }}</a>
           </div>
         </div>
       </nav>
 
-      <div class="flex items-center gap-3 md:gap-4 flex-shrink-0">
-        <!-- Mail Butonu -->
-        <a href="mailto:info@iotek.com.tr?subject=Beeses Audio İletişim"
-           class="flex items-center justify-center w-12 h-12 md:w-auto md:h-auto md:px-6 md:py-3 bg-beeses-gold hover:bg-white hover:text-beeses-dark text-white rounded-full transition-all duration-300 text-[11px] font-extrabold tracking-widest shadow-lg shadow-beeses-gold/40 z-[10000] cursor-pointer">
-          <lucide-icon name="mail" class="w-5 h-5 md:w-4 md:h-4"></lucide-icon>
-          <span class="hidden md:inline ml-2">İLETİŞİME GEÇ</span>
+      <!-- Center Logo -->
+      <div class="logo-container hidden lg:flex flex-shrink-0 px-8 relative items-center justify-center" [ngClass]="{'scrolled': isScrolled}">
+        <a routerLink="/" class="logo-link block z-50">
+          <div class="logo-mask" [ngClass]="{'scrolled': isScrolled}"
+               style="background-color: #000000; mask: url('assets/logo.png') no-repeat center; mask-size: contain; -webkit-mask: url('assets/logo.png') no-repeat center; -webkit-mask-size: contain;">
+          </div>
         </a>
-
-        <!-- Mobil Menü Butonu (Sadece Mobilde Görünür) -->
-        <button (click)="toggleSideMenu()" class="lg:hidden p-2 hover:text-beeses-gold transition-all hover:scale-110">
-          <lucide-icon name="menu" class="w-8 h-8"></lucide-icon>
-        </button>
       </div>
+
+      <!-- Right Menu -->
+      <nav class="hidden lg:flex items-center header-nav flex-grow basis-0 justify-end font-black tracking-widest text-white uppercase">
+        <a routerLink="/distributors" routerLinkActive="active" class="nav-link">{{ 'NAV_DISTRIBUTORS' | translate }}</a>
+        
+        <div class="relative group/nav flex items-center py-4 cursor-pointer">
+          <span class="nav-link flex items-center gap-1.5 cursor-default">
+            {{ 'NAV_CONTACT' | translate }} <lucide-icon name="chevron-down" class="w-3.5 h-3.5 opacity-55"></lucide-icon>
+          </span>
+          <div class="dropdown-menu">
+            <a routerLink="/contact">{{ 'NAV_CONTACT_FORM' | translate }}</a>
+            <a routerLink="/contact/warranty-query">{{ 'NAV_WARRANTY_QUERY' | translate }}</a>
+            <a routerLink="/contact/warranty">{{ 'NAV_WARRANTY_REG' | translate }}</a>
+          </div>
+        </div>
+
+        <a href="mailto:info@iotek.com.tr?subject=Beeses Audio İletişim" 
+           class="cta-button flex items-center gap-2 rounded-full shadow-xl cursor-pointer">
+          <lucide-icon name="mail" class="w-4 h-4 cta-icon"></lucide-icon>
+          <span>{{ 'BUTTON_CONTACT' | translate }}</span>
+        </a>
+      </nav>
+
+      <!-- ================= MOBILE & TABLET LAYOUT (lg:hidden) ================= -->
+      <div class="flex lg:hidden items-center justify-between w-full py-1.5">
+        
+        <!-- Left Side: Hamburger Menu Button -->
+        <div class="flex-1 flex justify-start items-center">
+          <button (click)="toggleSideMenu()" class="p-2 text-black hover:text-white transition-all hover:scale-110 cursor-pointer">
+            <lucide-icon name="menu" class="w-8 h-8"></lucide-icon>
+          </button>
+        </div>
+
+        <!-- Center: Centered Black Logo -->
+        <div class="flex-shrink-0 flex items-center justify-center relative h-16 md:h-20 w-48 md:w-60">
+          <a routerLink="/" class="cursor-pointer block absolute top-1/2 -translate-y-1/2">
+            <div class="logo-mask-mobile"
+                 style="background-color: #000000; mask: url('assets/logo.png') no-repeat center; mask-size: contain; -webkit-mask: url('assets/logo.png') no-repeat center; -webkit-mask-size: contain;">
+            </div>
+          </a>
+        </div>
+
+        <!-- Right Side: Black Mail Button -->
+        <div class="flex-1 flex justify-end items-center">
+          <a href="mailto:info@iotek.com.tr?subject=Beeses Audio İletişim"
+             class="flex items-center justify-center w-10 h-10 md:w-11 md:h-11 bg-black hover:bg-beeses-dark text-white rounded-full transition-all duration-300 shadow-md cursor-pointer">
+            <lucide-icon name="mail" class="w-4.5 h-4.5 md:w-5 md:h-5 text-beeses-gold"></lucide-icon>
+          </a>
+        </div>
+
+      </div>
+
     </div>
   </div>
 
-  <div class="fixed inset-0 z-[60] transition-all duration-500"
+  <!-- Mobile Drawer Menu Overlay and Sidebar -->
+  <div class="fixed inset-0 z-[200] transition-all duration-500"
     [ngClass]="{'opacity-100 visible': isSideMenuOpen, 'opacity-0 invisible': !isSideMenuOpen}">
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" (click)="toggleSideMenu()"></div>
+    <!-- Backdrop overlay -->
+    <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" (click)="toggleSideMenu()"></div>
 
+    <!-- Drawer container -->
     <div
-      class="absolute left-0 top-0 h-full w-full max-w-[340px] bg-beeses-dark border-r border-white/5 p-10 flex flex-col shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.8,0,0.2,1)]"
+      class="absolute left-0 top-0 h-full w-full max-w-[340px] bg-beeses-gold/95 backdrop-blur-md p-8 flex flex-col shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.8,0,0.2,1)]"
       [ngClass]="{'translate-x-0': isSideMenuOpen, '-translate-x-full': !isSideMenuOpen}">
 
-      <div class="flex justify-between items-center mb-12">
-        <img src="assets/logo.png" alt="Beeses Audio" class="h-9 w-auto object-contain">
-        <button (click)="toggleSideMenu()" class="hover:text-beeses-gold transition-transform hover:rotate-90">
-          <lucide-icon name="x" class="w-9 h-9"></lucide-icon>
+      <!-- Top Header in Drawer -->
+      <div class="flex justify-between items-center mb-10 pb-4 border-b border-white/10">
+        <div style="background-color: #000000; height: 80px; width: 180px; mask: url('assets/logo.png') no-repeat center; mask-size: contain; -webkit-mask: url('assets/logo.png') no-repeat center; -webkit-mask-size: contain;"></div>
+        <button (click)="toggleSideMenu()" class="p-2 text-white hover:text-black transition-transform duration-300 hover:rotate-90">
+          <lucide-icon name="x" class="w-8 h-8"></lucide-icon>
         </button>
       </div>
 
-      <div class="flex gap-4 mb-10 pb-10 border-b border-white/5">
+      <!-- Languages inside Drawer -->
+      <div class="flex gap-4 mb-8 pb-8 border-b border-white/10">
         <button *ngFor="let lang of languages" (click)="changeLang(lang)"
-          class="flex items-center gap-2 px-3 py-2 rounded border border-white/5 text-[10px] font-bold"
-          [ngClass]="{'bg-beeses-gold text-white border-beeses-gold': currentLang.code === lang.code}">
-          <img [src]="lang.flag" class="w-4 h-auto"> {{ lang.code }}
+          class="flex items-center gap-2 px-3 py-2 rounded-xl border text-[10px] font-black tracking-widest uppercase transition-all duration-300"
+          [ngClass]="currentLang.code === lang.code ? 'bg-white text-black border-white shadow-lg' : 'bg-transparent text-white border-white/20 hover:bg-white/5'">
+          <img [src]="lang.flag" class="w-4 h-auto rounded-sm shadow-sm"> 
+          <span>{{ lang.code }}</span>
         </button>
       </div>
 
-      <nav class="flex flex-col gap-6">
+      <!-- Navigation Links -->
+      <nav class="flex flex-col gap-5 overflow-y-auto no-scrollbar max-h-[50vh]">
 
-        <a routerLink="/" (click)="toggleSideMenu()" class="mobile-main-link">ANA SAYFA</a>
+        <a routerLink="/" (click)="toggleSideMenu()" class="mobile-main-link">{{ 'NAV_HOME' | translate }}</a>
 
+        <!-- Corporate Accordion -->
         <div class="flex flex-col">
           <div (click)="toggleMobileKurumsal($event)" class="mobile-main-link flex justify-between items-center w-full cursor-pointer">
-            <span class="flex-grow">KURUMSAL</span>
+            <span class="flex-grow">{{ 'NAV_CORPORATE' | translate }}</span>
             <button class="p-2 -mr-2">
               <lucide-icon [name]="isMobileKurumsalOpen ? 'chevron-up' : 'chevron-down'"
-                class="w-5 h-5 opacity-40"></lucide-icon>
+                class="w-5 h-5 text-white/70"></lucide-icon>
             </button>
           </div>
 
           <div class="mobile-sub-menu" [ngClass]="{'open': isMobileKurumsalOpen}">
-            <a routerLink="/corporate/components/about" (click)="toggleSideMenu()">HAKKIMIZDA</a>
-            <a routerLink="/corporate/components/news" (click)="toggleSideMenu()">HABERLER & DUYURULAR</a>
-            <a routerLink="/corporate/components/certificates" (click)="toggleSideMenu()">SERTİFİKALAR</a>
-            <!-- <a routerLink="/corporate/components/team" (click)="toggleSideMenu()">EKİBİMİZ</a> -->
-            <a routerLink="/corporate/components/sss" (click)="toggleSideMenu()">S.S.S</a>
-            <!-- <a routerLink="/corporate/components/references" (click)="toggleSideMenu()">REFERANSLARIMIZ</a> -->
+            <a routerLink="/corporate/components/about" (click)="toggleSideMenu()">{{ 'NAV_ABOUT' | translate }}</a>
+            <a routerLink="/corporate/components/news" (click)="toggleSideMenu()">{{ 'NAV_NEWS' | translate }}</a>
+            <a routerLink="/corporate/components/certificates" (click)="toggleSideMenu()">{{ 'NAV_CERTIFICATES' | translate }}</a>
+            <a routerLink="/corporate/components/sss" (click)="toggleSideMenu()">{{ 'NAV_FAQ' | translate }}</a>
           </div>
         </div>
 
+        <!-- Products Accordion -->
         <div class="flex flex-col">
           <div (click)="toggleMobileUrunler($event)" class="mobile-main-link flex justify-between items-center w-full cursor-pointer">
-            <span class="flex-grow">ÜRÜNLERİMİZ</span>
+            <span class="flex-grow">{{ 'NAV_PRODUCTS' | translate }}</span>
             <button class="p-2 -mr-2">
               <lucide-icon [name]="isMobileUrunlerOpen ? 'chevron-up' : 'chevron-down'"
-                class="w-5 h-5 opacity-40"></lucide-icon>
+                class="w-5 h-5 text-white/70"></lucide-icon>
             </button>
           </div>
           <div class="mobile-sub-menu" [ngClass]="{'open': isMobileUrunlerOpen}">
-            <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }" (click)="toggleSideMenu()">SQL
-              SERİSİ</a>
-            <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }" (click)="toggleSideMenu()">OF SERİSİ</a>
-            <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }" (click)="toggleSideMenu()">PETEK
-              SERİSİ</a>
-            <a routerLink="/products/innovation" (click)="toggleSideMenu()" class="text-beeses-gold">İNOVASYON & GELECEK</a>
+            <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }" (click)="toggleSideMenu()">{{ 'HEADER_SQL_SERIES' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }" (click)="toggleSideMenu()">{{ 'HEADER_OF_SERIES' | translate }}</a>
+            <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }" (click)="toggleSideMenu()">{{ 'HEADER_PETEK_SERIES' | translate }}</a>
+            <a routerLink="/products/innovation" (click)="toggleSideMenu()" class="font-black text-white">{{ 'HEADER_INNOVATION' | translate }}</a>
           </div>
         </div>
 
-        <a routerLink="/distributors" (click)="toggleSideMenu()" class="mobile-main-link">DİSTRİBÜTÖRLERİMİZ</a>
+        <a routerLink="/distributors" (click)="toggleSideMenu()" class="mobile-main-link">{{ 'NAV_DISTRIBUTORS' | translate }}</a>
         
+        <!-- Contact Accordion -->
         <div class="flex flex-col">
           <div (click)="toggleMobileIletisim($event)" class="mobile-main-link flex justify-between items-center w-full cursor-pointer">
-            <span class="flex-grow">BİZE ULAŞIN</span>
+            <span class="flex-grow">{{ 'NAV_CONTACT' | translate }}</span>
             <button class="p-2 -mr-2">
               <lucide-icon [name]="isMobileIletisimOpen ? 'chevron-up' : 'chevron-down'"
-                class="w-5 h-5 opacity-40"></lucide-icon>
+                class="w-5 h-5 text-white/70"></lucide-icon>
             </button>
           </div>
           <div class="mobile-sub-menu" [ngClass]="{'open': isMobileIletisimOpen}">
-            <a routerLink="/contact" (click)="toggleSideMenu()">TALEP FORMU</a>
-            <a routerLink="/contact/warranty-query" (click)="toggleSideMenu()">GARANTİ SORGULAMA</a>
-            <a routerLink="/contact/warranty" (click)="toggleSideMenu()">GARANTİ BAŞVURUSU</a>
+            <a routerLink="/contact" (click)="toggleSideMenu()">{{ 'NAV_CONTACT_FORM' | translate }}</a>
+            <a routerLink="/contact/warranty-query" (click)="toggleSideMenu()">{{ 'NAV_WARRANTY_QUERY' | translate }}</a>
+            <a routerLink="/contact/warranty" (click)="toggleSideMenu()">{{ 'NAV_WARRANTY_REG' | translate }}</a>
           </div>
         </div>
       </nav>
 
-      <div class="mt-auto pt-10">
-        <div class="flex items-center gap-5 mb-8">
+      <!-- Drawer Footer -->
+      <div class="mt-auto pt-8 border-t border-white/10">
+        <div class="flex items-center gap-5 mb-6">
           <a href="https://www.instagram.com/beeses.audio?igsh=MTU2bGR3bWd5MnJsdQ%3D%3D&utm_source=qr" target="_blank"
-            class="text-white/30 hover:text-beeses-gold transition-colors">
+            class="text-white/60 hover:text-white transition-colors">
             <lucide-icon name="instagram" class="w-5 h-5"></lucide-icon>
           </a>
-          <a href="#" target="_blank" class="text-white/30 hover:text-beeses-gold transition-colors">
+          <a href="#" target="_blank" class="text-white/60 hover:text-white transition-colors">
             <lucide-icon name="facebook" class="w-5 h-5"></lucide-icon>
           </a>
-          <a href="#" target="_blank" class="text-white/30 hover:text-beeses-gold transition-colors">
+          <a href="#" target="_blank" class="text-white/60 hover:text-white transition-colors">
             <lucide-icon name="youtube" class="w-5 h-5"></lucide-icon>
           </a>
         </div>
 
-        <div class="text-[10px] text-white/40 leading-relaxed tracking-widest uppercase font-medium">
-          <p class="text-beeses-gold mb-2 font-bold">BEESES AUDIO TECHNOLOGIES</p>
+        <div class="text-[9px] text-white/60 leading-relaxed tracking-widest uppercase font-bold">
+          <p class="text-white mb-1 font-black">BEESES AUDIO TECHNOLOGIES</p>
           <p>ESENLER / İSTANBUL</p>
         </div>
       </div>
     </div>
   </div>
+
 </header>

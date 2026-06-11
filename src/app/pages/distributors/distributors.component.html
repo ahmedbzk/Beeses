@@ -1,26 +1,27 @@
-<section class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
+<section class="relative w-full h-auto flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
   <div class="absolute inset-0 w-full h-full">
     <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
     <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/95 via-beeses-dark/70 to-beeses-silver"></div>
   </div>
   
-  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-6 md:pb-12">
-    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">Küresel Ağımız</span>
-    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">DİSTRİBÜTÖRLERİMİZ</h1>
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-16 md:pb-20">
+    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">{{ 'DIST_HERO_TAG' | translate }}</span>
+    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">{{ 'DIST_HERO_TITLE' | translate }}</h1>
     <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
     <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
-      Dünyanın dört bir yanındaki yetkili satış noktalarımızı keşfedin.
+      {{ 'DIST_HERO_DESC' | translate }}
     </p>
   </div>
 </section>
 
-<section class="relative z-10 w-full bg-beeses-silver py-8 md:py-20 -mt-2">
-  <div class="container mx-auto px-4 md:px-8 lg:px-12">
-    
+<section class="relative z-10 w-full bg-beeses-silver py-12 md:py-20 -mt-px">
+  <div class="container mx-auto px-4 md:px-8 lg:px-12 relative z-20">
+    <!-- Main Content Wrapped in a Card for Transition -->
+    <div class="bg-white border border-gray-200 shadow-2xl rounded-3xl p-6 md:p-10 lg:p-12 mb-10 transition-all duration-300">
     <!-- Mobile Filter Header -->
     <div class="lg:hidden mb-8 space-y-4 animate-fade-in">
       <div class="relative">
-        <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Distribütör Ara..." 
+        <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" [placeholder]="'DIST_SEARCH_PLACEHOLDER' | translate" 
                class="w-full bg-white border border-gray-200 rounded-2xl py-4 pl-12 pr-4 text-sm text-beeses-dark shadow-sm focus:outline-none focus:ring-2 focus:ring-beeses-gold/50 transition-all">
         <lucide-icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></lucide-icon>
       </div>
@@ -30,7 +31,7 @@
         <button (click)="filterByCountry(null)" 
                 class="whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-sm border"
                 [ngClass]="selectedCountry === null ? 'bg-beeses-dark text-white border-beeses-dark' : 'bg-white text-gray-500 border-gray-100'">
-          TÜMÜ
+          {{ 'DIST_ALL_COUNTRIES' | translate }}
         </button>
         <button *ngFor="let country of countries" (click)="filterByCountry(country)" 
                 class="whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-sm border"
@@ -47,20 +48,20 @@
         
         <div class="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
           
-          <h3 class="text-sm font-bold text-gray-400 tracking-[0.15em] uppercase mb-4">Arama</h3>
+          <h3 class="text-sm font-bold text-gray-400 tracking-[0.15em] uppercase mb-4">{{ 'DIST_SEARCH_LABEL' | translate }}</h3>
           <div class="relative mb-8">
-            <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Distribütör adı veya ülke..." 
+            <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" [placeholder]="'DIST_SEARCH_PLACEHOLDER2' | translate" 
                    class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm text-beeses-dark focus:outline-none focus:ring-2 focus:ring-beeses-gold/50 focus:border-beeses-gold transition-all">
             <lucide-icon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>
           </div>
 
-          <h3 class="text-sm font-bold text-gray-400 tracking-[0.15em] uppercase mb-4">Ülkeler</h3>
+          <h3 class="text-sm font-bold text-gray-400 tracking-[0.15em] uppercase mb-4">{{ 'DIST_COUNTRIES_LABEL' | translate }}</h3>
           <ul class="space-y-2">
             <li>
               <button (click)="filterByCountry(null)" 
                       class="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm flex items-center justify-between"
                       [ngClass]="selectedCountry === null ? 'bg-beeses-dark text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'">
-                Tüm Ülkeler
+                {{ 'DIST_ALL_COUNTRIES_LABEL' | translate }}
                 <lucide-icon name="chevron-right" class="w-4 h-4 opacity-50"></lucide-icon>
               </button>
             </li>
@@ -83,21 +84,21 @@
         <!-- Loading State -->
         <div *ngIf="isLoading" class="flex flex-col items-center justify-center h-64">
           <div class="w-12 h-12 border-4 border-gray-200 border-t-beeses-gold rounded-full animate-spin mb-4"></div>
-          <p class="text-gray-500 font-medium text-sm tracking-widest uppercase animate-pulse">Distribütörler Yükleniyor...</p>
+          <p class="text-gray-500 font-medium text-sm tracking-widest uppercase animate-pulse">{{ 'DIST_LOADING' | translate }}</p>
         </div>
 
         <div *ngIf="!isLoading">
           <!-- Result count -->
           <div class="mb-8 pb-4 border-b border-gray-200/50 flex justify-between items-center animate-fade-in">
-            <p class="text-gray-500 text-sm font-medium">Toplam <span class="text-beeses-dark font-bold">{{ filteredDistributors.length }}</span> distribütör bulundu.</p>
+            <p class="text-gray-500 text-sm font-medium">{{ 'DIST_FOUND_TOTAL' | translate }} <span class="text-beeses-dark font-bold">{{ filteredDistributors.length }}</span> {{ 'DIST_FOUND_LABEL' | translate }}</p>
           </div>
 
           <!-- Empty State -->
           <div *ngIf="filteredDistributors.length === 0" class="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100 animate-fade-in">
             <lucide-icon name="search-x" class="w-12 h-12 text-gray-300 mx-auto mb-4"></lucide-icon>
-            <h3 class="text-xl font-bold text-beeses-dark mb-2">Distribütör Bulunamadı</h3>
-            <p class="text-gray-500">Arama kriterlerinize uygun distribütör bulunamadı.</p>
-            <button (click)="searchQuery=''; filterByCountry(null)" class="mt-6 px-6 py-2 bg-beeses-gold text-white rounded-full text-sm font-bold hover:bg-beeses-dark transition-colors">Filtreleri Temizle</button>
+            <h3 class="text-xl font-bold text-beeses-dark mb-2">{{ 'DIST_EMPTY_TITLE' | translate }}</h3>
+            <p class="text-gray-500">{{ 'DIST_EMPTY_DESC' | translate }}</p>
+            <button (click)="searchQuery=''; filterByCountry(null)" class="mt-6 px-6 py-2 bg-beeses-gold text-white rounded-full text-sm font-bold hover:bg-beeses-dark transition-colors">{{ 'DIST_CLEAR' | translate }}</button>
           </div>
 
           <!-- Grid -->
@@ -127,7 +128,7 @@
                     <lucide-icon name="user" class="w-4 h-4"></lucide-icon>
                   </div>
                   <div>
-                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Temsilci</h4>
+                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{{ 'DIST_REPRESENTATIVE' | translate }}</h4>
                     <p class="text-xs text-beeses-dark font-medium">{{ d.representative }}</p>
                   </div>
                 </div>
@@ -137,7 +138,7 @@
                     <lucide-icon name="map-pin" class="w-4 h-4"></lucide-icon>
                   </div>
                   <div>
-                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Adres</h4>
+                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{{ 'DIST_ADDRESS' | translate }}</h4>
                     <p class="text-xs text-gray-600 leading-relaxed font-light line-clamp-3">{{ d.address }}</p>
                   </div>
                 </div>
@@ -147,7 +148,7 @@
                     <lucide-icon name="phone" class="w-4 h-4"></lucide-icon>
                   </div>
                   <div>
-                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Telefon</h4>
+                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{{ 'DIST_PHONE' | translate }}</h4>
                     <p class="text-xs text-beeses-dark font-medium">{{ d.phone }}</p>
                   </div>
                 </div>
@@ -157,18 +158,18 @@
                     <lucide-icon name="mail" class="w-4 h-4"></lucide-icon>
                   </div>
                   <div>
-                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">E-Posta</h4>
+                    <h4 class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{{ 'DIST_EMAIL' | translate }}</h4>
                     <a [href]="'mailto:' + d.email" class="text-xs text-beeses-dark font-medium hover:text-beeses-gold transition-colors">{{ d.email }}</a>
                   </div>
                 </div>
               </div>
 
-              <!-- İletişime Geç Button Section (Fixed above social media icons) -->
+              <!-- Contact Button -->
               <div class="px-6 pb-6 pt-2 flex justify-center" *ngIf="d.email">
                 <a [href]="'mailto:' + d.email" 
                    class="inline-flex items-center justify-center px-5 py-2 bg-beeses-gold hover:bg-white hover:text-beeses-dark text-white rounded-full transition-all duration-300 text-[10px] font-extrabold tracking-widest shadow-lg shadow-beeses-gold/30 cursor-pointer border border-transparent hover:border-beeses-gold/30">
                   <lucide-icon name="mail" class="w-3.5 h-3.5"></lucide-icon>
-                  <span class="ml-2">İLETİŞİME GEÇ</span>
+                  <span class="ml-2">{{ 'DIST_CONTACT' | translate }}</span>
                 </a>
               </div>
               
@@ -176,7 +177,7 @@
               <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-100 flex justify-center gap-4">
                 <a *ngIf="d.website" [href]="d.website" target="_blank" 
                    class="w-9 h-9 bg-beeses-dark hover:bg-beeses-gold text-white rounded-full transition-all duration-300 flex items-center justify-center shadow-sm"
-                   title="Web Sitesi">
+                   [title]="'DIST_WEBSITE' | translate">
                   <lucide-icon name="globe" class="w-4 h-4"></lucide-icon>
                 </a>
                 <a *ngIf="d.instagram" [href]="d.instagram" target="_blank" 
@@ -195,7 +196,7 @@
                   <lucide-icon name="youtube" class="w-4 h-4"></lucide-icon>
                 </a>
                 <div *ngIf="!d.website && !d.instagram && !d.facebook && !d.youtube" class="text-xs text-gray-400 font-medium py-2">
-                  Sosyal medya bilgisi bulunmuyor.
+                  {{ 'DIST_NO_SOCIAL' | translate }}
                 </div>
               </div>
             </div>
@@ -206,5 +207,6 @@
       </div>
       
     </div>
+    </div> <!-- End Main Content Wrapper -->
   </div>
 </section>

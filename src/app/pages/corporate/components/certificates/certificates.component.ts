@@ -3,16 +3,18 @@ import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { CertificateService, Certificate } from '../../../../services/certificate.service';
 import { environment } from '../../../../../environments/environment';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-certificates',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, TranslateModule],
   templateUrl: './certificates.component.html',
   styleUrl: './certificates.component.scss'
 })
 export class CertificatesComponent implements OnInit {
   private certificateService = inject(CertificateService);
+  public translate = inject(TranslateService);
   certificates: Certificate[] = [];
   apiUrl = environment.apiUrl;
 
@@ -27,7 +29,7 @@ export class CertificatesComponent implements OnInit {
           this.certificates = response.data;
         }
       },
-      error: (err) => console.error('Sertifikalar yüklenirken hata:', err)
+      error: () => {}
     });
   }
 

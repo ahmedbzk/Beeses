@@ -4,16 +4,18 @@ import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 import { NewsService, News } from '../../../../services/news.service';
 import { environment } from '../../../../../environments/environment';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, RouterLink],
+  imports: [CommonModule, LucideAngularModule, RouterLink, TranslateModule],
   templateUrl: './news.component.html',
   styleUrl: './news.component.scss'
 })
 export class NewsComponent implements OnInit, OnDestroy {
   private newsService = inject(NewsService);
+  public translate = inject(TranslateService);
   newsItems: News[] = [];
   
   // Slider State
@@ -97,11 +99,18 @@ export class NewsComponent implements OnInit, OnDestroy {
     if (this.newsItems.length === 0) return [];
     const raw = this.newsItems.slice(0, 6);
     const extra = this.itemsPerPage - 1;
-    const result = [...raw];
-    for (let i = 0; i < extra; i++) {
-      result.push(raw[i % raw.length]);
+    const looped = [...raw, ...raw.slice(0, extra)];
+    return looped;
+  }
+
+  getCategoryTranslationKey(cat: string): string {
+    switch (cat) {
+      case 'Tümü': return 'NEWS_CAT_ALL';
+      case 'Haber': return 'NEWS_CAT_NEWS';
+      case 'Duyuru': return 'NEWS_CAT_ANNOUNCEMENT';
+      case 'Etkinlik': return 'NEWS_CAT_EVENT';
+      default: return cat;
     }
-    return result;
   }
 
   getImageUrl(imagePath: string | undefined): string {

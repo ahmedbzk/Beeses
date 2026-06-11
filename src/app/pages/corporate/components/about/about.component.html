@@ -1,116 +1,169 @@
-<section class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
+<section class="relative w-full h-auto flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
   <div class="absolute inset-0 w-full h-full">
     <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
     <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/95 via-beeses-dark/70 to-beeses-silver"></div>
   </div>
 
-  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-6 md:pb-12">
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-16 md:pb-20">
     <span
-      class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">Kusursuz
-      Sesin Peşinde</span>
-    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">HAKKIMIZDA</h1>
+      class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">{{ 'ABOUT_HERO_TAG' | translate }}</span>
+    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">{{ 'NAV_ABOUT' | translate | uppercase }}</h1>
     <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
     <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
-      Sesin sadece duyulan değil, aynı zamanda <span class="font-bold">hissedilen</span> bir deneyim olduğuna
-      inanıyoruz.
+      {{ 'ABOUT_HERO_TITLE' | translate }}
     </p>
   </div>
 </section>
 
-<!-- Our Story Section (Light Theme) -->
-<section class="w-full bg-beeses-silver py-20 md:py-24 relative overflow-hidden -mt-px">
-
+<!-- Our Story Section -->
+<section class="w-full bg-gradient-to-b from-beeses-silver via-white to-beeses-silver py-20 md:py-32 relative overflow-hidden -mt-px">
+  <!-- Decorative subtle gold grid background -->
+  <div class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#b58131_1px,transparent_1px)] [background-size:24px_24px]"></div>
+  
   <div class="container mx-auto px-6 md:px-12 relative z-10">
     <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
 
       <div class="w-full lg:w-1/2 space-y-8">
-        <h2 class="text-4xl md:text-6xl font-light text-beeses-dark tracking-tight uppercase leading-tight">
-          Sesi<br>
-          <span class="font-bold text-beeses-gold">Sanata Dönüştürdük</span>
-        </h2>
-        <p class="text-gray-600 text-lg leading-relaxed text-justify">
-          Beeses Audio olarak, yılların getirdiği tecrübe ve bitmek tükenmek bilmeyen ses tutkusuyla yola çıktık.
-          Amacımız sadece ses çıkaran cihazlar üretmek değil; her notayı, her ritmi ve her fısıltıyı olduğu gibi, en
-          doğal ve en güçlü haliyle dinleyicilere ulaştırmaktır.
-        </p>
-        <p class="text-gray-600 text-lg leading-relaxed text-justify">
-          Geliştirdiğimiz her amplifikatör ve hoparlör serisinin arkasında ciddi bir mühendislik, tasarım ve Ar-Ge
-          süreci yatmaktadır. Amfi teknolojilerinde devrim yaratan detaylarımızla fark yaratıyoruz.
-        </p>
+        <div class="space-y-4">
+          <span class="text-beeses-gold text-xs tracking-[0.4em] font-extrabold uppercase block">{{ 'ABOUT_STORY_TITLE' | translate }}</span>
+          <h2 class="text-4xl md:text-6xl font-black text-beeses-dark tracking-tight uppercase leading-tight">
+            {{ 'ABOUT_STORY_TITLE2' | translate }}
+          </h2>
+        </div>
+        <div class="w-16 h-1 bg-beeses-gold rounded-full"></div>
+        <div class="space-y-6 text-gray-600 text-lg leading-relaxed text-justify font-medium">
+          <p>{{ 'ABOUT_STORY_DESC1' | translate }}</p>
+          <p>{{ 'ABOUT_STORY_DESC2' | translate }}</p>
+          <p class="border-l-4 border-beeses-gold pl-4 italic text-gray-500 font-normal">
+            {{ 'ABOUT_STORY_DESC3' | translate }}
+          </p>
+        </div>
       </div>
 
-      <div class="w-full lg:w-1/2 relative flex justify-center group perspective-[1000px]">
-        <img src="assets/products/1a.png" alt="Beeses Amplifier SQL"
-          class="w-3/4 max-w-md h-auto object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-transform duration-700 ease-out group-hover:scale-105 group-hover:rotate-y-6">
+      <!-- Fanned-Out/Slanted Photo Stack -->
+      <div class="w-full lg:w-1/2 flex justify-center items-center py-12 lg:py-0">
+        <div class="relative w-full max-w-lg h-[350px] md:h-[450px] flex items-center justify-center group">
+          <!-- Background gold decorative blob -->
+          <div class="absolute -z-10 w-80 h-80 bg-beeses-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <!-- Bottom Left Image (Stack 1) -->
+          <div class="absolute w-[80%] aspect-[4/3] rounded-2xl overflow-hidden shadow-lg border-4 border-white transform origin-bottom-left -translate-x-6 -translate-y-2 -rotate-6 opacity-90 photo-stack-item group-hover:-translate-x-12 group-hover:-translate-y-6 group-hover:-rotate-12 md:group-hover:-translate-x-28 md:group-hover:-translate-y-14 md:group-hover:-rotate-[15deg] z-10">
+            <img src="assets/about/story-stack1.jpg" alt="Beeses Heatsink Aluminum Fins" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-beeses-dark/40 to-transparent opacity-50"></div>
+          </div>
+
+          <!-- Bottom Right Image (Stack 2) -->
+          <div class="absolute w-[80%] aspect-[4/3] rounded-2xl overflow-hidden shadow-lg border-4 border-white transform origin-bottom-right translate-x-6 translate-y-2 rotate-6 opacity-90 photo-stack-item group-hover:translate-x-12 group-hover:translate-y-6 group-hover:rotate-12 md:group-hover:translate-x-28 md:group-hover:translate-y-14 md:group-hover:rotate-[15deg] z-20">
+            <img src="assets/about/story-stack2.jpg" alt="Beeses Toroidal Transformer" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-beeses-dark/40 to-transparent opacity-50"></div>
+          </div>
+
+          <!-- Top Main Image (Story Main) -->
+          <div class="absolute w-[80%] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-4 border-white transform photo-stack-item group-hover:scale-105 group-hover:-translate-y-4 md:group-hover:-translate-y-6 z-30">
+            <img src="assets/about/story-main.jpg" alt="Beeses Internal Circuitry" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-beeses-dark/50 to-transparent opacity-60"></div>
+            <div class="absolute inset-4 border border-white/20 rounded-lg pointer-events-none transition-all duration-700 group-hover:inset-6"></div>
+          </div>
+        </div>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- Values Section (Dark Theme) -->
+<!-- Craftsmanship & Technology Section (Dark Theme) -->
 <section class="w-full bg-beeses-dark py-24 md:py-32 relative overflow-hidden">
+  <!-- Subtle gradient glow in background -->
+  <div class="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-beeses-gold/10 rounded-full blur-[120px] pointer-events-none"></div>
+  <div class="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-[120px] pointer-events-none"></div>
+
   <div class="container mx-auto px-6 md:px-12 relative z-10">
-    <div class="flex flex-col-reverse lg:flex-row items-start gap-16 lg:gap-24">
+    <div class="flex flex-col lg:flex-row items-stretch gap-16 lg:gap-24">
 
-      <div class="w-full lg:w-1/2 relative group flex flex-col items-center">
-        <img src="assets/products/Petek Stereo.png" alt="Beeses Petek Series"
-          class="w-full max-w-lg h-auto object-contain relative z-10 drop-shadow-[0_30px_60px_rgba(0,0,0,0.5)] transition-all duration-1000 ease-[cubic-bezier(0.2,1,0.2,1)] group-hover:-translate-y-4 mb-8">
+      <!-- Left: Interactive Tech Cards Grid -->
+      <div class="w-full lg:w-1/2 flex flex-col justify-between space-y-8">
+        <div class="bg-white/[0.02] border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-2xl relative overflow-hidden">
+          <div class="absolute -right-16 -top-16 w-36 h-36 bg-beeses-gold/15 rounded-full blur-2xl pointer-events-none"></div>
+          
+          <h4 class="text-beeses-gold font-extrabold mb-6 tracking-[0.2em] uppercase text-sm flex items-center gap-2">
+            <lucide-icon name="sliders" class="w-5 h-5"></lucide-icon>
+            {{ 'ABOUT_PETEK_TECH' | translate }}
+          </h4>
+          
+          <div class="grid grid-cols-1 gap-6">
+            <!-- Card 1: Transformer -->
+            <div class="group relative h-48 rounded-2xl overflow-hidden border border-white/10 shadow-lg cursor-pointer">
+              <img src="assets/about/tech-transformer.jpg" alt="Cosmo Transformer" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-90">
+              <div class="absolute inset-0 bg-gradient-to-r from-beeses-dark via-beeses-dark/60 to-transparent"></div>
+              <div class="absolute inset-0 border border-white/5 group-hover:border-beeses-gold/40 rounded-2xl transition-colors duration-500"></div>
+              <div class="relative z-10 h-full flex flex-col justify-end p-6 max-w-[85%]">
+                <span class="text-beeses-gold text-[10px] tracking-widest font-extrabold uppercase mb-1">COSMO TECHNOLOGY</span>
+                <h5 class="text-white font-bold text-lg mb-1">{{ 'ABOUT_TECH_TITLE1' | translate }}</h5>
+                <p class="text-gray-400 text-xs line-clamp-2 transition-colors duration-300 group-hover:text-gray-300">{{ 'ABOUT_PETEK_TECH_DESC2' | translate }}</p>
+              </div>
+            </div>
 
-        <div class="bg-white/5 border border-white/10 rounded-xl p-6 w-full max-w-lg backdrop-blur-sm">
-          <h4 class="text-beeses-gold font-bold mb-3 tracking-wider uppercase text-sm">Petek Serisi Teknolojisi</h4>
-          <ul class="space-y-3 text-sm text-gray-400">
-            <li class="flex items-center gap-3">
-              <lucide-icon name="check-circle" class="w-4 h-4 text-beeses-gold shrink-0"></lucide-icon>
-              <span>Özel alüminyum soğutucu blokları ile maksimum termal verimlilik.</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <lucide-icon name="check-circle" class="w-4 h-4 text-beeses-gold shrink-0"></lucide-icon>
-              <span>Saf bakır bobinler ile sıfır kayıplı sinyal iletimi.</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <lucide-icon name="check-circle" class="w-4 h-4 text-beeses-gold shrink-0"></lucide-icon>
-              <span>Düşük distorsiyon ve yüksek dinamik aralık (HDR Audio).</span>
-            </li>
-          </ul>
+            <!-- Card 2: Capacitors -->
+            <div class="group relative h-48 rounded-2xl overflow-hidden border border-white/10 shadow-lg cursor-pointer">
+              <img src="assets/about/tech-capacitors.jpg" alt="Premium Components" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-90">
+              <div class="absolute inset-0 bg-gradient-to-r from-beeses-dark via-beeses-dark/60 to-transparent"></div>
+              <div class="absolute inset-0 border border-white/5 group-hover:border-beeses-gold/40 rounded-2xl transition-colors duration-500"></div>
+              <div class="relative z-10 h-full flex flex-col justify-end p-6 max-w-[85%]">
+                <span class="text-beeses-gold text-[10px] tracking-widest font-extrabold uppercase mb-1">PREMIUM MATERIALS</span>
+                <h5 class="text-white font-bold text-lg mb-1">{{ 'ABOUT_TECH_TITLE2' | translate }}</h5>
+                <p class="text-gray-400 text-xs line-clamp-2 transition-colors duration-300 group-hover:text-gray-300">{{ 'ABOUT_PETEK_TECH_DESC3' | translate }}</p>
+              </div>
+            </div>
+
+            <!-- Card 3: Ribbed Heatsinks (Thermal management photo matches text) -->
+            <div class="group relative h-48 rounded-2xl overflow-hidden border border-white/10 shadow-lg cursor-pointer">
+              <img src="assets/about/story-stack1.jpg" alt="Thermal Design Ribbed Heatsink" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-90">
+              <div class="absolute inset-0 bg-gradient-to-r from-beeses-dark via-beeses-dark/60 to-transparent"></div>
+              <div class="absolute inset-0 border border-white/5 group-hover:border-beeses-gold/40 rounded-2xl transition-colors duration-500"></div>
+              <div class="relative z-10 h-full flex flex-col justify-end p-6 max-w-[85%]">
+                <span class="text-beeses-gold text-[10px] tracking-widest font-extrabold uppercase mb-1">THERMAL EFFICIENCY</span>
+                <h5 class="text-white font-bold text-lg mb-1">{{ 'INNOVATION_TECH3_TITLE' | translate }}</h5>
+                <p class="text-gray-400 text-xs line-clamp-2 transition-colors duration-300 group-hover:text-gray-300">{{ 'ABOUT_PETEK_TECH_DESC1' | translate }}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="w-full lg:w-1/2 space-y-12">
+      <!-- Right: Vision and Value Text -->
+      <div class="w-full lg:w-1/2 flex flex-col justify-center space-y-12">
         <div>
-          <span class="text-beeses-gold text-[11px] tracking-[0.4em] font-bold uppercase mb-4 block">VİZYONUMUZ</span>
-          <h2 class="text-4xl md:text-5xl font-light text-white tracking-tight uppercase mb-6 leading-tight">
-            Kaliteden <br><span class="font-bold">Ödün Vermeyenler İçin</span>
+          <span class="text-beeses-gold text-xs tracking-[0.4em] font-extrabold uppercase mb-4 block">{{ 'ABOUT_VISION' | translate }}</span>
+          <h2 class="text-4xl md:text-5xl font-black text-white tracking-tight uppercase mb-6 leading-tight">
+            {{ 'ABOUT_VISION_TITLE' | translate }}
           </h2>
-          <p class="text-gray-400 text-lg leading-relaxed text-justify">
-            Modern teknolojiyi estetikle birleştirerek, hem görsel hem de işitsel anlamda kusursuz ürünler tasarlamak en
-            büyük misyonumuzdur. Müşteri memnuniyetini merkeze alan yaklaşımımızla, amatör dinleyicilerden profesyonel
-            kullanıcılara kadar herkesin beklentilerini aşmayı hedefliyoruz.
+          <div class="w-16 h-1 bg-beeses-gold rounded-full mb-6"></div>
+          <p class="text-gray-400 text-lg leading-relaxed text-justify font-medium">
+            {{ 'ABOUT_VISION_DESC' | translate }}
           </p>
         </div>
 
+        <!-- Technology Points -->
         <div class="space-y-8">
-          <div class="flex items-start gap-6">
+          <div class="flex items-start gap-6 group">
             <div
-              class="w-14 h-14 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center shrink-0 shadow-[0_10px_20px_rgba(0,0,0,0.2)]">
-              <lucide-icon name="cpu" class="w-6 h-6 text-beeses-gold"></lucide-icon>
+              class="w-14 h-14 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-all duration-300 group-hover:border-beeses-gold/50 group-hover:bg-white/[0.06]">
+              <lucide-icon name="cpu" class="w-6 h-6 text-beeses-gold transition-transform duration-500 group-hover:rotate-[360deg]"></lucide-icon>
             </div>
             <div>
-              <h4 class="text-xl font-bold text-white mb-2">İleri Teknoloji Ar-Ge</h4>
-              <p class="text-gray-400 leading-relaxed text-sm">Sektörün en yenilikçi bileşenlerini ve kendi
-                geliştirdiğimiz devre yapılarını kullanarak sınırları zorluyoruz.</p>
+              <h4 class="text-xl font-bold text-white mb-2 transition-colors duration-300 group-hover:text-beeses-gold">{{ 'ABOUT_TECH_TITLE1' | translate }}</h4>
+              <p class="text-gray-400 leading-relaxed text-sm">{{ 'ABOUT_TECH_DESC1' | translate }}</p>
             </div>
           </div>
 
-          <div class="flex items-start gap-6">
+          <div class="flex items-start gap-6 group">
             <div
-              class="w-14 h-14 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center shrink-0 shadow-[0_10px_20px_rgba(0,0,0,0.2)]">
-              <lucide-icon name="award" class="w-6 h-6 text-beeses-gold"></lucide-icon>
+              class="w-14 h-14 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-all duration-300 group-hover:border-beeses-gold/50 group-hover:bg-white/[0.06]">
+              <lucide-icon name="award" class="w-6 h-6 text-beeses-gold transition-all duration-300 group-hover:scale-110"></lucide-icon>
             </div>
             <div>
-              <h4 class="text-xl font-bold text-white mb-2">Premium Malzeme Kalitesi</h4>
-              <p class="text-gray-400 leading-relaxed text-sm">Kasadan devre elemanlarına kadar her detayı uzun ömürlü
-                ve en üst kalite standartlarında üretiyoruz.</p>
+              <h4 class="text-xl font-bold text-white mb-2 transition-colors duration-300 group-hover:text-beeses-gold">{{ 'ABOUT_TECH_TITLE2' | translate }}</h4>
+              <p class="text-gray-400 leading-relaxed text-sm">{{ 'ABOUT_TECH_DESC2' | translate }}</p>
             </div>
           </div>
         </div>
@@ -120,7 +173,58 @@
   </div>
 </section>
 
-<!-- Quote Section (Light Theme, Redesigned) -->
+<!-- Stats Grid Section (Dark Theme, Premium Glowing Cards) -->
+<section class="bg-gradient-to-b from-[#121212] via-[#0d0d0d] to-[#121212] py-24 relative overflow-hidden border-t border-b border-white/5">
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-beeses-gold/5 rounded-full blur-[150px] pointer-events-none"></div>
+
+  <div class="container mx-auto px-6 md:px-12 relative z-10">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      
+      <!-- Stat Card 1 -->
+      <div class="bg-white/[0.01] border border-white/5 hover:border-beeses-gold/45 rounded-3xl p-6 md:p-8 text-center shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_15px_40px_rgba(181,129,49,0.12)] group relative overflow-hidden">
+        <div class="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 text-beeses-gold flex items-center justify-center mx-auto mb-6 transition-all duration-500 group-hover:scale-110 group-hover:border-beeses-gold/40 group-hover:bg-white/[0.07]">
+          <lucide-icon name="flask-conical" class="w-6 h-6"></lucide-icon>
+        </div>
+        <div class="text-3xl md:text-5xl font-black text-beeses-gold mb-3 tracking-tight text-shadow-gold">%30+</div>
+        <div class="text-gray-400 text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-300 group-hover:text-white">{{ 'ABOUT_STATS_ARGE' | translate }}</div>
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-beeses-gold to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+
+      <!-- Stat Card 2 -->
+      <div class="bg-white/[0.01] border border-white/5 hover:border-beeses-gold/45 rounded-3xl p-6 md:p-8 text-center shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_15px_40px_rgba(181,129,49,0.12)] group relative overflow-hidden">
+        <div class="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 text-beeses-gold flex items-center justify-center mx-auto mb-6 transition-all duration-500 group-hover:scale-110 group-hover:border-beeses-gold/40 group-hover:bg-white/[0.07]">
+          <lucide-icon name="sliders" class="w-6 h-6"></lucide-icon>
+        </div>
+        <div class="text-3xl md:text-5xl font-black text-beeses-gold mb-3 tracking-tight text-shadow-gold">%99.9</div>
+        <div class="text-gray-400 text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-300 group-hover:text-white">{{ 'ABOUT_STATS_COMPONENTS' | translate }}</div>
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-beeses-gold to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+
+      <!-- Stat Card 3 -->
+      <div class="bg-white/[0.01] border border-white/5 hover:border-beeses-gold/45 rounded-3xl p-6 md:p-8 text-center shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_15px_40px_rgba(181,129,49,0.12)] group relative overflow-hidden">
+        <div class="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 text-beeses-gold flex items-center justify-center mx-auto mb-6 transition-all duration-500 group-hover:scale-110 group-hover:border-beeses-gold/40 group-hover:bg-white/[0.07]">
+          <lucide-icon name="star" class="w-6 h-6"></lucide-icon>
+        </div>
+        <div class="text-3xl md:text-5xl font-black text-beeses-gold mb-3 tracking-tight text-shadow-gold">%100</div>
+        <div class="text-gray-400 text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-300 group-hover:text-white">{{ 'ABOUT_STATS_SATISFACTION' | translate }}</div>
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-beeses-gold to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+
+      <!-- Stat Card 4 -->
+      <div class="bg-white/[0.01] border border-white/5 hover:border-beeses-gold/45 rounded-3xl p-6 md:p-8 text-center shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_15px_40px_rgba(181,129,49,0.12)] group relative overflow-hidden">
+        <div class="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 text-beeses-gold flex items-center justify-center mx-auto mb-6 transition-all duration-500 group-hover:scale-110 group-hover:border-beeses-gold/40 group-hover:bg-white/[0.07]">
+          <lucide-icon name="home" class="w-6 h-6"></lucide-icon>
+        </div>
+        <div class="text-3xl md:text-5xl font-black text-beeses-gold mb-3 tracking-tight text-shadow-gold">%95</div>
+        <div class="text-gray-400 text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-300 group-hover:text-white">{{ 'ABOUT_STATS_PRODUCTION' | translate }}</div>
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-beeses-gold to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Quote Section (Light Theme, Redesigned to Original State) -->
 <section class="bg-beeses-silver py-24 md:py-32 relative overflow-hidden">
 
   <div class="container mx-auto px-6 relative z-10">
@@ -144,12 +248,12 @@
         </div>
 
         <h3 class="text-3xl md:text-5xl font-light text-beeses-dark leading-tight uppercase tracking-widest mb-8">
-          "Sesi Dinlemekle Kalma,<br>
-          <span class="font-bold text-beeses-gold tracking-[0.3em] block mt-4">YAŞA"</span>
+          "{{ 'FOOTER_SLOGAN1' | translate }},<br>
+          <span class="font-bold text-beeses-gold tracking-[0.3em] block mt-4">{{ 'FOOTER_SLOGAN2' | translate }}"</span>
         </h3>
 
         <div class="w-12 h-1 bg-gray-200 mx-auto rounded-full mb-8"></div>
-        <p class="text-gray-500 font-medium tracking-[0.2em] uppercase text-sm">Beeses Audio Felsefesi</p>
+        <p class="text-gray-500 font-medium tracking-[0.2em] uppercase text-sm">{{ 'ABOUT_PHILOSOPHY' | translate }}</p>
       </div>
 
     </div>

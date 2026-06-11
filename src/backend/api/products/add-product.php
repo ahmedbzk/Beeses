@@ -18,10 +18,15 @@ $shortDescription = $_POST['shortDescription'] ?? '';
 $description = $_POST['description'] ?? '';
 $specs = $_POST['specs'] ?? '[]';
 $features = $_POST['features'] ?? '[]';
+$shortDescription_en = $_POST['shortDescription_en'] ?? '';
+$description_en = $_POST['description_en'] ?? '';
+$specs_en = $_POST['specs_en'] ?? '[]';
+$features_en = $_POST['features_en'] ?? '[]';
+$name_en = $_POST['name_en'] ?? '';
 
-if (empty($slug) || empty($name) || empty($category)) {
+if (empty($slug) || empty($name) || empty($category) || empty($name_en)) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Urun adi, slug ve kategori alanlari zorunludur."]);
+    echo json_encode(["success" => false, "message" => "Lütfen Türkçe ve İngilizce isimler dahil tüm zorunlu alanları doldurun."]);
     exit;
 }
 
@@ -93,21 +98,44 @@ if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] == UPLOAD_ERR_OK)
     }
 }
 
+$pdf_path_en = '';
+
+// Handle PDF EN Upload
+if (isset($_FILES['pdf_file_en']) && $_FILES['pdf_file_en']['error'] == UPLOAD_ERR_OK) {
+    $file_tmp_path = $_FILES['pdf_file_en']['tmp_name'];
+    $file_name = $_FILES['pdf_file_en']['name'];
+    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+    if (in_array($file_ext, $allowed_doc_exts)) {
+        $unique_file_name = time() . '_doc_en_' . uniqid() . '.' . $file_ext;
+        $dest_path = $upload_dir . $unique_file_name;
+        if (move_uploaded_file($file_tmp_path, $dest_path)) {
+            $pdf_path_en = 'uploads/products/' . $unique_file_name;
+        }
+    }
+}
+
 try {
-    $query = "INSERT INTO products (slug, name, category, shortDescription, description, image, images, pdfUrl, specs, features) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO products (slug, name, name_en, category, shortDescription, description, shortDescription_en, description_en, image, images, pdfUrl, pdfUrl_en, specs, features, specs_en, features_en) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
         $slug,
         $name,
+        $name_en,
         $category,
         $shortDescription,
         $description,
+        $shortDescription_en,
+        $description_en,
         $image_path,
         json_encode($gallery_images),
         $pdf_path,
+        $pdf_path_en,
         $specs,
-        $features
+        $features,
+        $specs_en,
+        $features_en
     ]);
 
     http_response_code(201);
@@ -121,6 +149,7 @@ try {
         }
     }
     if (!empty($pdf_path) && file_exists('../' . $pdf_path)) unlink('../' . $pdf_path);
+    if (!empty($pdf_path_en) && file_exists('../' . $pdf_path_en)) unlink('../' . $pdf_path_en);
 
     http_response_code(500);
     echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()]);

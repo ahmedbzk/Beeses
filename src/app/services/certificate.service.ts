@@ -7,6 +7,8 @@ export interface Certificate {
   id?: number;
   name: string;
   description: string;
+  name_en?: string;
+  description_en?: string;
   icon: string;
   file_path: string;
   created_at?: string;

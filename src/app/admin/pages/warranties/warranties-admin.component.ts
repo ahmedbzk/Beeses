@@ -11,7 +11,6 @@ import { environment } from '../../../../environments/environment';
   imports: [CommonModule, LucideAngularModule, FormsModule],
   template: `
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <!-- Header -->
       <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50/50">
         <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
           <lucide-icon name="shield-check" class="w-5 h-5 text-beeses-gold"></lucide-icon>
@@ -24,26 +23,23 @@ import { environment } from '../../../../environments/environment';
         </div>
       </div>
 
-      <!-- Tab bar -->
       <div class="flex border-b border-gray-100 bg-gray-50/50">
         <button (click)="switchTab('applications')" 
-                [ngClass]="activeTab === 'applications' ? 'border-beeses-gold text-beeses-gold bg-white' : 'border-transparent text-gray-500 hover:text-beeses-dark hover:bg-gray-50/20'"
-                class="flex-1 md:flex-initial px-6 py-4 border-b-2 font-bold text-sm transition-all flex items-center justify-center gap-2 outline-none cursor-pointer">
+                 [ngClass]="activeTab === 'applications' ? 'border-beeses-gold text-beeses-gold bg-white' : 'border-transparent text-gray-500 hover:text-beeses-dark hover:bg-gray-50/20'"
+                 class="flex-1 md:flex-initial px-6 py-4 border-b-2 font-bold text-sm transition-all flex items-center justify-center gap-2 outline-none cursor-pointer">
           <lucide-icon name="layers" class="w-4 h-4"></lucide-icon>
           Garanti Başvuruları
         </button>
         <button (click)="switchTab('status')" 
-                [ngClass]="activeTab === 'status' ? 'border-beeses-gold text-beeses-gold bg-white' : 'border-transparent text-gray-500 hover:text-beeses-dark hover:bg-gray-50/20'"
-                class="flex-1 md:flex-initial px-6 py-4 border-b-2 font-bold text-sm transition-all flex items-center justify-center gap-2 outline-none cursor-pointer">
+                 [ngClass]="activeTab === 'status' ? 'border-beeses-gold text-beeses-gold bg-white' : 'border-transparent text-gray-500 hover:text-beeses-dark hover:bg-gray-50/20'"
+                 class="flex-1 md:flex-initial px-6 py-4 border-b-2 font-bold text-sm transition-all flex items-center justify-center gap-2 outline-none cursor-pointer">
           <lucide-icon name="shield-check" class="w-4 h-4"></lucide-icon>
           Garanti Durumu (Aktif/Pasif)
         </button>
       </div>
 
-      <!-- Toolbar: Search & Filters -->
       <div class="p-6 border-b border-gray-100 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white" *ngIf="!isLoading">
         
-        <!-- Search -->
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
           <select [(ngModel)]="searchField" class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-beeses-gold focus:border-beeses-gold block p-2.5 outline-none cursor-pointer h-10 min-w-[120px]">
             <option value="serial_number">Seri No</option>
@@ -65,7 +61,6 @@ import { environment } from '../../../../environments/environment';
           </div>
         </div>
 
-        <!-- Filter Status & Bulk Actions -->
         <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
           <select [(ngModel)]="filterStatus" (change)="currentPage = 1" class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-beeses-gold focus:border-beeses-gold block p-2.5 outline-none cursor-pointer h-10 min-w-[160px] ml-auto">
             <ng-container *ngIf="activeTab === 'applications'">
@@ -96,7 +91,6 @@ import { environment } from '../../../../environments/environment';
 
       <div class="overflow-x-auto" *ngIf="!isLoading">
         <table class="w-full text-left text-sm text-gray-600">
-          <!-- Sekme 1: Garanti Başvuruları Başlıkları -->
           <thead *ngIf="activeTab === 'applications'" class="bg-beeses-dark text-beeses-gold font-bold uppercase text-[10px] tracking-[0.15em] border-b-2 border-beeses-gold shadow-sm">
             <tr>
               <th class="px-6 py-5 w-10 text-center rounded-tl-xl">
@@ -113,7 +107,6 @@ import { environment } from '../../../../environments/environment';
             </tr>
           </thead>
           
-          <!-- Sekme 2: Garanti Durumu Başlıkları -->
           <thead *ngIf="activeTab === 'status'" class="bg-beeses-dark text-beeses-gold font-bold uppercase text-[10px] tracking-[0.15em] border-b-2 border-beeses-gold shadow-sm">
             <tr>
               <th class="px-6 py-4 rounded-tl-xl">Tarih</th>
@@ -127,7 +120,6 @@ import { environment } from '../../../../environments/environment';
           </thead>
 
           <tbody class="divide-y divide-gray-100 bg-white">
-            <!-- Sekme 1: Garanti Başvuruları Tablo Satırları -->
             <ng-container *ngIf="activeTab === 'applications'">
               <tr *ngFor="let item of paginatedWarranties; let i = index" 
                   class="transition-colors hover:bg-beeses-gold/5" 
@@ -191,7 +183,6 @@ import { environment } from '../../../../environments/environment';
               </tr>
             </ng-container>
 
-            <!-- Sekme 2: Garanti Durumu Tablo Satırları -->
             <ng-container *ngIf="activeTab === 'status'">
               <tr *ngFor="let item of paginatedWarranties; let i = index" 
                   class="transition-colors hover:bg-beeses-gold/5 animate-fade-in" 
@@ -245,7 +236,6 @@ import { environment } from '../../../../environments/environment';
               </tr>
             </ng-container>
 
-            <!-- Boş Sonuç Satırı -->
             <tr *ngIf="filteredWarranties.length === 0">
               <td [attr.colspan]="activeTab === 'applications' ? 9 : 8" class="px-6 py-12 text-center text-gray-500">
                 <lucide-icon name="search" class="w-8 h-8 mx-auto mb-3 text-gray-300"></lucide-icon>
@@ -256,7 +246,6 @@ import { environment } from '../../../../environments/environment';
         </table>
       </div>
       
-      <!-- Pagination -->
       <div class="p-4 border-t border-gray-100 flex items-center justify-between bg-gray-50" *ngIf="!isLoading && filteredWarranties.length > 0">
         <span class="text-sm text-gray-600">
           Toplam <strong>{{ filteredWarranties.length }}</strong> kayıttan <strong>{{ (currentPage - 1) * pageSize + 1 }}</strong> - <strong>{{ Math.min(currentPage * pageSize, filteredWarranties.length) }}</strong> arası gösteriliyor
@@ -275,7 +264,6 @@ import { environment } from '../../../../environments/environment';
       </div>
     </div>
 
-    <!-- Özel Onay Modalı (Toplu işlemler için korundu) -->
     <div *ngIf="showConfirmModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-beeses-dark/50 backdrop-blur-sm animate-fade-in">
       <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden transform transition-all border border-gray-100">
         <div class="p-8 text-center">
@@ -290,7 +278,6 @@ import { environment } from '../../../../environments/environment';
             <br>Bu işlem durumu değiştirecektir.
           </p>
 
-          <!-- Garanti Başlangıç Tarihi Girişi (Sadece Onaylama İşleminde) -->
           <div *ngIf="confirmAction === 'approved'" class="text-left mb-6">
             <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Garanti Başlangıç Tarihi *</label>
             <input type="date" [(ngModel)]="startDateInput" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-2 focus:ring-beeses-gold/20 transition-all font-semibold text-beeses-dark">
@@ -309,10 +296,8 @@ import { environment } from '../../../../environments/environment';
       </div>
     </div>
 
-    <!-- Detay Modal -->
     <div *ngIf="selectedWarranty" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-sm animate-fade-in">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <!-- Modal Header -->
         <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
           <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
             <lucide-icon name="shield-check" class="w-5 h-5 text-beeses-gold"></lucide-icon>
@@ -323,10 +308,8 @@ import { environment } from '../../../../environments/environment';
           </button>
         </div>
 
-        <!-- Modal Body -->
         <div class="p-6 overflow-y-auto flex-grow space-y-6">
           <div class="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden divide-y divide-gray-200 shadow-inner">
-            <!-- Müşteri Bilgileri -->
             <div class="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50/50">
               <div class="space-y-1.5">
                 <span class="text-[10px] font-black text-beeses-gold uppercase tracking-widest block mb-1">Müşteri Bilgileri</span>
@@ -359,7 +342,6 @@ import { environment } from '../../../../environments/environment';
               </div>
             </div>
 
-            <!-- Ürün Bilgileri -->
             <div class="p-5 space-y-3 bg-white">
               <span class="text-[10px] font-black text-beeses-gold uppercase tracking-widest block">Ürün Bilgileri</span>
               <div class="grid grid-cols-2 gap-6">
@@ -379,7 +361,6 @@ import { environment } from '../../../../environments/environment';
               </div>
             </div>
 
-            <!-- Fatura Bilgileri -->
             <div class="p-5 space-y-3 bg-gray-50/30">
               <span class="text-[10px] font-black text-beeses-gold uppercase tracking-widest block">Fatura Bilgileri</span>
               <div class="flex justify-start">
@@ -392,7 +373,6 @@ import { environment } from '../../../../environments/environment';
             </div>
           </div>
 
-          <!-- Gönderilen E-postalar Geçmişi -->
           <div class="border-t border-gray-100 pt-6">
              <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Gönderilen E-posta Geçmişi</p>
              
@@ -424,8 +404,8 @@ import { environment } from '../../../../environments/environment';
              <div class="p-4 rounded-xl flex items-start gap-3"
                   [ngClass]="selectedWarranty.status === 'approved' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'">
                <lucide-icon [name]="selectedWarranty.status === 'approved' ? 'check-circle' : 'x'" 
-                            class="w-5 h-5 flex-shrink-0 mt-0.5"
-                            [ngClass]="selectedWarranty.status === 'approved' ? 'text-green-500' : 'text-red-500'"></lucide-icon>
+                             class="w-5 h-5 flex-shrink-0 mt-0.5"
+                             [ngClass]="selectedWarranty.status === 'approved' ? 'text-green-500' : 'text-red-500'"></lucide-icon>
                <div>
                  <p class="text-sm font-bold" [ngClass]="selectedWarranty.status === 'approved' ? 'text-green-800' : 'text-red-800'">
                    Bu garanti başvurusu {{ selectedWarranty.status === 'approved' ? 'onaylandı' : 'reddedildi' }}.
@@ -433,9 +413,8 @@ import { environment } from '../../../../environments/environment';
                </div>
              </div>
 
-             <!-- Onaylanmış Garanti Detayları -->
              <div *ngIf="selectedWarranty.status === 'approved' && selectedWarranty.start_date" 
-                  class="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3 mt-4 text-xs">
+                   class="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3 mt-4 text-xs">
                <p class="text-[10px] font-black text-beeses-dark uppercase tracking-widest border-b border-gray-200 pb-2">Garanti Süreç Detayları</p>
                <div class="grid grid-cols-2 gap-4">
                  <div>
@@ -459,7 +438,6 @@ import { environment } from '../../../../environments/environment';
 
         </div>
 
-        <!-- Modal Footer -->
         <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
           <button (click)="closeDetail()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900 font-bold text-sm transition-colors">
             Kapat
@@ -479,10 +457,8 @@ import { environment } from '../../../../environments/environment';
       </div>
     </div>
 
-    <!-- E-posta Gönderim Modalı -->
     <div *ngIf="showEmailModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-sm animate-fade-in">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] border border-gray-100">
-        <!-- Modal Header -->
         <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
           <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
             <lucide-icon name="mail" class="w-5 h-5 text-beeses-gold"></lucide-icon>
@@ -493,7 +469,6 @@ import { environment } from '../../../../environments/environment';
           </button>
         </div>
 
-        <!-- Modal Body -->
         <div class="p-6 overflow-y-auto flex-grow space-y-4">
           <div>
             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-1.5">Alıcı E-posta</label>
@@ -511,7 +486,6 @@ import { environment } from '../../../../environments/environment';
           </div>
         </div>
 
-        <!-- Modal Footer -->
         <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 shrink-0">
           <button (click)="closeEmailModal()" class="px-4 py-2 border border-gray-200 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold transition-all cursor-pointer">
             Vazgeç
@@ -533,17 +507,14 @@ export class WarrantiesAdminComponent implements OnInit {
   warranties: any[] = [];
   isLoading = true;
 
-  // Active Tab
   activeTab: 'applications' | 'status' = 'applications';
 
-  // Filter & Search states
   searchQuery = '';
   searchDateStart = '';
   searchDateEnd = '';
   searchField = 'serial_number';
   filterStatus = 'all';
   
-  // Pagination
   currentPage = 1;
   pageSize = 10;
   Math = Math;
@@ -586,12 +557,9 @@ export class WarrantiesAdminComponent implements OnInit {
 
   get filteredWarranties() {
     return this.warranties.filter(w => {
-      // Sekme bazlı filtreleme
       if (this.activeTab === 'status') {
-        // Garanti Durumu sekmesinde sadece onaylanmış olanlar listelenir
         if (w.status !== 'approved') return false;
         
-        // Durum Filtresi (Aktif / Pasif)
         if (this.filterStatus !== 'all') {
           if (this.filterStatus === 'approved_active') {
             if (w.approved_status !== 'active') return false;
@@ -600,10 +568,8 @@ export class WarrantiesAdminComponent implements OnInit {
           }
         }
       } else {
-        // Garanti Başvuruları sekmesinde onaylanmış olanları GÖSTERMİYORUZ
         if (w.status === 'approved') return false;
         
-        // Durum Filtresi (Bekleyenler / Reddedilenler)
         if (this.filterStatus !== 'all') {
           if (this.filterStatus === 'pending') {
             if (w.status !== 'pending') return false;
@@ -613,7 +579,6 @@ export class WarrantiesAdminComponent implements OnInit {
         }
       }
       
-      // Tarih / Arama Filtreleme
       if (this.searchField === 'created_at') {
         if (this.searchDateStart || this.searchDateEnd) {
           if (!w.created_at) return false;
@@ -690,7 +655,6 @@ export class WarrantiesAdminComponent implements OnInit {
   selectedWarranty: any = null;
   startDateInput = '';
 
-  // E-posta Gönderimi için State ve Metodlar
   showEmailModal = false;
   isSendingEmail = false;
   emailData = {
@@ -705,7 +669,7 @@ export class WarrantiesAdminComponent implements OnInit {
     this.emailData = {
       to: recipientEmail,
       subject: 'Beeses Audio - Garanti Başvurusu Hakkında',
-      message: `Sayın ${fullName},\n\nGaranti başvurunuzla ilgili olarak:\n\n\n\nSaygılarımızla,\nBeeses Audio Ekibi`,
+      message: `Sayın ${fullName},\n\nGaranti başvurunuzla ilgili olarak:\n\n\n\nSaygılarimizla,\nBeeses Audio Ekibi`,
       warranty_id: warrantyId
     };
     this.showEmailModal = true;

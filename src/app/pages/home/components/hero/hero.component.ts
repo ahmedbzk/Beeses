@@ -1,36 +1,39 @@
-import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule, RouterModule, LucideAngularModule],
+  imports: [CommonModule, RouterModule, LucideAngularModule, TranslateModule],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.scss'
 })
 export class HeroComponent implements OnInit, OnDestroy {
+  public translate = inject(TranslateService);
+
   slides = [
     {
       image: 'assets/backgrounds/bg6.jpg',
-      subtitle: 'HIGH-END AUDIO TECHNOLOGIES',
-      title: 'PURE <span class="text-beeses-gold font-bold">AUDIO</span> EXPERIENCE',
-      description: 'Müziği sadece dinlemeyin, Beeses ile en saf haliyle hissedin.',
+      subtitleKey: 'HERO_SLIDE1_SUBTITLE',
+      titleKey: 'HERO_SLIDE1_TITLE',
+      descriptionKey: 'HERO_SLIDE1_DESC',
       position: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-8 md:mt-0 md:top-auto md:bottom-24 md:left-12 md:translate-x-0 md:translate-y-0 text-center items-center md:text-left md:items-start w-[85%] max-w-[300px] md:max-w-2xl md:w-auto'
     },
     {
       image: 'assets/backgrounds/bg2.jpg',
-      subtitle: 'SINCE 2026',
-      title: 'SAF ANALOG <br> GÜÇ',
-      description: 'Monoblok amplifikatörlerimizle gürültüsüz ve güçlü ses performansı.',
+      subtitleKey: 'HERO_SLIDE2_SUBTITLE',
+      titleKey: 'HERO_SLIDE2_TITLE',
+      descriptionKey: 'HERO_SLIDE2_DESC',
       position: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-8 md:mt-0 md:top-auto md:left-auto md:bottom-24 md:right-12 md:translate-x-0 md:translate-y-0 text-center items-center md:text-right md:items-end w-[85%] max-w-[300px] md:max-w-2xl md:w-auto'
     },
     {
       image: 'assets/backgrounds/bg7.jpg',
-      subtitle: 'BEESES PHILOSOPHY',
-      title: 'SESİN <span class="text-beeses-gold">GELECEĞİ</span>',
-      description: 'Profesyonel grade çözümler ile dijital ses teknolojilerini keşfedin.',
+      subtitleKey: 'HERO_SLIDE3_SUBTITLE',
+      titleKey: 'HERO_SLIDE3_TITLE',
+      descriptionKey: 'HERO_SLIDE3_DESC',
       position: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-8 md:mt-0 text-center items-center w-[85%] max-w-[300px] md:max-w-2xl md:w-auto'
     }
   ];
@@ -44,7 +47,7 @@ export class HeroComponent implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       this.intervalId = setInterval(() => {
         this.currentSlideIndex = (this.currentSlideIndex + 1) % this.slides.length;
-      }, 6000); // 6 saniyede bir kayar
+      }, 6000);
     }
   }
 

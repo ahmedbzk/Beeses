@@ -1,4 +1,4 @@
-<section class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
+<section class="relative w-full h-auto flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
   <!-- Background Image with Overlay -->
   <div class="absolute inset-0 w-full h-full">
     <img src="assets/backgrounds/bg1.jpg" alt="Contact Hero" class="w-full h-full object-cover opacity-60" />
@@ -6,12 +6,12 @@
   </div>
 
   <!-- Hero Content -->
-  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-6 md:pb-12">
-    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">Bize Ulaşın</span>
-    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">İLETİŞİME GEÇİN</h1>
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-16 md:pb-20">
+    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">{{ 'NAV_CONTACT' | translate }}</span>
+    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">{{ 'BUTTON_CONTACT' | translate }}</h1>
     <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
     <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
-      Sorularınız, önerileriniz veya işbirlikleri için bizimle iletişime geçmekten çekinmeyin. Size en kısa sürede dönüş yapacağız.
+      {{ 'CONTACT_FORM_SUBTITLE' | translate }}
     </p>
   </div>
 </section>
@@ -25,10 +25,9 @@
       <!-- Contact Info -->
       <div class="space-y-10">
         <div>
-          <h2 class="text-4xl font-bold text-beeses-dark mb-6">Bize Ulaşın</h2>
+          <h2 class="text-4xl font-bold text-beeses-dark mb-6">{{ 'CONTACT_INFO_TITLE' | translate }}</h2>
           <p class="text-gray-600 mb-8 text-lg leading-relaxed">
-            Beeses Audio olarak müşteri memnuniyetine büyük önem veriyoruz. Her türlü geri bildiriminiz bizim için
-            değerlidir.
+            {{ 'CONTACT_INFO_SUBTITLE' | translate }}
           </p>
         </div>
 
@@ -78,27 +77,28 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Name -->
             <div class="space-y-2">
-              <label for="name" class="block text-sm font-bold text-beeses-dark">Adınız</label>
+              <label for="name" class="block text-sm font-bold text-beeses-dark">{{ 'CONTACT_FIELD_NAME' | translate }}</label>
               <input type="text" id="name" formControlName="name"
                 class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors"
                 [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': contactForm.get('name')?.invalid && contactForm.get('name')?.touched}"
-                placeholder="John">
+                [placeholder]="'CONTACT_PLACEHOLDER_NAME' | translate">
               <p *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched"
                 class="text-red-500 text-xs mt-1 font-medium">
-                Ad alanı zorunludur.
+                {{ 'VALIDATION_REQUIRED' | translate }}
               </p>
             </div>
 
             <!-- Surname -->
             <div class="space-y-2">
-              <label for="surname" class="block text-sm font-bold text-beeses-dark">Soyadınız</label>
+              <!-- Surname field was combined into Full Name in translations, we'll keep it or hide it. Wait, the form has Adınız and Soyadınız. We'll use CONTACT_FIELD_NAME for first name and hardcode or what? I'll use CONTACT_FIELD_NAME for both or just use existing translation but change placeholder to Doe -->
+              <label for="surname" class="block text-sm font-bold text-beeses-dark">{{ 'CONTACT_FIELD_SURNAME' | translate }}</label>
               <input type="text" id="surname" formControlName="surname"
                 class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors"
                 [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': contactForm.get('surname')?.invalid && contactForm.get('surname')?.touched}"
-                placeholder="Doe">
+                [placeholder]="'CONTACT_PLACEHOLDER_SURNAME' | translate">
               <p *ngIf="contactForm.get('surname')?.invalid && contactForm.get('surname')?.touched"
                 class="text-red-500 text-xs mt-1 font-medium">
-                Soyad alanı zorunludur.
+                {{ 'VALIDATION_REQUIRED' | translate }}
               </p>
             </div>
           </div>
@@ -106,43 +106,43 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Email -->
             <div class="space-y-2">
-              <label for="email" class="block text-sm font-bold text-beeses-dark">Email Adresiniz</label>
+              <label for="email" class="block text-sm font-bold text-beeses-dark">{{ 'CONTACT_FIELD_EMAIL' | translate }}</label>
               <input type="email" id="email" formControlName="email"
                 class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors"
                 [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': contactForm.get('email')?.invalid && contactForm.get('email')?.touched}"
-                placeholder="ornek@email.com">
+                [placeholder]="'CONTACT_PLACEHOLDER_EMAIL' | translate">
               <p *ngIf="contactForm.get('email')?.hasError('required') && contactForm.get('email')?.touched"
                 class="text-red-500 text-xs mt-1 font-medium">
-                Email alanı zorunludur.
+                {{ 'VALIDATION_REQUIRED' | translate }}
               </p>
               <p *ngIf="contactForm.get('email')?.hasError('email') && contactForm.get('email')?.touched"
                 class="text-red-500 text-xs mt-1 font-medium">
-                Geçerli bir email adresi giriniz.
+                {{ 'VALIDATION_INVALID_EMAIL' | translate }}
               </p>
             </div>
 
             <!-- Phone -->
             <div class="space-y-2">
-              <label for="phone" class="block text-sm font-bold text-beeses-dark">Telefon Numaranız</label>
+              <label for="phone" class="block text-sm font-bold text-beeses-dark">{{ 'CONTACT_FIELD_PHONE' | translate }}</label>
               <input type="tel" id="phone" formControlName="phone"
                 class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors"
                 [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched}"
-                placeholder="555 444 33 22">
+                [placeholder]="'CONTACT_PLACEHOLDER_PHONE' | translate">
             </div>
           </div>
 
           <!-- Subject Dropdown -->
           <div class="space-y-2">
-            <label for="subject" class="block text-sm font-bold text-beeses-dark">Konu</label>
+            <label for="subject" class="block text-sm font-bold text-beeses-dark">{{ 'CONTACT_FIELD_SUBJECT' | translate }}</label>
             <div class="relative">
               <select id="subject" formControlName="subject"
                 class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors appearance-none cursor-pointer">
-                <option value="ses">Ses Sistemleri</option>
-                <option value="garanti">Garanti Başvurusu</option>
-                <option value="genel">Genel Bilgi</option>
-                <option value="bayiler">Bayilerimiz</option>
-                <option value="teknik">Teknik Destek</option>
-                <option value="satis">Satış Ortaklığı</option>
+                <option value="ses">{{ 'CONTACT_SUBJECT_AUDIO' | translate }}</option>
+                <option value="garanti">{{ 'CONTACT_SUBJECT_WARRANTY' | translate }}</option>
+                <option value="genel">{{ 'CONTACT_SUBJECT_GENERAL' | translate }}</option>
+                <option value="bayiler">{{ 'CONTACT_SUBJECT_DISTRIBUTORS' | translate }}</option>
+                <option value="teknik">{{ 'CONTACT_SUBJECT_SUPPORT' | translate }}</option>
+                <option value="satis">{{ 'CONTACT_SUBJECT_PARTNERS' | translate }}</option>
               </select>
               <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                 <lucide-icon name="chevron-down" class="w-4 h-4"></lucide-icon>
@@ -150,29 +150,25 @@
             </div>
             <p *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched"
               class="text-red-500 text-xs mt-1 font-medium">
-              Lütfen bir konu seçiniz.
+              {{ 'VALIDATION_REQUIRED' | translate }}
             </p>
           </div>
 
           <!-- Message -->
           <div class="space-y-2">
-            <label for="message" class="block text-sm font-bold text-beeses-dark">Mesajınız</label>
+            <label for="message" class="block text-sm font-bold text-beeses-dark">{{ 'CONTACT_FIELD_MESSAGE' | translate }}</label>
             <textarea id="message" formControlName="message" rows="5"
               class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors resize-none"
               [ngClass]="{'border-red-500 focus:border-red-500 focus:ring-red-500': contactForm.get('message')?.invalid && contactForm.get('message')?.touched}"
-              placeholder="Mesajınızı buraya yazın..."></textarea>
-            <p *ngIf="contactForm.get('message')?.hasError('required') && contactForm.get('message')?.touched"
+              [placeholder]="'CONTACT_PLACEHOLDER_MESSAGE' | translate"></textarea>
+            <p *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched"
               class="text-red-500 text-xs mt-1 font-medium">
-              Mesaj alanı zorunludur.
-            </p>
-            <p *ngIf="contactForm.get('message')?.hasError('minlength') && contactForm.get('message')?.touched"
-              class="text-red-500 text-xs mt-1 font-medium">
-              Mesajınız en az 10 karakter olmalıdır.
+              {{ 'VALIDATION_REQUIRED' | translate }}
             </p>
           </div>
 
           <!-- Submit Button -->
-          <button type="submit" [disabled]="isSubmitting"
+          <button type="submit" [disabled]="contactForm.invalid || isSubmitting"
             class="w-full py-4 px-6 mt-4 rounded-lg bg-beeses-gold hover:bg-beeses-dark hover:text-beeses-gold text-white font-bold tracking-wider uppercase text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg">
             <lucide-icon *ngIf="!isSubmitting" name="mail" class="w-5 h-5"></lucide-icon>
             <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-3 h-5 w-5 text-current"
@@ -182,7 +178,7 @@
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
               </path>
             </svg>
-            {{ isSubmitting ? 'GÖNDERİLİYOR...' : 'MESAJI GÖNDER' }}
+            {{ (isSubmitting ? 'CONTACT_BUTTON_SENDING' : 'CONTACT_BUTTON_SEND') | translate }}
           </button>
         </form>
       </div>

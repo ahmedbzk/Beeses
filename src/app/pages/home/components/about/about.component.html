@@ -5,18 +5,17 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
       
       <div class="flex flex-col items-start justify-center z-10">
-        <h3 class="text-beeses-gold text-[11px] font-bold tracking-[0.5em] mb-10 uppercase">THE BEESES PHILOSOPHY</h3>
-        <h2 class="text-beeses-silver text-5xl md:text-7xl font-bold tracking-tighter leading-[1] mb-10 uppercase">
-          SESİN SINIRLARINI <br> 
-          <span class="text-beeses-gold italic font-extrabold text-shadow-gold">YENİDEN</span> TANIMLIYORUZ
+        <h3 class="text-beeses-gold text-[11px] font-bold tracking-[0.5em] mb-10 uppercase">{{ 'HOME_ABOUT_TAG' | translate }}</h3>
+        <h2 class="text-beeses-silver text-5xl md:text-7xl font-bold tracking-tighter leading-[1] mb-10 uppercase"
+            [innerHTML]="'HOME_ABOUT_TITLE' | translate">
         </h2>
         <p class="text-beeses-silver/60 text-lg leading-relaxed max-w-lg mb-14 font-light">
-          Sadece hoparlör üretmiyoruz; her notanın arkasındaki saf duyguyu yakalayan mühendislik harikaları tasarlıyoruz. Milimetrik işçilik ve kayıpsız ses iletimi ile müziği olduğu gibi yaşamanız için buradayız.
+          {{ 'HOME_ABOUT_DESC' | translate }}
         </p>
         
         <div class="flex flex-col items-start gap-4">
           <div class="w-16 h-[1px] bg-beeses-gold transition-all duration-700"></div>
-          <span class="text-beeses-gold text-[12px] tracking-[0.3em] font-bold uppercase">SINCE 2026</span>
+          <span class="text-beeses-gold text-[12px] tracking-[0.3em] font-bold uppercase">{{ 'HOME_ABOUT_SINCE' | translate }}</span>
         </div>
       </div>
 
@@ -31,21 +30,21 @@
              
           <div class="relative group">
             <img [src]="'assets/products/' + product.name" 
-                 [alt]="product.title" 
+                 [alt]="product.titleKey | translate" 
                  class="w-full h-auto max-w-[550px] md:max-w-[620px] drop-shadow-[0_45px_45px_rgba(0,0,0,0.85)] transition-transform duration-700 group-hover:scale-105">
             
             <div *ngIf="i === currentIndex" class="product-label">
               <h4 class="text-beeses-gold font-bold text-[13px] tracking-[0.35em] uppercase leading-none mb-2">
-                {{ product.title }}
+                {{ product.titleKey | translate }}
               </h4>
               <p class="text-beeses-silver/40 text-[10px] tracking-[0.25em] uppercase font-medium mb-6">
-                {{ product.type }}
+                {{ product.type | translate }}
               </p>
               
-            <a class="view-product-btn" (click)="$event.stopPropagation()">
-  <span>ÜRÜNÜ İNCELE</span>
-  <div class="btn-line"></div>
-</a>
+            <a class="view-product-btn" [routerLink]="['/products', product.slug]" (click)="$event.stopPropagation()">
+              <span>{{ 'HOME_ABOUT_VIEW_PRODUCT' | translate }}</span>
+              <div class="btn-line"></div>
+            </a>
             </div>
           </div>
         </div>

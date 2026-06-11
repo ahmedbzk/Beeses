@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { DistributorService, Distributor } from '../../services/distributor.service';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-distributors',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, FormsModule],
+  imports: [CommonModule, LucideAngularModule, FormsModule, TranslateModule],
   templateUrl: './distributors.component.html',
   styles: [`
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -58,7 +58,6 @@ export class DistributorsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching distributors:', err);
         this.isLoading = false;
       }
     });

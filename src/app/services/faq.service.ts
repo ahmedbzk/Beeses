@@ -7,6 +7,8 @@ export interface FAQ {
   id?: number;
   question: string;
   answer: string;
+  question_en?: string;
+  answer_en?: string;
   created_at?: string;
   isOpen?: boolean;
   selected?: boolean;

@@ -17,14 +17,20 @@ export interface Product {
   id?: number;
   slug: string;
   name: string;
+  name_en?: string;
   category: string;
   shortDescription: string;
   description?: string;
+  shortDescription_en?: string;
+  description_en?: string;
   image: string;
   images?: string[];
   pdfUrl?: string;
+  pdfUrl_en?: string;
   specs: ProductSpec[];
   features: ProductFeature[];
+  specs_en?: ProductSpec[];
+  features_en?: ProductFeature[];
   created_at?: string;
   selected?: boolean; // UI multi-select helper
 }

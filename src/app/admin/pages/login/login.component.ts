@@ -11,7 +11,7 @@ import { environment } from '../../../../environments/environment';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
   template: `
-    <!-- Client-side Rendered Login Page -->
+    
     <div *ngIf="isBrowser" class="min-h-screen flex items-center justify-center bg-beeses-silver px-4 relative overflow-hidden">
       <div class="absolute inset-0 w-full h-full">
         <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-10 filter grayscale" />
@@ -54,7 +54,7 @@ import { environment } from '../../../../environments/environment';
       </div>
     </div>
 
-    <!-- Server-side / Hydration Loading Screen -->
+    
     <div *ngIf="!isBrowser" class="min-h-screen w-screen flex flex-col items-center justify-center bg-beeses-dark">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-beeses-gold mb-4"></div>
       <p class="text-white/60 text-xs font-medium tracking-widest uppercase animate-pulse">Yükleniyor...</p>
@@ -95,6 +95,9 @@ export class AdminLoginComponent {
         if (res.success) {
           localStorage.setItem('admin_token', res.token);
           localStorage.setItem('admin_username', res.username);
+          localStorage.setItem('admin_id', String(res.id));
+          localStorage.setItem('admin_role', res.role);
+          localStorage.setItem('admin_permissions', typeof res.permissions === 'object' ? JSON.stringify(res.permissions) : res.permissions || '{}');
           this.router.navigate(['/admin/dashboard']);
         } else {
           this.errorMessage = res.message;
@@ -107,3 +110,4 @@ export class AdminLoginComponent {
     });
   }
 }
+

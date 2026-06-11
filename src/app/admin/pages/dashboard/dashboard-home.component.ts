@@ -7,7 +7,8 @@ import { DistributorService } from '../../../services/distributor.service';
 import { NewsService } from '../../../services/news.service';
 import { ContactService } from '../../../services/contact.service';
 import { environment } from '../../../../environments/environment';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -16,7 +17,6 @@ import { forkJoin } from 'rxjs';
   template: `
     <div class="space-y-8 animate-fade-in pb-8">
       
-      <!-- Welcome Banner -->
       <div class="bg-gradient-to-r from-beeses-dark to-slate-900 rounded-3xl p-8 md:p-10 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-[0_15px_30px_rgba(0,0,0,0.05)] border border-white/5">
         <div class="relative z-10 flex-1">
           <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-beeses-gold/15 text-beeses-gold font-bold text-xs uppercase tracking-widest mb-4">
@@ -30,7 +30,6 @@ import { forkJoin } from 'rxjs';
           </p>
         </div>
         
-        <!-- Animated Decoration -->
         <div class="relative z-10 hidden md:block">
           <div class="w-32 h-32 bg-white/5 rounded-full flex items-center justify-center relative border border-white/5 backdrop-blur-sm">
             <div class="absolute inset-2 border border-beeses-gold/30 rounded-full animate-[spin_12s_linear_infinite]"></div>
@@ -40,18 +39,16 @@ import { forkJoin } from 'rxjs';
         <div class="absolute -right-20 -top-20 w-96 h-96 bg-beeses-gold/5 rounded-full blur-3xl pointer-events-none"></div>
       </div>
 
-      <!-- Loading State -->
       <div *ngIf="isLoading" class="flex flex-col items-center justify-center h-64 bg-white rounded-3xl border border-gray-100 shadow-sm">
         <lucide-icon name="refresh-cw" class="w-10 h-10 animate-spin text-beeses-gold mb-3"></lucide-icon>
         <p class="text-gray-500 font-medium text-sm tracking-widest uppercase animate-pulse">İstatistikler Yükleniyor...</p>
       </div>
 
       <div *ngIf="!isLoading" class="space-y-8">
-        <!-- KPI Stat Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
-          <!-- Garanti Stat Card -->
-          <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+          <!-- Garanti Başvuruları Card -->
+          <div *ngIf="hasPermission('warranties')" class="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <lucide-icon name="shield-check" class="w-6 h-6"></lucide-icon>
@@ -66,8 +63,8 @@ import { forkJoin } from 'rxjs';
             </div>
           </div>
 
-          <!-- Mesajlar Stat Card -->
-          <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+          <!-- Gelen Mesajlar Card -->
+          <div *ngIf="hasPermission('contacts')" class="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <lucide-icon name="mail" class="w-6 h-6"></lucide-icon>
@@ -82,8 +79,8 @@ import { forkJoin } from 'rxjs';
             </div>
           </div>
 
-          <!-- Distribütör Stat Card -->
-          <div routerLink="/admin/dashboard/distributors" class="cursor-pointer bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+          <!-- Distribütörler Card -->
+          <div *ngIf="hasPermission('distributors')" routerLink="/admin/dashboard/distributors" class="cursor-pointer bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <lucide-icon name="globe" class="w-6 h-6"></lucide-icon>
@@ -98,8 +95,8 @@ import { forkJoin } from 'rxjs';
             </div>
           </div>
 
-          <!-- Haberler Stat Card -->
-          <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+          <!-- Haber & Duyurular Card -->
+          <div *ngIf="hasPermission('news')" class="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <lucide-icon name="file-text" class="w-6 h-6"></lucide-icon>
@@ -116,36 +113,32 @@ import { forkJoin } from 'rxjs';
 
         </div>
 
-        <!-- Charts Layout (Donut & Progress Bars) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Charts Section (Only shown if warranties or distributors are authorized) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8" *ngIf="hasPermission('warranties') || hasPermission('distributors')">
           
-          <!-- SVG Donut Chart (Garanti Dağılımı) -->
-          <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
+          <!-- Garanti Başvurusu Dağılımı Donut Chart -->
+          <div *ngIf="hasPermission('warranties')" [ngClass]="hasPermission('distributors') ? 'lg:col-span-5' : 'lg:col-span-12'" class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
             <div>
               <h3 class="text-base font-bold text-beeses-dark tracking-tight mb-2">Garanti Başvurusu Dağılımı</h3>
               <p class="text-xs text-gray-400 mb-6">Müşterilerin oluşturduğu garanti taleplerinin onay, red ve bekleme durumları</p>
             </div>
             
             <div class="py-4 relative flex items-center justify-center">
-              <!-- SVG Donut -->
               <svg width="100%" height="180px" viewBox="0 0 42 42" class="donut max-w-[180px] mx-auto rotate-[-90deg]">
                 <circle class="donut-hole" cx="21" cy="21" r="15.91549430918954" fill="transparent"></circle>
                 <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#f1f5f9" stroke-width="2.8"></circle>
                 
                 <ng-container *ngIf="warrantiesCount > 0">
-                  <!-- Approved Segment (Green) -->
                   <circle *ngIf="warrantiesApproved > 0" class="donut-segment text-emerald-500" cx="21" cy="21" r="15.91549430918954" fill="transparent" 
                           stroke="currentColor" stroke-width="2.8" 
                           [attr.stroke-dasharray]="(warrantiesApproved / warrantiesCount * 100) + ' ' + (100 - (warrantiesApproved / warrantiesCount * 100))"
                           stroke-dashoffset="0"></circle>
                   
-                  <!-- Pending Segment (Gold) -->
                   <circle *ngIf="warrantiesPending > 0" class="donut-segment text-[#b58131]" cx="21" cy="21" r="15.91549430918954" fill="transparent" 
                           stroke="currentColor" stroke-width="2.8" 
                           [attr.stroke-dasharray]="(warrantiesPending / warrantiesCount * 100) + ' ' + (100 - (warrantiesPending / warrantiesCount * 100))"
                           [attr.stroke-dashoffset]="- (warrantiesApproved / warrantiesCount * 100)"></circle>
                           
-                  <!-- Rejected Segment (Red) -->
                   <circle *ngIf="warrantiesRejected > 0" class="donut-segment text-red-500" cx="21" cy="21" r="15.91549430918954" fill="transparent" 
                           stroke="currentColor" stroke-width="2.8" 
                           [attr.stroke-dasharray]="(warrantiesRejected / warrantiesCount * 100) + ' ' + (100 - (warrantiesRejected / warrantiesCount * 100))"
@@ -153,14 +146,12 @@ import { forkJoin } from 'rxjs';
                 </ng-container>
               </svg>
               
-              <!-- Text Centered inside Donut (rotated back to 0deg) -->
               <div class="absolute flex flex-col items-center justify-center">
                 <span class="text-3xl font-black text-beeses-dark leading-none">{{ warrantiesCount }}</span>
                 <span class="text-[9px] font-bold text-gray-400 tracking-widest uppercase mt-1">Başvuru</span>
               </div>
             </div>
 
-            <!-- Legends -->
             <div class="grid grid-cols-3 gap-2 mt-6 pt-4 border-t border-gray-50 text-center">
               <div>
                 <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5"></span>
@@ -180,8 +171,8 @@ import { forkJoin } from 'rxjs';
             </div>
           </div>
 
-          <!-- Distributor Countries distribution -->
-          <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
+          <!-- Distribütör Dağılımı Bar Chart -->
+          <div *ngIf="hasPermission('distributors')" [ngClass]="hasPermission('warranties') ? 'lg:col-span-7' : 'lg:col-span-12'" class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
             <div>
               <h3 class="text-base font-bold text-beeses-dark tracking-tight mb-2">Distribütör Dağılımı</h3>
               <p class="text-xs text-gray-400 mb-6">Distribütörlerin ülkelere göre dağılım yüzdeleri ve adetleri</p>
@@ -193,9 +184,7 @@ import { forkJoin } from 'rxjs';
                   <span class="font-bold text-gray-700 uppercase tracking-wide">{{ item.country }}</span>
                   <span class="font-bold text-beeses-dark">{{ item.count }} Distribütör <span class="text-gray-400 font-medium ml-1">({{ item.percentage }}%)</span></span>
                 </div>
-                <!-- Progress bar container -->
                 <div class="w-full h-3 bg-gray-50 rounded-full overflow-hidden border border-gray-100 relative">
-                  <!-- Progress bar fill -->
                   <div class="h-full bg-gradient-to-r from-beeses-gold/60 to-beeses-gold rounded-full transition-all duration-1000" [style.width.%]="item.percentage"></div>
                 </div>
               </div>
@@ -212,11 +201,11 @@ import { forkJoin } from 'rxjs';
 
         </div>
 
-        <!-- Recent Activities Grid -->
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        <!-- Lists Section (Only shown if warranties or contacts are authorized) -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8" *ngIf="hasPermission('warranties') || hasPermission('contacts')">
           
-          <!-- Recent Warranties -->
-          <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between">
+          <!-- Son Garanti Başvuruları List -->
+          <div *ngIf="hasPermission('warranties')" [ngClass]="hasPermission('contacts') ? '' : 'xl:col-span-2'" class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4 border-b border-gray-50 pb-4">
               <h3 class="text-base font-bold text-beeses-dark tracking-tight flex items-center gap-2">
                 <lucide-icon name="shield-check" class="w-5 h-5 text-emerald-500"></lucide-icon>
@@ -264,8 +253,8 @@ import { forkJoin } from 'rxjs';
             </div>
           </div>
 
-          <!-- Recent Contacts -->
-          <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between">
+          <!-- Son Gelen Mesajlar List -->
+          <div *ngIf="hasPermission('contacts')" [ngClass]="hasPermission('warranties') ? '' : 'xl:col-span-2'" class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between mb-4 border-b border-gray-50 pb-4">
               <h3 class="text-base font-bold text-beeses-dark tracking-tight flex items-center gap-2">
                 <lucide-icon name="mail" class="w-5 h-5 text-blue-500"></lucide-icon>
@@ -325,8 +314,9 @@ export class DashboardHomeComponent implements OnInit {
 
   isLoading = true;
   adminUsername = 'Yönetici';
+  adminRole = 'admin';
+  adminPermissions: any = {};
 
-  // Stats counters
   warrantiesCount = 0;
   warrantiesPending = 0;
   warrantiesApproved = 0;
@@ -336,12 +326,10 @@ export class DashboardHomeComponent implements OnInit {
   distributorsCount = 0;
   newsCount = 0;
 
-  // Detail lists
   latestWarranties: any[] = [];
   latestContacts: any[] = [];
   topCountries: { country: string; count: number; percentage: number }[] = [];
 
-  // SVG percentages
   donutApprovedPct = 0;
   donutPendingPct = 0;
   donutRejectedPct = 0;
@@ -349,22 +337,70 @@ export class DashboardHomeComponent implements OnInit {
   ngOnInit() {
     if (typeof window !== 'undefined') {
       this.adminUsername = localStorage.getItem('admin_username') || 'Yönetici';
+      this.adminRole = localStorage.getItem('admin_role') || 'admin';
+      
+      const permsRaw = localStorage.getItem('admin_permissions');
+      try {
+        this.adminPermissions = JSON.parse(permsRaw || '{}');
+      } catch (e) {
+        this.adminPermissions = {};
+      }
     }
     this.loadDashboardData();
+  }
+
+  hasPermission(page: string): boolean {
+    if (this.adminRole === 'superadmin') return true;
+    return !!(this.adminPermissions[page] && this.adminPermissions[page].view === true);
   }
 
   loadDashboardData() {
     this.isLoading = true;
     
-    // Fetch all counts and lists in parallel using forkJoin
-    forkJoin({
-      warranties: this.http.get<any>(`${environment.apiUrl}/warranty/get-warranties.php`),
-      distributors: this.distributorService.getDistributors(),
-      contacts: this.contactService.getContacts(),
-      news: this.newsService.getNews()
-    }).subscribe({
+    const requests: any = {};
+
+    if (this.hasPermission('warranties')) {
+      requests.warranties = this.http.get<any>(`${environment.apiUrl}/warranty/get-warranties.php`).pipe(
+        catchError(err => {
+          return of(null);
+        })
+      );
+    } else {
+      requests.warranties = of(null);
+    }
+
+    if (this.hasPermission('distributors')) {
+      requests.distributors = this.distributorService.getDistributors().pipe(
+        catchError(err => {
+          return of(null);
+        })
+      );
+    } else {
+      requests.distributors = of(null);
+    }
+
+    if (this.hasPermission('contacts')) {
+      requests.contacts = this.contactService.getContacts().pipe(
+        catchError(err => {
+          return of(null);
+        })
+      );
+    } else {
+      requests.contacts = of(null);
+    }
+
+    if (this.hasPermission('news')) {
+      requests.news = this.newsService.getNews().pipe(
+        catchError(err => {
+          return of(null);
+        })
+      );
+    } else {
+      requests.news = of(null);
+    }
+
+    forkJoin(requests).subscribe({
       next: (res: any) => {
-        // 1. Process Warranties
         if (res.warranties && res.warranties.success) {
           const wList = res.warranties.data || [];
           this.warrantiesCount = wList.length;
@@ -376,12 +412,10 @@ export class DashboardHomeComponent implements OnInit {
           this.calculateDonutPercentages();
         }
 
-        // 2. Process Distributors
         if (res.distributors && res.distributors.success) {
           const dList = res.distributors.data || [];
           this.distributorsCount = dList.length;
 
-          // Group by country to calculate distributions
           const countryCounts: { [key: string]: number } = {};
           dList.forEach((d: any) => {
             if (d.country) {
@@ -400,14 +434,12 @@ export class DashboardHomeComponent implements OnInit {
           this.topCountries = countries.slice(0, 4);
         }
 
-        // 3. Process Contacts
         if (res.contacts && res.contacts.success) {
           const cList = res.contacts.data || [];
           this.contactsCount = cList.length;
           this.latestContacts = cList.slice(0, 3);
         }
 
-        // 4. Process News
         if (res.news && res.news.success) {
           const nList = res.news.data || [];
           this.newsCount = nList.length;
@@ -416,7 +448,6 @@ export class DashboardHomeComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading dashboard statistics:', err);
         this.isLoading = false;
       }
     });

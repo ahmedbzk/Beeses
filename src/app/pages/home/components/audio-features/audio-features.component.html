@@ -5,7 +5,7 @@
   </div>
 
   <div class="container mx-auto px-6 relative z-10">
-    <!-- Başlık / Logo Konsepti -->
+    <!-- Header -->
     <div class="text-center mb-20 flex flex-col items-center">
       <div class="w-12 h-[1px] bg-beeses-gold mb-8"></div>
       <div class="flex items-center gap-4 mb-4">
@@ -15,49 +15,49 @@
         </h2>
       </div>
       <p class="text-black/50 mt-4 text-xs md:text-sm max-w-xl font-medium tracking-wide italic">
-        "Sesi renklendirmek için değil, sadece olduğu gibi iletmek için."
+        {{ 'AUDIO_FEATURES_TAGLINE' | translate }}
       </p>
     </div>
 
-    <!-- İkonlar ve Özellikler Grid -->
+    <!-- Features Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 max-w-5xl mx-auto">
 
-      <!-- Özellik 1 -->
+      <!-- Feature 1 -->
       <div class="flex flex-col items-center text-center group cursor-default">
         <div
           class="w-20 h-20 rounded-full border border-black/5 bg-white flex items-center justify-center mb-6 group-hover:border-beeses-gold/40 group-hover:bg-[#fdfbf6] transition-all duration-700 shadow-[0_10px_20px_rgba(0,0,0,0.05)] group-hover:shadow-[0_15px_30px_rgba(212,175,55,0.15)]">
           <lucide-icon name="headphones"
             class="w-8 h-8 text-beeses-dark group-hover:text-beeses-gold group-hover:scale-110 transition-all duration-500"></lucide-icon>
         </div>
-        <h3 class="text-beeses-dark font-bold text-xs tracking-[0.2em] mb-4 uppercase">Odyofil Sınıfı</h3>
+        <h3 class="text-beeses-dark font-bold text-xs tracking-[0.2em] mb-4 uppercase">{{ 'AUDIO_FEATURE1_TITLE' | translate }}</h3>
         <p class="text-black/50 font-medium text-[11px] leading-relaxed max-w-[250px]">
-          Stüdyo kalitesindeki duyumu ev ortamına taşıyan tavizsiz malzeme ve mühendislik harikası mimari.
+          {{ 'AUDIO_FEATURE1_DESC' | translate }}
         </p>
       </div>
 
-      <!-- Özellik 2 -->
+      <!-- Feature 2 -->
       <div class="flex flex-col items-center text-center group cursor-default md:-translate-y-8">
         <div
           class="w-20 h-20 rounded-full border border-black/5 bg-white flex items-center justify-center mb-6 group-hover:border-beeses-gold/40 group-hover:bg-[#fdfbf6] transition-all duration-700 shadow-[0_10px_20px_rgba(0,0,0,0.05)] group-hover:shadow-[0_15px_30px_rgba(212,175,55,0.15)]">
           <lucide-icon name="sliders"
             class="w-8 h-8 text-beeses-dark group-hover:text-beeses-gold group-hover:scale-110 transition-all duration-500"></lucide-icon>
         </div>
-        <h3 class="text-beeses-dark font-bold text-xs tracking-[0.2em] mb-4 uppercase">Saf Analog Yol</h3>
+        <h3 class="text-beeses-dark font-bold text-xs tracking-[0.2em] mb-4 uppercase">{{ 'AUDIO_FEATURE2_TITLE' | translate }}</h3>
         <p class="text-black/50 font-medium text-[11px] leading-relaxed max-w-[250px]">
-          Sesi dijital yorgunluktan uzak, en sıcak ve gerçekçi haliyle kulaklarınıza ulaştıran sinyal yolu.
+          {{ 'AUDIO_FEATURE2_DESC' | translate }}
         </p>
       </div>
 
-      <!-- Özellik 3 -->
+      <!-- Feature 3 -->
       <div class="flex flex-col items-center text-center group cursor-default">
         <div
           class="w-20 h-20 rounded-full border border-black/5 bg-white flex items-center justify-center mb-6 group-hover:border-beeses-gold/40 group-hover:bg-[#fdfbf6] transition-all duration-700 shadow-[0_10px_20px_rgba(0,0,0,0.05)] group-hover:shadow-[0_15px_30px_rgba(212,175,55,0.15)]">
           <lucide-icon name="zap"
             class="w-8 h-8 text-beeses-dark group-hover:text-beeses-gold group-hover:scale-110 transition-all duration-500"></lucide-icon>
         </div>
-        <h3 class="text-beeses-dark font-bold text-xs tracking-[0.2em] mb-4 uppercase">Dinamik Güç</h3>
+        <h3 class="text-beeses-dark font-bold text-xs tracking-[0.2em] mb-4 uppercase">{{ 'AUDIO_FEATURE3_TITLE' | translate }}</h3>
         <p class="text-black/50 font-medium text-[11px] leading-relaxed max-w-[250px]">
-          En zorlu hoparlörleri bile kusursuzca sürebilen, yüksek akım kapasiteli monoblok rezerv.
+          {{ 'AUDIO_FEATURE3_DESC' | translate }}
         </p>
       </div>
 

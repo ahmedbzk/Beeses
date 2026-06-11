@@ -1,5 +1,4 @@
-<section
-  class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
+<section class="relative w-full h-auto flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
   <!-- Background Image with Overlay -->
   <div class="absolute inset-0 w-full h-full">
     <img src="assets/backgrounds/bg1.jpg" alt="Warranty Hero" class="w-full h-full object-cover opacity-60" />
@@ -7,17 +6,17 @@
   </div>
 
   <!-- Hero Content -->
-  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-6 md:pb-12">
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-16 md:pb-20">
     <span
-      class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">Kayıt
-      Sistemi</span>
+      class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">
+      {{ 'NAV_WARRANTY_REG' | translate }}
+    </span>
     <h1
       class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">
-      GARANTİ <span class="text-beeses-gold">BAŞVURUSU</span></h1>
+      {{ 'WARRANTY_REG_TITLE' | translate }}</h1>
     <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
     <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
-      Beeses Audio ürününüzü sisteme kaydederek garanti sürecini başlatın ve size özel teknik destek avantajlarından
-      faydalanın.
+      {{ 'WARRANTY_REG_SUBTITLE' | translate }}
     </p>
   </div>
 </section>
@@ -44,57 +43,62 @@
             <div class="w-8 h-8 rounded-full bg-beeses-gold/10 flex items-center justify-center">
               <span class="text-beeses-gold font-bold text-sm">1</span>
             </div>
-            <h2 class="text-lg font-bold text-beeses-dark uppercase tracking-widest">Kişisel Bilgiler</h2>
+            <h2 class="text-lg font-bold text-beeses-dark uppercase tracking-widest">{{ 'WARRANTY_PERSONAL_INFO' | translate }}</h2>
             <div class="flex-grow h-px bg-gray-200"></div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Ad Soyad -->
             <div class="space-y-2">
-              <label class="block text-sm font-bold text-beeses-dark">Adınız Soyadınız</label>
+              <label class="block text-sm font-bold text-beeses-dark">{{ 'CONTACT_FIELD_NAME' | translate }}</label>
               <input type="text" formControlName="full_name"
                 class="w-full px-4 py-3.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors text-sm"
-                placeholder="Tam adınızı giriniz">
+                [placeholder]="'CONTACT_PLACEHOLDER_NAME' | translate">
               <p *ngIf="warrantyForm.get('full_name')?.touched && warrantyForm.get('full_name')?.invalid"
-                class="text-red-500 text-xs mt-1 font-medium">Ad soyad zorunludur.</p>
+                class="text-red-500 text-xs mt-1 font-medium">{{ 'VALIDATION_REQUIRED' | translate }}</p>
             </div>
 
             <!-- Ülke Dropdown -->
             <div class="space-y-2">
-              <label class="block text-sm font-bold text-beeses-dark">Ülke</label>
+              <label class="block text-sm font-bold text-beeses-dark">{{ 'WARRANTY_COUNTRY' | translate }}</label>
               <div class="relative">
                 <select formControlName="country" (change)="onCountryChange($event)"
                   class="w-full px-4 py-3.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors text-sm appearance-none cursor-pointer">
-                  <option value="" disabled selected>Ülke Seçiniz</option>
-                  <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+                  <option value="" disabled selected>{{ 'WARRANTY_COUNTRY_SELECT' | translate }}</option>
+                  <option *ngFor="let country of countries" [value]="country.id">{{ country.key | translate }}</option>
                 </select>
                 <lucide-icon name="chevron-down"
                   class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></lucide-icon>
               </div>
               <p *ngIf="warrantyForm.get('country')?.touched && warrantyForm.get('country')?.invalid"
-                class="text-red-500 text-xs mt-1 font-medium">Ülke seçimi zorunludur.</p>
+                class="text-red-500 text-xs mt-1 font-medium">{{ 'VALIDATION_REQUIRED' | translate }}</p>
             </div>
 
             <!-- E-posta -->
             <div class="space-y-2">
-              <label class="block text-sm font-bold text-beeses-dark">E-posta Adresiniz</label>
+              <label class="block text-sm font-bold text-beeses-dark">{{ 'CONTACT_FIELD_EMAIL' | translate }}</label>
               <input type="email" formControlName="email"
                 class="w-full px-4 py-3.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors text-sm"
-                placeholder="ornek@mail.com">
+                [placeholder]="'CONTACT_PLACEHOLDER_EMAIL' | translate">
               <p *ngIf="warrantyForm.get('email')?.touched && warrantyForm.get('email')?.invalid"
-                class="text-red-500 text-xs mt-1 font-medium">Geçerli bir e-posta zorunludur.</p>
+                class="text-red-500 text-xs mt-1 font-medium">
+                <span *ngIf="warrantyForm.get('email')?.hasError('required')">{{ 'VALIDATION_REQUIRED' | translate
+                  }}</span>
+                <span *ngIf="warrantyForm.get('email')?.hasError('email')">{{ 'VALIDATION_INVALID_EMAIL' | translate
+                  }}</span>
+              </p>
             </div>
 
             <!-- Telefon -->
             <div class="space-y-2">
-              <label class="block text-sm font-bold text-beeses-dark">Telefon Numarası</label>
+              <label class="block text-sm font-bold text-beeses-dark">{{ 'CONTACT_FIELD_PHONE' | translate }}</label>
               <div class="relative">
                 <input type="tel" formControlName="phone" (input)="onPhoneInput($event)"
                   class="w-full px-4 py-3.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors text-sm"
-                  placeholder="Telefon numaranızı girin">
+                  [placeholder]="'CONTACT_PLACEHOLDER_PHONE' | translate">
               </div>
               <p *ngIf="warrantyForm.get('phone')?.touched && warrantyForm.get('phone')?.invalid"
-                class="text-red-500 text-xs mt-1 font-medium">Telefon zorunludur.</p>
+                class="text-red-500 text-xs mt-1 font-medium">{{ 'VALIDATION_REQUIRED' | translate }}</p>
             </div>
           </div>
         </div>
@@ -105,18 +109,18 @@
             <div class="w-8 h-8 rounded-full bg-beeses-gold/10 flex items-center justify-center">
               <span class="text-beeses-gold font-bold text-sm">2</span>
             </div>
-            <h2 class="text-lg font-bold text-beeses-dark uppercase tracking-widest">Ürün Bilgileri</h2>
+            <h2 class="text-lg font-bold text-beeses-dark uppercase tracking-widest">{{ 'WARRANTY_PRODUCT_INFO' | translate }}</h2>
             <div class="flex-grow h-px bg-gray-200"></div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Ürün Adı -->
             <div class="space-y-2">
-              <label class="block text-sm font-bold text-beeses-dark">Ürün Adı</label>
+              <label class="block text-sm font-bold text-beeses-dark">{{ 'WARRANTY_FIELD_PRODUCT' | translate }}</label>
               <div class="relative">
                 <select formControlName="product_name" (change)="onProductChange($event)"
                   class="w-full px-4 py-3.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors text-sm appearance-none cursor-pointer">
-                  <option value="" disabled selected>Lütfen bir ürün seçin</option>
+                  <option value="" disabled selected>{{ 'WARRANTY_PLACEHOLDER_PRODUCT' | translate }}</option>
                   <option value="SQL-4400">SQL-4400</option>
                   <option value="SQL-4200">SQL-4200</option>
                   <option value="OF-1">OF-1</option>
@@ -129,25 +133,26 @@
                 </div>
               </div>
               <p *ngIf="warrantyForm.get('product_name')?.touched && warrantyForm.get('product_name')?.invalid"
-                class="text-red-500 text-xs mt-1 font-medium">Lütfen bir ürün seçin.</p>
+                class="text-red-500 text-xs mt-1 font-medium">{{ 'VALIDATION_SELECT_PRODUCT' | translate }}</p>
             </div>
 
             <!-- Seri Numarası -->
             <div class="space-y-2">
-              <label class="block text-sm font-bold text-beeses-dark">Seri Numarası</label>
+              <label class="block text-sm font-bold text-beeses-dark">{{ 'WARRANTY_FIELD_SERIAL' | translate }}</label>
               <input type="text" formControlName="serial_number" (input)="onSerialNumberInput($event)"
                 [readonly]="!warrantyForm.get('product_name')?.value"
                 class="w-full px-4 py-3.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-colors text-sm font-mono uppercase"
-                placeholder="ÖRN: 440011112222">
+                [placeholder]="'WARRANTY_PLACEHOLDER_SERIAL' | translate">
               <p *ngIf="warrantyForm.get('serial_number')?.touched && warrantyForm.get('serial_number')?.errors?.['required']"
-                class="text-red-500 text-xs mt-1 font-medium">Seri numarası zorunludur.</p>
+                class="text-red-500 text-xs mt-1 font-medium">{{ 'VALIDATION_SERIAL_REQUIRED' | translate }}</p>
               <p *ngIf="warrantyForm.get('serial_number')?.touched && (warrantyForm.get('serial_number')?.errors?.['minlength'] || warrantyForm.get('serial_number')?.errors?.['maxlength'])"
-                class="text-red-500 text-xs mt-1 font-medium">Seri numarası tam olarak {{ getExpectedLength() }} hane olmalıdır.</p>
+                class="text-red-500 text-xs mt-1 font-medium">{{ 'VALIDATION_SERIAL_LENGTH' | translate:{length:
+                getExpectedLength()} }}</p>
             </div>
 
             <!-- Fatura Yükleme -->
             <div class="md:col-span-2 space-y-2 mt-2">
-              <label class="block text-sm font-bold text-beeses-dark">Fatura Resmi (Zorunlu)</label>
+              <label class="block text-sm font-bold text-beeses-dark">{{ 'WARRANTY_FIELD_FILE' | translate }}</label>
               <div
                 class="relative border-2 border-dashed border-gray-300 rounded-2xl p-10 hover:border-beeses-gold hover:bg-beeses-gold/5 transition-all duration-300 group text-center bg-gray-50">
                 <input type="file" (change)="onFileChange($event)" accept="image/*,application/pdf"
@@ -158,16 +163,15 @@
                     <lucide-icon name="file-text"
                       class="w-8 h-8 text-gray-400 group-hover:text-beeses-gold transition-colors"></lucide-icon>
                   </div>
-                  <p class="text-[15px] text-gray-700 font-bold mb-1" *ngIf="!selectedFile">Tıklayarak veya sürükleyerek
-                    fatura dosyanızı yükleyin</p>
+                  <p class="text-[15px] text-gray-700 font-bold mb-1" *ngIf="!selectedFile">{{ 'WARRANTY_FILE_UPLOAD' |
+                    translate }}</p>
                   <p class="text-[15px] text-beeses-gold font-bold mb-1" *ngIf="selectedFile">{{ selectedFile.name }}
                   </p>
-                  <p class="text-xs text-gray-400 font-medium mt-1">JPG, PNG veya PDF formatında yükleyebilirsiniz.
-                    (Maks. 5MB)</p>
+                  <p class="text-xs text-gray-400 font-medium mt-1">{{ 'WARRANTY_FILE_HINT' | translate }}</p>
                 </div>
               </div>
-              <p *ngIf="errorMessage && !selectedFile" class="text-red-500 text-xs mt-2 font-medium">Fatura yüklenmesi
-                zorunludur.</p>
+              <p *ngIf="errorMessage && !selectedFile" class="text-red-500 text-xs mt-2 font-medium">{{
+                'VALIDATION_FILE_REQUIRED' | translate }}</p>
             </div>
           </div>
         </div>
@@ -184,7 +188,7 @@
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
               </path>
             </svg>
-            {{ isSubmitting ? 'KAYIT İŞLEMİ SÜRÜYOR...' : 'GARANTİ KAYDINI ONAYLA VE GÖNDER' }}
+            {{ (isSubmitting ? 'WARRANTY_BUTTON_SUBMITTING' : 'WARRANTY_BUTTON_SUBMIT') | translate }}
           </button>
         </div>
 
@@ -195,23 +199,28 @@
 </section>
 
 <!-- Başarı Modalı -->
-<div *ngIf="showSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-md animate-fade-in">
-  <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all border border-gray-100 text-center p-8 md:p-10 relative">
-    <button (click)="closeSuccessModal()" class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 transition-colors bg-gray-50 hover:bg-gray-100 rounded-full p-2">
+<div *ngIf="showSuccessModal"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-md animate-fade-in">
+  <div
+    class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all border border-gray-100 text-center p-8 md:p-10 relative">
+    <button (click)="closeSuccessModal()"
+      class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 transition-colors bg-gray-50 hover:bg-gray-100 rounded-full p-2">
       <lucide-icon name="x" class="w-5 h-5"></lucide-icon>
     </button>
-    
-    <div class="w-24 h-24 rounded-full bg-green-50 text-green-500 flex items-center justify-center mx-auto mb-6 shadow-inner ring-8 ring-green-50/50">
+
+    <div
+      class="w-24 h-24 rounded-full bg-green-50 text-green-500 flex items-center justify-center mx-auto mb-6 shadow-inner ring-8 ring-green-50/50">
       <lucide-icon name="check-circle" class="w-12 h-12"></lucide-icon>
     </div>
-    
-    <h3 class="text-3xl font-black text-beeses-dark mb-4 tracking-tight">Kayıt Başarılı!</h3>
+
+    <h3 class="text-3xl font-black text-beeses-dark mb-4 tracking-tight">{{ 'WARRANTY_REG_SUCCESS_MODAL_TITLE' | translate }}</h3>
     <p class="text-gray-500 text-base mb-8 leading-relaxed">
-      Garanti kaydınız başarıyla işleme alınmıştır. <br>Ürününüz sisteme tanımlandı ve teknik ekibimiz tarafından incelenmektedir.
+      {{ 'WARRANTY_REG_SUCCESS_MODAL_DESC' | translate }}
     </p>
-    
-    <button (click)="closeSuccessModal()" class="w-full py-4 px-4 bg-beeses-gold hover:bg-beeses-dark text-white font-bold rounded-xl transition-all duration-300 text-sm uppercase tracking-wider shadow-[0_10px_20px_rgba(181,129,49,0.3)] hover:shadow-2xl hover:-translate-y-1">
-      Tamam, Teşekkürler
+
+    <button (click)="closeSuccessModal()"
+      class="w-full py-4 px-4 bg-beeses-gold hover:bg-beeses-dark text-white font-bold rounded-xl transition-all duration-300 text-sm uppercase tracking-wider shadow-[0_10px_20px_rgba(181,129,49,0.3)] hover:shadow-2xl hover:-translate-y-1">
+      {{ 'WARRANTY_OK_THANKS' | translate }}
     </button>
   </div>
 </div>

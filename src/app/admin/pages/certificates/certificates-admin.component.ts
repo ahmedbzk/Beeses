@@ -12,7 +12,6 @@ import { environment } from '../../../../environments/environment';
   imports: [CommonModule, FormsModule, LucideAngularModule],
   template: `
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <!-- Header -->
       <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50/50">
         <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
           <lucide-icon name="award" class="w-5 h-5 text-beeses-gold"></lucide-icon>
@@ -25,9 +24,7 @@ import { environment } from '../../../../environments/environment';
         </div>
       </div>
 
-      <!-- Toolbar: Search & Add -->
       <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-white" *ngIf="!isLoading">
-        <!-- Search -->
         <div class="relative w-full sm:w-80">
           <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <lucide-icon name="search" class="w-4 h-4 text-gray-400"></lucide-icon>
@@ -40,13 +37,11 @@ import { environment } from '../../../../environments/environment';
         </button>
       </div>
 
-      <!-- Loading State -->
       <div class="p-6 text-center text-gray-500" *ngIf="isLoading">
         <lucide-icon name="refresh-cw" class="w-8 h-8 animate-spin mx-auto mb-2 text-beeses-gold"></lucide-icon>
         <p>Sertifikalar Yükleniyor...</p>
       </div>
 
-      <!-- Table View -->
       <div class="overflow-x-auto" *ngIf="!isLoading">
         <table class="w-full text-left text-sm text-gray-600">
           <thead class="bg-beeses-dark text-beeses-gold font-bold uppercase text-[10px] tracking-[0.15em] border-b-2 border-beeses-gold shadow-sm">
@@ -66,7 +61,6 @@ import { environment } from '../../../../environments/environment';
               
               <td class="px-6 py-4 text-center font-semibold text-beeses-dark">{{ item.id }}</td>
               
-              <!-- Icon Preview -->
               <td class="px-6 py-4 text-center">
                 <div class="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center mx-auto border border-gray-100 text-beeses-gold">
                   <lucide-icon [name]="item.icon || 'award'" class="w-5 h-5"></lucide-icon>
@@ -81,7 +75,6 @@ import { environment } from '../../../../environments/environment';
                 <div class="line-clamp-2" [title]="item.description">{{ item.description }}</div>
               </td>
 
-              <!-- File path viewer link -->
               <td class="px-6 py-4">
                 <div *ngIf="item.file_path; else noFile">
                   <a [href]="apiUrl + '/' + item.file_path" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 hover:bg-green-600 hover:text-white rounded-full text-xs font-bold transition-all" title="Belgeyi Görüntüle">
@@ -116,10 +109,8 @@ import { environment } from '../../../../environments/environment';
       </div>
     </div>
 
-    <!-- Add/Edit Modal -->
     <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-sm animate-fade-in">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <!-- Modal Header -->
         <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
           <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
             <lucide-icon name="award" class="w-5 h-5 text-beeses-gold"></lucide-icon>
@@ -130,21 +121,40 @@ import { environment } from '../../../../environments/environment';
           </button>
         </div>
 
-        <!-- Modal Body -->
+        <div class="px-6 pt-4 flex border-b border-gray-100 bg-gray-50/50 gap-2">
+          <button type="button" (click)="activeTab = 'tr'" [class]="'flex items-center gap-1.5 px-4 py-2.5 border-b-2 text-xs font-black uppercase tracking-wider transition-all cursor-pointer ' + (activeTab === 'tr' ? 'border-beeses-gold text-beeses-gold' : 'border-transparent text-gray-400 hover:text-gray-600')">
+            Türkçe (TR)
+          </button>
+          <button type="button" (click)="activeTab = 'en'" [class]="'flex items-center gap-1.5 px-4 py-2.5 border-b-2 text-xs font-black uppercase tracking-wider transition-all cursor-pointer ' + (activeTab === 'en' ? 'border-beeses-gold text-beeses-gold' : 'border-transparent text-gray-400 hover:text-gray-600')">
+            English (EN)
+          </button>
+        </div>
+
         <div class="p-6 overflow-y-auto flex-grow space-y-4">
-          <!-- Name -->
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Sertifika Adı *</label>
-            <input type="text" [(ngModel)]="formData.name" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Sertifika adını yazın...">
+          <div *ngIf="activeTab === 'tr'" class="space-y-4 animate-fade-in">
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Sertifika Adı (TR) *</label>
+              <input type="text" [(ngModel)]="formData.name" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Türkçe sertifika adını yazın...">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Açıklama (TR)</label>
+              <textarea [(ngModel)]="formData.description" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all resize-none" placeholder="Türkçe sertifika açıklamasını yazın..."></textarea>
+            </div>
           </div>
 
-          <!-- Description -->
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Açıklama</label>
-            <textarea [(ngModel)]="formData.description" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all resize-none" placeholder="Sertifika açıklamasını yazın..."></textarea>
+          <div *ngIf="activeTab === 'en'" class="space-y-4 animate-fade-in">
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Sertifika Adı (EN)</label>
+              <input type="text" [(ngModel)]="formData.name_en" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Write certificate name in English...">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Açıklama (EN)</label>
+              <textarea [(ngModel)]="formData.description_en" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all resize-none" placeholder="Write certificate description in English..."></textarea>
+            </div>
           </div>
 
-          <!-- Icon Select -->
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Simge (Icon) *</label>
             <select [(ngModel)]="formData.icon" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all cursor-pointer mb-2">
@@ -159,7 +169,6 @@ import { environment } from '../../../../environments/environment';
             </select>
           </div>
 
-          <!-- File Upload -->
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
               Sertifika Belgesi (PDF / Görsel)
@@ -186,7 +195,6 @@ import { environment } from '../../../../environments/environment';
           </div>
         </div>
 
-        <!-- Modal Footer -->
         <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
           <button (click)="closeModal()" class="px-4 py-2 border border-gray-200 text-gray-600 hover:bg-gray-100 rounded-lg text-sm font-bold transition-all cursor-pointer">
             İptal
@@ -209,17 +217,18 @@ export class CertificatesAdminComponent implements OnInit {
   isSaving = false;
   apiUrl = environment.apiUrl;
 
-  // Search & Filters
   searchQuery = '';
 
-  // Modal State
   showModal = false;
   editingItem: Certificate | null = null;
   selectedFile: File | null = null;
   selectedFileName = '';
+  activeTab = 'tr';
   formData = {
     name: '',
     description: '',
+    name_en: '',
+    description_en: '',
     icon: 'award'
   };
 
@@ -257,7 +266,6 @@ export class CertificatesAdminComponent implements OnInit {
     );
   }
 
-  // File handling
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -275,14 +283,16 @@ export class CertificatesAdminComponent implements OnInit {
     return path.split('/').pop() || '';
   }
 
-  // Modal actions
   openAddModal() {
     this.editingItem = null;
     this.selectedFile = null;
     this.selectedFileName = '';
+    this.activeTab = 'tr';
     this.formData = {
       name: '',
       description: '',
+      name_en: '',
+      description_en: '',
       icon: 'award'
     };
     this.showModal = true;
@@ -292,9 +302,12 @@ export class CertificatesAdminComponent implements OnInit {
     this.editingItem = item;
     this.selectedFile = null;
     this.selectedFileName = '';
+    this.activeTab = 'tr';
     this.formData = {
       name: item.name,
       description: item.description || '',
+      name_en: item.name_en || '',
+      description_en: item.description_en || '',
       icon: item.icon || 'award'
     };
     this.showModal = true;
@@ -315,10 +328,11 @@ export class CertificatesAdminComponent implements OnInit {
 
     this.isSaving = true;
 
-    // We build a FormData payload since we might upload a file
     const uploadData = new FormData();
     uploadData.append('name', this.formData.name);
     uploadData.append('description', this.formData.description);
+    uploadData.append('name_en', this.formData.name_en);
+    uploadData.append('description_en', this.formData.description_en);
     uploadData.append('icon', this.formData.icon);
 
     if (this.selectedFile) {
@@ -326,7 +340,6 @@ export class CertificatesAdminComponent implements OnInit {
     }
 
     if (this.editingItem) {
-      // Edit mode
       uploadData.append('id', String(this.editingItem.id));
 
       this.certificateService.updateCertificate(uploadData).subscribe({
@@ -346,7 +359,6 @@ export class CertificatesAdminComponent implements OnInit {
         }
       });
     } else {
-      // Add mode
       this.certificateService.addCertificate(uploadData).subscribe({
         next: (response) => {
           if (response.success) {

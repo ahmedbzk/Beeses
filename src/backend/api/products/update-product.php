@@ -19,11 +19,16 @@ $shortDescription = $_POST['shortDescription'] ?? '';
 $description = $_POST['description'] ?? '';
 $specs = $_POST['specs'] ?? '[]';
 $features = $_POST['features'] ?? '[]';
+$shortDescription_en = $_POST['shortDescription_en'] ?? '';
+$description_en = $_POST['description_en'] ?? '';
+$specs_en = $_POST['specs_en'] ?? '[]';
+$features_en = $_POST['features_en'] ?? '[]';
+$name_en = $_POST['name_en'] ?? '';
 $existing_images_json = $_POST['existing_images'] ?? '[]'; // JSON array of preserved gallery images
 
-if (empty($id) || empty($slug) || empty($name) || empty($category)) {
+if (empty($id) || empty($slug) || empty($name) || empty($category) || empty($name_en)) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Urun kimligi, adi, slug ve kategori alanlari zorunludur."]);
+    echo json_encode(["success" => false, "message" => "Lütfen Türkçe ve İngilizce isimler dahil tüm zorunlu alanları doldurun."]);
     exit;
 }
 
@@ -58,6 +63,7 @@ try {
 
     // Handle primary image upload if provided
     $main_image_updated = false;
+    $old_main_replaced = false;
     if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == UPLOAD_ERR_OK) {
         $file_tmp_path = $_FILES['image_file']['tmp_name'];
         $file_name = $_FILES['image_file']['name'];
@@ -73,22 +79,29 @@ try {
                 }
                 $image_path = 'uploads/products/' . $unique_file_name;
                 $main_image_updated = true;
+                $old_main_replaced = true;
             }
+        }
+    } else {
+        // If no new primary image is uploaded, check if the first element of existing_images is different from current image
+        // indicating a swap happened in the UI.
+        if (!empty($preserved_images) && isset($preserved_images[0]) && $preserved_images[0] !== $current['image']) {
+            $image_path = $preserved_images[0];
+            $main_image_updated = true;
         }
     }
 
     // Rebuild gallery list
     $new_gallery = [];
-    if ($main_image_updated) {
-        $new_gallery[] = $image_path;
-    } else {
-        // If main image wasn't updated, keep it as the first item of gallery
-        $new_gallery[] = $image_path;
-    }
+    $new_gallery[] = $image_path;
 
-    // Add other preserved gallery images (filtering out the old main image if it was replaced)
+    // Add other preserved gallery images (if they are not the new main image)
     foreach ($preserved_images as $p_img) {
-        if ($p_img !== $current['image'] && $p_img !== $image_path && !empty($p_img)) {
+        if ($p_img !== $image_path && !empty($p_img)) {
+            // If old main was replaced by a new uploaded file, filter it out completely
+            if ($old_main_replaced && $p_img === $current['image']) {
+                continue;
+            }
             $new_gallery[] = $p_img;
         }
     }
@@ -149,22 +162,54 @@ try {
         $pdf_path = '';
     }
 
+    // Handle PDF EN upload
+    $pdf_path_en = $current['pdfUrl_en'] ?? '';
+    if (isset($_FILES['pdf_file_en']) && $_FILES['pdf_file_en']['error'] == UPLOAD_ERR_OK) {
+        $file_tmp_path = $_FILES['pdf_file_en']['tmp_name'];
+        $file_name = $_FILES['pdf_file_en']['name'];
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+        if (in_array($file_ext, $allowed_doc_exts)) {
+            $unique_file_name = time() . '_doc_en_' . uniqid() . '.' . $file_ext;
+            $dest_path = $upload_dir . $unique_file_name;
+            if (move_uploaded_file($file_tmp_path, $dest_path)) {
+                // Delete old EN PDF if exists
+                if (!empty($current['pdfUrl_en']) && strpos($current['pdfUrl_en'], 'uploads/') === 0 && file_exists('../' . $current['pdfUrl_en'])) {
+                    unlink('../' . $current['pdfUrl_en']);
+                }
+                $pdf_path_en = 'uploads/products/' . $unique_file_name;
+            }
+        }
+    } else if (isset($_POST['delete_pdf_en']) && $_POST['delete_pdf_en'] == 'true') {
+        // Delete EN PDF flag set
+        if (!empty($current['pdfUrl_en']) && strpos($current['pdfUrl_en'], 'uploads/') === 0 && file_exists('../' . $current['pdfUrl_en'])) {
+            unlink('../' . $current['pdfUrl_en']);
+        }
+        $pdf_path_en = '';
+    }
+
     // Update DB
     $query = "UPDATE products 
-              SET slug = ?, name = ?, category = ?, shortDescription = ?, description = ?, image = ?, images = ?, pdfUrl = ?, specs = ?, features = ? 
+              SET slug = ?, name = ?, name_en = ?, category = ?, shortDescription = ?, description = ?, shortDescription_en = ?, description_en = ?, image = ?, images = ?, pdfUrl = ?, pdfUrl_en = ?, specs = ?, features = ?, specs_en = ?, features_en = ? 
               WHERE id = ?";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
         $slug,
         $name,
+        $name_en,
         $category,
         $shortDescription,
         $description,
+        $shortDescription_en,
+        $description_en,
         $image_path,
         json_encode($new_gallery),
         $pdf_path,
+        $pdf_path_en,
         $specs,
         $features,
+        $specs_en,
+        $features_en,
         $id
     ]);
 

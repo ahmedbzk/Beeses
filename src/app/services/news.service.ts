@@ -7,10 +7,14 @@ export interface News {
   id?: number;
   title: string;
   summary: string;
+  title_en?: string;
+  summary_en?: string;
   content?: string;
+  content_en?: string;
   category: string;
   image: string;
   sections?: { title?: string; text: string; image: string; }[];
+  sections_en?: { title?: string; text: string; image: string; }[];
   news_date: string;
   formatted_date?: string;
   created_at?: string;

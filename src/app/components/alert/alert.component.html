@@ -11,7 +11,7 @@
     
     <div class="flex-1">
       <h3 class="text-sm font-bold text-white">
-        {{ alert.type === 'success' ? 'Başarılı' : 'Hata' }}
+        {{ isAdminRoute() ? (alert.type === 'success' ? 'İşlem Başarılı' : 'Hata Oluştu') : ((alert.type === 'success' ? 'ALERT_SUCCESS' : 'ALERT_ERROR') | translate) }}
       </h3>
       <p class="mt-1 text-sm text-white/90">
         {{ alert.message }}

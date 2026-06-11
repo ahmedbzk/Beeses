@@ -12,7 +12,7 @@ import { AlertService } from '../../../services/alert.service';
   template: `
     <div class="space-y-6">
 
-      <!-- Üst istatistik kartları -->
+      
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center gap-4">
           <div class="w-12 h-12 rounded-xl bg-beeses-gold/10 flex items-center justify-center shrink-0">
@@ -43,10 +43,10 @@ import { AlertService } from '../../../services/alert.service';
         </div>
       </div>
 
-      <!-- Ana içerik: 2 sütun -->
+      
       <div class="grid grid-cols-1 xl:grid-cols-5 gap-6">
 
-        <!-- Sol: Aboneler Listesi (3 sütun) -->
+        
         <div class="xl:col-span-3 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
           <div class="p-6 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
             <h2 class="text-base font-bold text-beeses-dark flex items-center gap-2">
@@ -59,7 +59,7 @@ import { AlertService } from '../../../services/alert.service';
             </button>
           </div>
 
-          <!-- Arama -->
+          
           <div class="px-6 py-4 border-b border-gray-100">
             <div class="relative">
               <lucide-icon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>
@@ -68,13 +68,13 @@ import { AlertService } from '../../../services/alert.service';
             </div>
           </div>
 
-          <!-- Loading -->
+          
           <div *ngIf="isLoadingSubscribers" class="p-12 text-center">
             <lucide-icon name="loader" class="w-8 h-8 animate-spin mx-auto mb-2 text-beeses-gold"></lucide-icon>
             <p class="text-sm text-gray-400">Aboneler yükleniyor...</p>
           </div>
 
-          <!-- Tablo -->
+          
           <div *ngIf="!isLoadingSubscribers" class="overflow-x-auto flex-1">
             <table class="w-full text-sm text-left">
               <thead class="bg-beeses-dark text-beeses-gold text-[10px] font-bold uppercase tracking-[0.15em]">
@@ -121,7 +121,7 @@ import { AlertService } from '../../../services/alert.service';
             </table>
           </div>
 
-          <!-- Abone Pagination -->
+          
           <div *ngIf="!isLoadingSubscribers && filteredSubscribers.length > 0"
                class="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between gap-4 flex-wrap">
             <p class="text-xs text-gray-400">
@@ -147,10 +147,10 @@ import { AlertService } from '../../../services/alert.service';
           </div>
         </div>
 
-        <!-- Sağ: Toplu Mail Gönder (2 sütun) -->
+        
         <div class="xl:col-span-2 space-y-5">
 
-          <!-- Mail Gönder Formu -->
+          
           <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="p-6 border-b border-gray-100 bg-gray-50/50">
               <h2 class="text-base font-bold text-beeses-dark flex items-center gap-2">
@@ -187,7 +187,7 @@ import { AlertService } from '../../../services/alert.service';
             </div>
           </div>
 
-          <!-- Gönderim Geçmişi -->
+          
           <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
               <h2 class="text-sm font-bold text-beeses-dark flex items-center gap-2">
@@ -200,12 +200,12 @@ import { AlertService } from '../../../services/alert.service';
               </button>
             </div>
 
-            <!-- Loading -->
+            
             <div *ngIf="isLoadingLogs" class="p-8 text-center">
               <lucide-icon name="loader" class="w-6 h-6 animate-spin mx-auto text-beeses-gold"></lucide-icon>
             </div>
 
-            <!-- Log satırları -->
+            
             <div *ngIf="!isLoadingLogs" class="divide-y divide-gray-100">
               <div *ngFor="let log of pagedLogs" class="px-5 py-4 hover:bg-gray-50 transition-colors">
                 <div class="flex items-start justify-between gap-3">
@@ -232,7 +232,7 @@ import { AlertService } from '../../../services/alert.service';
               </div>
             </div>
 
-            <!-- Log Pagination -->
+            
             <div *ngIf="!isLoadingLogs && logs.length > 0"
                  class="px-5 py-3 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between gap-3 flex-wrap">
               <p class="text-xs text-gray-400">
@@ -261,7 +261,7 @@ import { AlertService } from '../../../services/alert.service';
       </div>
     </div>
 
-    <!-- Gönder Onay Modalı -->
+    
     <div *ngIf="showConfirm" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
         <div class="p-6 text-center">
@@ -283,7 +283,7 @@ import { AlertService } from '../../../services/alert.service';
       </div>
     </div>
 
-    <!-- Sil Onay Modalı -->
+    
     <div *ngIf="showDeleteConfirm" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
         <div class="p-6 text-center">
@@ -327,24 +327,20 @@ export class NewsletterAdminComponent implements OnInit {
   mailSubject = '';
   mailBody = '';
 
-  // Abone pagination
   subPage = 1;
   subPageSize = 10;
 
-  // Log pagination
   logPage = 1;
   logPageSize = 8;
 
   Math = Math;
 
-  // ── Filtrelenmiş aboneler ─────────────────────────────
   get filteredSubscribers() {
     if (!this.searchQuery.trim()) return this.subscribers;
     const q = this.searchQuery.toLowerCase();
     return this.subscribers.filter(s => s.email.toLowerCase().includes(q));
   }
 
-  // ── Sayfalanmış aboneler ──────────────────────────────
   get pagedSubscribers() {
     const start = (this.subPage - 1) * this.subPageSize;
     return this.filteredSubscribers.slice(start, start + this.subPageSize);
@@ -359,13 +355,12 @@ export class NewsletterAdminComponent implements OnInit {
     const current = this.subPage;
     const pages: number[] = [];
 
-    // Akıllı sayfa numaraları: çok fazla olunca ortada göster
     if (total <= 7) {
       for (let i = 1; i <= total; i++) pages.push(i);
     } else {
       if (current <= 4) {
         for (let i = 1; i <= 5; i++) pages.push(i);
-        pages.push(-1); // '...' işareti için
+        pages.push(-1);
         pages.push(total);
       } else if (current >= total - 3) {
         pages.push(1);
@@ -382,7 +377,6 @@ export class NewsletterAdminComponent implements OnInit {
     return pages;
   }
 
-  // ── Sayfalanmış loglar ────────────────────────────────
   get pagedLogs() {
     const start = (this.logPage - 1) * this.logPageSize;
     return this.logs.slice(start, start + this.logPageSize);
@@ -399,7 +393,6 @@ export class NewsletterAdminComponent implements OnInit {
     return pages;
   }
 
-  // ── Yardımcı ─────────────────────────────────────────
   getTotalSent(): number {
     return this.logs.reduce((sum, l) => sum + (l.sent_count || 0), 0);
   }
@@ -451,7 +444,6 @@ export class NewsletterAdminComponent implements OnInit {
       next: (res) => {
         if (res.success) {
           this.subscribers = this.subscribers.filter(s => s.id !== sub.id);
-          // Eğer o sayfada başka kayıt kalmadıysa bir önceki sayfaya git
           if (this.pagedSubscribers.length === 0 && this.subPage > 1) this.subPage--;
           this.alertService.showSuccess('Abone başarıyla silindi.');
         } else {
@@ -491,3 +483,4 @@ export class NewsletterAdminComponent implements OnInit {
     });
   }
 }
+

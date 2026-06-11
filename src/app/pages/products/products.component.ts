@@ -6,11 +6,12 @@ import { ProductService, Product } from '../../services/product.service';
 import { NewsletterService } from '../../services/newsletter.service';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, FormsModule],
+  imports: [CommonModule, RouterLink, LucideAngularModule, FormsModule, TranslateModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss'
 })
@@ -18,6 +19,7 @@ export class ProductsComponent implements OnInit {
   private productService = inject(ProductService);
   private newsletterService = inject(NewsletterService);
   private route = inject(ActivatedRoute);
+  public translate = inject(TranslateService);
 
   products: Product[] = [];
   filteredProducts: Product[] = [];
@@ -29,7 +31,6 @@ export class ProductsComponent implements OnInit {
   isFilterOpen: boolean = false;
   apiUrl = environment.apiUrl;
 
-  // Newsletter
   newsletterEmail: string = '';
   newsletterLoading: boolean = false;
   newsletterSuccess: boolean = false;
@@ -44,7 +45,6 @@ export class ProductsComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.products = response.data;
-          // Extract unique categories
           const catSet = new Set(this.products.map(p => p.category));
           this.categories = Array.from(catSet);
 
@@ -57,8 +57,7 @@ export class ProductsComponent implements OnInit {
           });
         }
       },
-      error: (err) => {
-        console.error('Urunler yuklenirken hata:', err);
+      error: () => {
         this.isLoading = false;
       }
     });
@@ -69,6 +68,15 @@ export class ProductsComponent implements OnInit {
     this.applyFilters();
     if (window.innerWidth < 1024) {
       this.isFilterOpen = false;
+    }
+  }
+
+  getCategoryTranslationKey(cat: string): string {
+    switch (cat) {
+      case 'SQL SERİSİ': return 'HEADER_SQL_SERIES';
+      case 'OF SERİSİ': return 'HEADER_OF_SERIES';
+      case 'PETEK SERİSİ': return 'HEADER_PETEK_SERIES';
+      default: return cat;
     }
   }
 
@@ -97,6 +105,9 @@ export class ProductsComponent implements OnInit {
 
   getImageUrl(imagePath: string | undefined): string {
     if (!imagePath) return '';
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
     if (imagePath.startsWith('assets/')) {
       return imagePath;
     }

@@ -6,11 +6,11 @@
   </div>
   
   <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-6 md:pb-12">
-    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">Ekibimiz</span>
-    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">PROFESYONEL EKİBİMİZ</h1>
+    <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">{{ 'TEAM_HERO_TAG' | translate }}</span>
+    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">{{ 'TEAM_HERO_TITLE' | translate }}</h1>
     <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
     <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
-      Ses teknolojileri alanında uzman mühendislik ve tasarım kadromuz.
+      {{ 'TEAM_HERO_SUBTITLE' | translate }}
     </p>
   </div>
 </section>
@@ -42,7 +42,7 @@
         <!-- Content -->
         <div class="p-6 text-center border-t border-gray-100 relative z-10 bg-white">
           <h3 class="text-xl font-bold text-beeses-dark mb-1 transition-colors group-hover:text-beeses-gold">{{ member.name }}</h3>
-          <p class="text-xs tracking-widest text-gray-500 uppercase font-medium">{{ member.role }}</p>
+          <p class="text-xs tracking-widest text-gray-500 uppercase font-medium">{{ member.role | translate }}</p>
         </div>
         
       </div>

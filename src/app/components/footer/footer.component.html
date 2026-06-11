@@ -3,16 +3,15 @@
   <div class="container mx-auto px-6 md:px-12 py-20 relative z-10">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
 
-      <div class="flex flex-col items-center lg:items-start">
+      <div class="flex flex-col items-center text-center">
         <img src="assets/logo.png" alt="BEESES Logo" class="h-14 mb-8 object-contain">
 
-        <p
-          class="text-beeses-silver/60 text-[12px] leading-tight mb-8 uppercase tracking-[0.3em] font-medium text-center">
-          SESİ DİNLEMEKLE KALMA <br>
-          <span class="text-beeses-gold font-black text-[18px] tracking-[0.5em] mt-2 block w-full">YAŞA</span>
+        <p class="text-beeses-silver/60 text-[12px] leading-tight mb-8 uppercase tracking-[0.3em] font-medium text-center">
+          {{ 'FOOTER_SLOGAN1' | translate }} <br>
+          <span class="text-beeses-gold font-black text-[18px] tracking-[0.5em] mt-2 block w-full text-center">{{ 'FOOTER_SLOGAN2' | translate }}</span>
         </p>
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center justify-center gap-4">
           <a href="#" class="social-icon"><lucide-icon name="facebook"></lucide-icon></a>
           <a href="#" class="social-icon"><lucide-icon name="twitter"></lucide-icon></a>
           <a href="#" class="social-icon"><lucide-icon name="youtube"></lucide-icon></a>
@@ -21,34 +20,31 @@
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-title">SAYFALAR</h4>
+        <h4 class="footer-title">{{ 'FOOTER_PAGES' | translate }}</h4>
         <ul class="footer-links">
-          <li><a routerLink="/">Ana Sayfa</a></li>
-          <li><a routerLink="/corporate">Kurumsal</a></li>
-          <li><a routerLink="/products">Ürünlerimiz</a></li>
-          <li><a routerLink="/distributors">Distribütörlerimiz</a></li>
-          <li><a routerLink="/contact">Bize Ulaşın</a></li>
+          <li><a routerLink="/">{{ 'NAV_HOME' | translate }}</a></li>
+          <li><a routerLink="/corporate/components/about">{{ 'NAV_CORPORATE' | translate }}</a></li>
+          <li><a routerLink="/products">{{ 'NAV_PRODUCTS' | translate }}</a></li>
+          <li><a routerLink="/distributors">{{ 'NAV_DISTRIBUTORS' | translate }}</a></li>
+          <li><a routerLink="/contact">{{ 'NAV_CONTACT' | translate }}</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-title">ÜRÜNLER</h4>
+        <h4 class="footer-title">{{ 'FOOTER_PRODUCTS' | translate }}</h4>
         <ul class="footer-links">
-          <li><a href="#">Sql Serisi</a></li>
-          <li><a href="#">Of Serisi</a></li>
-          <li><a href="#">Petek Serisi</a></li>
-          <!-- <li><a href="#">Bs Serisi</a></li>
-          <li><a href="#">Bs-o Serisi</a></li> -->
+          <li><a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }">{{ 'HEADER_SQL_SERIES' | translate }}</a></li>
+          <li><a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }">{{ 'HEADER_OF_SERIES' | translate }}</a></li>
+          <li><a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }">{{ 'HEADER_PETEK_SERIES' | translate }}</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-title">BİZE ULAŞIN</h4>
+        <h4 class="footer-title">{{ 'NAV_CONTACT' | translate }}</h4>
         <div class="contact-info">
           <div class="info-item">
             <div class="icon-wrapper"><lucide-icon name="map-pin"></lucide-icon></div>
-            <p>Oruçreis Mahallesi Giyimkent 16. Sokak <br> Giyimkent Sitesi B170 Blok no: 112/A <br> <strong>Esenler /
-                İSTANBUL</strong></p>
+            <p>Oruçreis Mahallesi Giyimkent 16. Sokak <br> Giyimkent Sitesi B170 Blok no: 112/A <br> <strong>{{ 'FOOTER_LOC' | translate }}</strong></p>
           </div>
           <div class="info-item group cursor-pointer">
             <div class="icon-wrapper"><lucide-icon name="mail"></lucide-icon></div>
@@ -67,8 +63,8 @@
     <div class="footer-bottom">
       <p>© BEESES 2026. Designed By BEESES AUDIO TECHNOLOGY.</p>
       <div class="flex gap-8 text-[10px] tracking-[0.2em] uppercase font-bold text-beeses-silver/20">
-        <a href="#" class="hover:text-beeses-gold transition-colors">Gizlilik Politikası</a>
-        <a href="#" class="hover:text-beeses-gold transition-colors">Çerez Ayarları</a>
+        <a href="#" class="hover:text-beeses-gold transition-colors">{{ 'FOOTER_PRIVACY' | translate }}</a>
+        <a href="#" class="hover:text-beeses-gold transition-colors">{{ 'FOOTER_COOKIES' | translate }}</a>
       </div>
     </div>
   </div>

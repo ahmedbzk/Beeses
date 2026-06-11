@@ -1,15 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HeaderV1Component } from '../../components/header/variants/header-v1/header-v1.component';
-import { HeaderV2Component } from '../../components/header/variants/header-v2/header-v2.component';
-import { HeaderV3Component } from '../../components/header/variants/header-v3/header-v3.component';
-import { HeaderV4Component } from '../../components/header/variants/header-v4/header-v4.component';
-import { HeaderV5Component } from '../../components/header/variants/header-v5/header-v5.component';
-import { HeaderV1_1Component } from '../../components/header/variants/header-v1-1/header-v1-1.component';
-import { HeaderV1_2Component } from '../../components/header/variants/header-v1-2/header-v1-2.component';
-import { HeaderV1_1_1Component } from '../../components/header/variants/header-v1-1-1/header-v1-1-1.component';
 import { HeaderVtestComponent } from '../../components/header/variants/header-vtest/header-vtest.component';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-header-demo',
@@ -17,21 +10,14 @@ import { HeaderVtestComponent } from '../../components/header/variants/header-vt
   imports: [
     CommonModule, 
     FormsModule,
-    HeaderV1Component, 
-    HeaderV1_1Component,
-    HeaderV1_2Component,
-    HeaderV1_1_1Component,
-    HeaderV2Component, 
-    HeaderV3Component, 
-    HeaderV4Component, 
-    HeaderV5Component,
+    LucideAngularModule,
     HeaderVtestComponent
   ],
   template: `
     <div class="min-h-screen transition-colors duration-500 overflow-x-hidden bg-gray-100">
       
       <!-- Variant Selector -->
-      <div class="fixed top-1/2 left-6 -translate-y-1/2 z-[10000] flex flex-col gap-3 p-4 bg-white/80 backdrop-blur-xl border border-black/5 shadow-2xl rounded-[32px]">
+      <div class="fixed top-1/2 left-6 -translate-y-1/2 z-[10000] flex flex-col gap-3 p-4 bg-white/80 backdrop-blur-xl border border-black/5 shadow-2xl rounded-[32px] max-h-[85vh] overflow-y-auto no-scrollbar">
         <p class="text-[9px] font-black text-gray-400 tracking-[0.2em] mb-2 px-2 uppercase">Tasarımlar</p>
         <button *ngFor="let v of variants" (click)="activeHeader = v.id" 
                 class="group relative px-5 py-3 rounded-2xl font-black transition-all text-[11px] text-left flex items-center justify-between gap-4"
@@ -41,15 +27,9 @@ import { HeaderVtestComponent } from '../../components/header/variants/header-vt
         </button>
       </div>
  
-      <!-- Header Render -->
-      <app-header-v1 *ngIf="activeHeader === 1"></app-header-v1>
-      <app-header-v1-1 *ngIf="activeHeader === '1.1'"></app-header-v1-1>
-      <app-header-v1-1-1 *ngIf="activeHeader === '1.1.1'"></app-header-v1-1-1>
-      <app-header-v1-2 *ngIf="activeHeader === '1.2'"></app-header-v1-2>
-      <app-header-v2 *ngIf="activeHeader === 2"></app-header-v2>
-      <app-header-v3 *ngIf="activeHeader === 3"></app-header-v3>
-      <app-header-v4 *ngIf="activeHeader === 4"></app-header-v4>
-      <app-header-v5 *ngIf="activeHeader === 5"></app-header-v5>
+
+      
+      <!-- Live VTEST Header -->
       <app-header-vtest *ngIf="activeHeader === 'test'" 
                         [logoColor]="selectedColor"
                         [logoSize]="selectedSize"
@@ -63,6 +43,21 @@ import { HeaderVtestComponent } from '../../components/header/variants/header-vt
                         [btnIconColor]="selectedBtnIconColor"
                         [headerBgColor]="selectedHeaderBgColor"
                         [headerLinkColor]="selectedHeaderLinkColor"></app-header-vtest>
+
+      <!-- Saved Custom VTEST Headers -->
+      <app-header-vtest *ngIf="activeCustomConfig" 
+                        [logoColor]="activeCustomConfig.logoColor"
+                        [logoSize]="activeCustomConfig.logoSize"
+                        [hasShadow]="activeCustomConfig.hasShadow"
+                        [shadowColor]="activeCustomConfig.shadowColor"
+                        [menuFontSize]="activeCustomConfig.menuFontSize"
+                        [headerPadding]="activeCustomConfig.headerPadding"
+                        [btnBgColor]="activeCustomConfig.btnBgColor"
+                        [btnHoverBgColor]="activeCustomConfig.btnHoverBgColor"
+                        [btnTextColor]="activeCustomConfig.btnTextColor"
+                        [btnIconColor]="activeCustomConfig.btnIconColor"
+                        [headerBgColor]="activeCustomConfig.headerBgColor"
+                        [headerLinkColor]="activeCustomConfig.headerLinkColor"></app-header-vtest>
 
  
       <!-- Main Content (Simplified) -->
@@ -247,6 +242,20 @@ import { HeaderVtestComponent } from '../../components/header/variants/header-vt
                       class="w-6 h-6 rounded-full border border-black/10 shadow-sm transition-transform hover:scale-125"
                       [style.backgroundColor]="color"></button>
             </div>
+
+            <!-- Save Configuration Button -->
+            <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col items-center justify-center gap-4">
+              <button (click)="addCustomHeader()" 
+                      class="flex items-center gap-2 px-8 py-4 bg-beeses-gold hover:bg-black text-white font-black rounded-2xl transition-all duration-300 shadow-xl shadow-beeses-gold/20 hover:shadow-black/20 cursor-pointer text-xs uppercase tracking-widest hover:-translate-y-0.5 transform">
+                <lucide-icon name="plus" class="w-4 h-4"></lucide-icon>
+                <span>Tasarımı Listeye Ekle (v{{ nextCustomIndex }})</span>
+              </button>
+              
+              <button *ngIf="nextCustomIndex > 6" (click)="clearCustomHeaders()" 
+                      class="text-[10px] font-black text-red-500 hover:text-red-700 uppercase tracking-widest cursor-pointer mt-2 bg-transparent border-0 outline-none">
+                [ Tüm Özel Tasarımları Temizle ]
+              </button>
+            </div>
           </div>
  
           <div *ngIf="activeHeader !== 'test'" class="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -266,7 +275,7 @@ import { HeaderVtestComponent } from '../../components/header/variants/header-vt
   `
 })
 export class HeaderDemoComponent {
-  activeHeader: string | number = 1;
+  activeHeader: string | number = 'test';
   selectedColor: string = '#ffb84d';
   selectedSize: number = 80;
   selectedFontSize: number = 11;
@@ -276,25 +285,107 @@ export class HeaderDemoComponent {
   selectedBtnBgColor: string = '#000000';
   selectedBtnHoverBgColor: string = '#1f2937';
   selectedBtnTextColor: string = '#ffffff';
-  selectedBtnIconColor: string = '#b58131';
-  selectedHeaderBgColor: string = '#b58131';
+  selectedBtnIconColor: string = '#b48232';
+  selectedHeaderBgColor: string = '#b48232';
   selectedHeaderLinkColor: string = '#ffffff';
-  presetColors: string[] = ['#ffb84d', '#b58131', '#000000', '#ffffff', '#dc2626', '#2563eb', '#16a34a'];
-  shadowPresets: string[] = ['#ffffff', '#000000', '#b58131', '#ffc107', '#ff5722'];
+  presetColors: string[] = ['#ffb84d', '#b48232', '#000000', '#ffffff', '#dc2626', '#2563eb', '#16a34a'];
+  shadowPresets: string[] = ['#ffffff', '#000000', '#b48232', '#ffc107', '#ff5722'];
   
+  nextCustomIndex = 6;
+
   get activeVariant() {
     return this.variants.find(v => v.id === this.activeHeader) || this.variants[0];
   }
+
+  get activeCustomConfig() {
+    const variant = this.variants.find(v => v.id === this.activeHeader);
+    return variant && (variant as any).config ? (variant as any).config : null;
+  }
   
   variants = [
-    { id: 1, name: 'V1: Gold Bold', desc: 'Altın arka plan, siyah logo ve tam genişlikli kurumsal menü yapısı.' },
-    { id: '1.1', name: 'V1.1: Gold Bold (Light Logo)', desc: 'Altın arka plan, açık logo (logo_acik.png - parlamasız) ve tam genişlikli kurumsal menü yapısı.' },
-    { id: '1.1.1', name: 'V1.1.1: Gold Bold (Light Logo 2)', desc: 'Altın arka plan, logo_acik2.png logosu (parlamalı) ve tam genişlikli kurumsal menü yapısı.' },
-    { id: '1.2', name: 'V1.2: Gold Bold (White Logo)', desc: 'Altın arka plan, beyaz logo (logo_beyaz.png) ve tam genişlikli kurumsal menü yapısı.' },
-    { id: 2, name: 'V2: Centered Lacivert', desc: 'Beyaz arka plan, merkezde lacivert logo ve dengeli split menü yerleşimi.' },
-    { id: 3, name: 'V3: Centered Off-White', desc: 'Kırık beyaz doku, merkezde siyah logo ve minimalist başlık detayları.' },
-    { id: 4, name: 'V4: Koyu Ortalanmış (Sade)', desc: 'Koyu premium arka plan, merkezde parıldayan logo ve split menü düzeni (İletişime geç butonsuz).' },
-    { id: 5, name: 'V5: Koyu Ortalanmış', desc: 'Koyu premium arka plan, merkezde parıldayan logo ve split menü yerleşimi.' },
     { id: 'test', name: 'VTEST: Dinamik Renk', desc: 'V1 tabanlı başlık, logo.png ile renk seçimi ve dinamik renklendirme denemesi.' }
   ];
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('beeses_custom_headers');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          const testIndex = this.variants.findIndex(v => v.id === 'test');
+          if (testIndex !== -1) {
+            this.variants.splice(testIndex, 0, ...parsed);
+          } else {
+            this.variants.push(...parsed);
+          }
+          let maxIndex = 5;
+          parsed.forEach((p: any) => {
+            const num = parseInt(p.id.replace('v', ''), 10);
+            if (!isNaN(num) && num > maxIndex) {
+              maxIndex = num;
+            }
+          });
+          this.nextCustomIndex = maxIndex + 1;
+        } catch (e) {
+          // Error loading saved headers
+        }
+      }
+    }
+  }
+
+  addCustomHeader() {
+    const customId = `v${this.nextCustomIndex}`;
+    const customName = `V${this.nextCustomIndex}: Özel Tasarım`;
+    const customDesc = `VTEST üzerinde ${new Date().toLocaleTimeString()} saatinde oluşturulup kaydedilen özel tasarım.`;
+    
+    const config = {
+      logoColor: this.selectedColor,
+      logoSize: this.selectedSize,
+      hasShadow: this.hasShadow,
+      shadowColor: this.shadowColor,
+      menuFontSize: this.selectedFontSize,
+      headerPadding: this.selectedPadding,
+      btnBgColor: this.selectedBtnBgColor,
+      btnHoverBgColor: this.selectedBtnHoverBgColor,
+      btnTextColor: this.selectedBtnTextColor,
+      btnIconColor: this.selectedBtnIconColor,
+      headerBgColor: this.selectedHeaderBgColor,
+      headerLinkColor: this.selectedHeaderLinkColor
+    };
+
+    // Insert before 'test' (VTEST) in the variants array
+    const testIndex = this.variants.findIndex(v => v.id === 'test');
+    if (testIndex !== -1) {
+      this.variants.splice(testIndex, 0, {
+        id: customId,
+        name: customName,
+        desc: customDesc,
+        config: config
+      } as any);
+    } else {
+      this.variants.push({
+        id: customId,
+        name: customName,
+        desc: customDesc,
+        config: config
+      } as any);
+    }
+
+    // Save to localStorage
+    if (typeof window !== 'undefined') {
+      const customVariants = this.variants.filter((v: any) => typeof v.id === 'string' && v.id.startsWith('v'));
+      localStorage.setItem('beeses_custom_headers', JSON.stringify(customVariants));
+    }
+
+    // Automatically switch to the newly created variant
+    this.activeHeader = customId;
+    this.nextCustomIndex++;
+  }
+
+  clearCustomHeaders() {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('beeses_custom_headers');
+      window.location.reload();
+    }
+  }
 }

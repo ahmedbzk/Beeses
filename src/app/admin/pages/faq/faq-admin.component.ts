@@ -11,7 +11,6 @@ import { AlertService } from '../../../services/alert.service';
   imports: [CommonModule, FormsModule, LucideAngularModule],
   template: `
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <!-- Header -->
       <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50/50">
         <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
           <lucide-icon name="message-square" class="w-5 h-5 text-beeses-gold"></lucide-icon>
@@ -24,9 +23,7 @@ import { AlertService } from '../../../services/alert.service';
         </div>
       </div>
 
-      <!-- Toolbar: Search & Add -->
       <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-white" *ngIf="!isLoading">
-        <!-- Search -->
         <div class="relative w-full sm:w-80">
           <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <lucide-icon name="search" class="w-4 h-4 text-gray-400"></lucide-icon>
@@ -39,13 +36,11 @@ import { AlertService } from '../../../services/alert.service';
         </button>
       </div>
 
-      <!-- Loading State -->
       <div class="p-6 text-center text-gray-500" *ngIf="isLoading">
         <lucide-icon name="refresh-cw" class="w-8 h-8 animate-spin mx-auto mb-2 text-beeses-gold"></lucide-icon>
         <p>Sorular Yükleniyor...</p>
       </div>
 
-      <!-- Table View -->
       <div class="overflow-x-auto" *ngIf="!isLoading">
         <table class="w-full text-left text-sm text-gray-600">
           <thead class="bg-beeses-dark text-beeses-gold font-bold uppercase text-[10px] tracking-[0.15em] border-b-2 border-beeses-gold shadow-sm">
@@ -92,7 +87,6 @@ import { AlertService } from '../../../services/alert.service';
         </table>
       </div>
 
-      <!-- Pagination -->
       <div class="p-4 border-t border-gray-100 flex items-center justify-between bg-gray-50" *ngIf="!isLoading && filteredFaqs.length > 0">
         <span class="text-sm text-gray-600">
           Toplam <strong>{{ filteredFaqs.length }}</strong> kayıttan <strong>{{ getStartRange() }}</strong> - <strong>{{ getEndRange() }}</strong> arası gösteriliyor
@@ -111,10 +105,8 @@ import { AlertService } from '../../../services/alert.service';
       </div>
     </div>
 
-    <!-- Add/Edit Modal -->
     <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-beeses-dark/70 backdrop-blur-sm animate-fade-in">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <!-- Modal Header -->
         <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
           <h2 class="text-lg font-bold text-beeses-dark flex items-center gap-2">
             <lucide-icon name="message-square" class="w-5 h-5 text-beeses-gold"></lucide-icon>
@@ -125,22 +117,41 @@ import { AlertService } from '../../../services/alert.service';
           </button>
         </div>
 
-        <!-- Modal Body -->
+        <div class="px-6 pt-4 flex border-b border-gray-100 bg-gray-50/50 gap-2">
+          <button type="button" (click)="activeTab = 'tr'" [class]="'flex items-center gap-1.5 px-4 py-2.5 border-b-2 text-xs font-black uppercase tracking-wider transition-all cursor-pointer ' + (activeTab === 'tr' ? 'border-beeses-gold text-beeses-gold' : 'border-transparent text-gray-400 hover:text-gray-600')">
+            Türkçe (TR)
+          </button>
+          <button type="button" (click)="activeTab = 'en'" [class]="'flex items-center gap-1.5 px-4 py-2.5 border-b-2 text-xs font-black uppercase tracking-wider transition-all cursor-pointer ' + (activeTab === 'en' ? 'border-beeses-gold text-beeses-gold' : 'border-transparent text-gray-400 hover:text-gray-600')">
+            English (EN)
+          </button>
+        </div>
+
         <div class="p-6 overflow-y-auto flex-grow space-y-4">
-          <!-- Question -->
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Soru *</label>
-            <input type="text" [(ngModel)]="formData.question" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Soruyu yazın...">
+          <div *ngIf="activeTab === 'tr'" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Soru (TR) *</label>
+              <input type="text" [(ngModel)]="formData.question" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Türkçe soruyu yazın...">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Cevap (TR) *</label>
+              <textarea [(ngModel)]="formData.answer" rows="6" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all resize-none" placeholder="Türkçe cevabı yazın..."></textarea>
+            </div>
           </div>
 
-          <!-- Answer -->
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Cevap *</label>
-            <textarea [(ngModel)]="formData.answer" rows="6" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all resize-none" placeholder="Cevabı yazın..."></textarea>
+          <div *ngIf="activeTab === 'en'" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Soru (EN)</label>
+              <input type="text" [(ngModel)]="formData.question_en" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Write English question...">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Cevap (EN)</label>
+              <textarea [(ngModel)]="formData.answer_en" rows="6" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all resize-none" placeholder="Write English answer..."></textarea>
+            </div>
           </div>
         </div>
 
-        <!-- Modal Footer -->
         <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
           <button (click)="closeModal()" class="px-4 py-2 border border-gray-200 text-gray-600 hover:bg-gray-100 rounded-lg text-sm font-bold transition-all cursor-pointer">
             İptal
@@ -162,17 +173,18 @@ export class FaqAdminComponent implements OnInit {
   isLoading = true;
   isSaving = false;
 
-  // Search & Pagination
   searchQuery = '';
   currentPage = 1;
   itemsPerPage = 10;
 
-  // Modal State
   showModal = false;
   editingItem: FAQ | null = null;
+  activeTab = 'tr';
   formData = {
     question: '',
-    answer: ''
+    answer: '',
+    question_en: '',
+    answer_en: ''
   };
 
   ngOnInit() {
@@ -197,7 +209,6 @@ export class FaqAdminComponent implements OnInit {
     });
   }
 
-  // Getters for filtered and paginated lists
   get filteredFaqs(): FAQ[] {
     if (!this.searchQuery.trim()) {
       return this.faqs;
@@ -237,21 +248,26 @@ export class FaqAdminComponent implements OnInit {
     return pages;
   }
 
-  // Modal actions
   openAddModal() {
     this.editingItem = null;
+    this.activeTab = 'tr';
     this.formData = {
       question: '',
-      answer: ''
+      answer: '',
+      question_en: '',
+      answer_en: ''
     };
     this.showModal = true;
   }
 
   openEditModal(item: FAQ) {
     this.editingItem = item;
+    this.activeTab = 'tr';
     this.formData = {
       question: item.question,
-      answer: item.answer
+      answer: item.answer,
+      question_en: item.question_en || '',
+      answer_en: item.answer_en || ''
     };
     this.showModal = true;
   }
@@ -263,18 +279,19 @@ export class FaqAdminComponent implements OnInit {
 
   saveFaq() {
     if (!this.formData.question.trim() || !this.formData.answer.trim()) {
-      this.alertService.showError('Lütfen tüm zorunlu alanları doldurun.');
+      this.alertService.showError('Lütfen Türkçe soru ve cevap alanlarını doldurun.');
       return;
     }
 
     this.isSaving = true;
 
     if (this.editingItem) {
-      // Update
       const payload = {
         id: this.editingItem.id,
         question: this.formData.question,
-        answer: this.formData.answer
+        answer: this.formData.answer,
+        question_en: this.formData.question_en,
+        answer_en: this.formData.answer_en
       };
 
       this.faqService.updateFaq(payload).subscribe({
@@ -294,10 +311,11 @@ export class FaqAdminComponent implements OnInit {
         }
       });
     } else {
-      // Add
       const payload = {
         question: this.formData.question,
-        answer: this.formData.answer
+        answer: this.formData.answer,
+        question_en: this.formData.question_en,
+        answer_en: this.formData.answer_en
       };
 
       this.faqService.addFaq(payload).subscribe({

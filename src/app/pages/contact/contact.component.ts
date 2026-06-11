@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { ContactService } from '../../services/contact.service';
 import { AlertService } from '../../services/alert.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss'
 })
@@ -19,7 +20,9 @@ export class ContactComponent {
   constructor(
     private fb: FormBuilder,
     private contactService: ContactService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    public translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) {
     this.contactForm = this.fb.group({
       name: ['', Validators.required],
@@ -34,7 +37,7 @@ export class ContactComponent {
   onSubmit() {
     if (this.contactForm.invalid) {
       this.contactForm.markAllAsTouched();
-      this.alertService.showError('Lütfen tüm alanları geçerli bir şekilde doldurun.');
+      this.alertService.showError(this.translate.instant('CONTACT_ERROR') || 'Lütfen tüm alanları geçerli bir şekilde doldurun.');
       return;
     }
 
@@ -58,13 +61,15 @@ export class ContactComponent {
     this.contactService.sendMessage(formData).subscribe({
       next: (res) => {
         this.isSubmitting = false;
-        this.alertService.showSuccess('Mesajınız başarıyla gönderildi.');
+        this.alertService.showSuccess(this.translate.instant('CONTACT_SUCCESS'));
         this.contactForm.reset();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.isSubmitting = false;
-        const msg = err.error?.message || 'Mesaj gönderilirken bir hata oluştu.';
+        const msg = err.error?.message || this.translate.instant('ERROR_CONNECTION');
         this.alertService.showError(msg);
+        this.cdr.detectChanges();
       }
     });
   }

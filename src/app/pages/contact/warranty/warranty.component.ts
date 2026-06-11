@@ -1,20 +1,23 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { LucideAngularModule } from 'lucide-angular';
 import { environment } from '../../../../environments/environment';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-warranty',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, TranslateModule],
   templateUrl: './warranty.component.html',
   styleUrl: './warranty.component.scss'
 })
 export class WarrantyComponent {
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
+  public translate = inject(TranslateService);
+  private cdr = inject(ChangeDetectorRef);
 
   warrantyForm: FormGroup;
   selectedFile: File | null = null;
@@ -22,7 +25,13 @@ export class WarrantyComponent {
   errorMessage = '';
   showSuccessModal = false;
   
-  countries = ['Tayvan', 'Amerika', 'Almanya', 'İran', 'Türkiye'];
+  countries = [
+    { id: 'Tayvan', key: 'COUNTRY_TAIWAN' },
+    { id: 'Amerika', key: 'COUNTRY_USA' },
+    { id: 'Almanya', key: 'COUNTRY_GERMANY' },
+    { id: 'İran', key: 'COUNTRY_IRAN' },
+    { id: 'Türkiye', key: 'COUNTRY_TURKEY' }
+  ];
   countryCodes: { [key: string]: string } = {
     'Türkiye': '+90',
     'Almanya': '+49',
@@ -118,7 +127,7 @@ export class WarrantyComponent {
   onSubmit() {
     if (this.warrantyForm.invalid || !this.selectedFile) {
       this.warrantyForm.markAllAsTouched();
-      this.errorMessage = 'Lütfen tüm zorunlu alanları doldurun ve faturanızı yükleyin.';
+      this.errorMessage = this.translate.instant('WARRANTY_REG_ERROR') || 'Lütfen tüm zorunlu alanları doldurun ve faturanızı yükleyin.';
       return;
     }
 
@@ -150,13 +159,14 @@ export class WarrantyComponent {
           }
           this.selectedFile = null;
         } else {
-          this.errorMessage = response.message || 'Bir hata oluştu.';
+          this.errorMessage = response.message || this.translate.instant('ALERT_ERROR');
         }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMessage = 'Sunucuya bağlanılamadı. Lütfen XAMPP sunucusunun açık olduğundan emin olun.';
-        console.error(err);
+        this.errorMessage = this.translate.instant('ERROR_CONNECTION');
+        this.cdr.detectChanges();
       }
     });
   }

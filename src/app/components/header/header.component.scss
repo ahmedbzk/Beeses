@@ -5,12 +5,18 @@
   text-decoration: none;
   transition: all 0.4s ease;
   cursor: pointer;
+  white-space: nowrap;
 
-  &:hover { @apply text-beeses-gold; }
+  &:hover {
+    color: #000000;
+  }
 
   &.active {
-    @apply text-beeses-gold;
-    &::after { transform: scaleX(1); opacity: 1; }
+    color: #000000;
+    &::after {
+      transform: scaleX(1);
+      opacity: 1;
+    }
   }
 
   &::after {
@@ -20,42 +26,85 @@
     left: 0;
     width: 100%;
     height: 1.5px;
-    background-color: #B58131;
+    background-color: #000000;
     transform: scaleX(0);
     transition: all 0.4s ease;
     opacity: 0;
   }
 }
 
+/* --- Responsive Header Navigation --- */
+.header-nav {
+  gap: 1rem; /* gap-4 on narrow desktop */
+  font-size: 10.5px !important;
+  transition: all 0.5s ease-in-out;
+
+  @media (min-width: 1200px) {
+    gap: 1.5rem; /* gap-6 */
+    font-size: 11.5px !important;
+  }
+
+  @media (min-width: 1400px) {
+    gap: 2.5rem; /* gap-10 */
+    font-size: 12px !important;
+  }
+}
+
+/* --- Premium Navigation Dropdowns (Desktop) --- */
 .dropdown-menu {
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  width: 240px;
-  background-color: #0c0c0c;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 1rem 0;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+  transform: translateX(-50%) translateY(15px);
+  min-width: 240px;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  border-radius: 24px;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease-out;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 100;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: 0;
-    width: 100%;
-    height: 15px;
-    background: transparent;
-  }
+  margin-top: 0.25rem;
 
   a {
-    @apply block px-8 py-4 text-[10px] font-bold tracking-[0.25em] text-white/60 hover:text-beeses-gold hover:bg-white/[0.03] transition-all;
-    border-bottom: 1px solid rgba(255,255,255,0.02);
-    &:last-child { border-bottom: none; }
+    display: block;
+    padding: 12px 20px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #555555;
+    transition: all 0.3s ease;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: normal;
+    border-bottom: none;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 4px;
+      height: 0;
+      background: #B48232;
+      transform: translateY(-50%);
+      transition: height 0.3s ease;
+      border-radius: 0 4px 4px 0;
+    }
+
+    &:hover {
+      background: #fcfcfc;
+      color: #000000;
+      padding-left: 28px;
+      
+      &::before {
+        height: 60%;
+      }
+    }
   }
 }
 
@@ -65,16 +114,83 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* --- DÜZELTİLEN EFEKT KODLARI --- */
+/* --- Language Bar Dropdown (Desktop) --- */
+.lang-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 160px;
+  background: white;
+  padding: 0.75rem;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  border-radius: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(15px);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 130;
+  margin-top: 0.25rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #555555;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: normal;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 4px;
+      height: 0;
+      background: #B48232;
+      transform: translateY(-50%);
+      transition: height 0.3s ease;
+      border-radius: 0 4px 4px 0;
+    }
+
+    &:hover {
+      background: #fcfcfc;
+      color: #000000;
+      padding-left: 24px;
+      
+      &::before {
+        height: 60%;
+      }
+    }
+  }
+}
+
+.group\/lang:hover .lang-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* --- Language Bar Visibility (Scroll behavior) --- */
 .lang-bar-visible {
   opacity: 1;
   transform: translateY(0);
   max-height: 50px;
-  padding: 0.50rem 0;
+  padding: 0.5rem 0;
   pointer-events: auto;
   transition: all 0.7s ease-in-out;
   overflow: visible;
-  /* Çerçeve görünürken varsayılan değerinde kalsın */
 }
 
 .lang-bar-hidden {
@@ -85,42 +201,213 @@
   pointer-events: none;
   transition: all 0.7s ease-in-out;
   overflow: hidden;
-  
-  // HATA ÇÖZÜMÜ: 1px boşluğu burası siliyor
-  border-bottom: 0px solid transparent !important; 
+  border-bottom: 0px solid transparent !important;
 }
 
+/* --- Golden Header Bar Container --- */
+.header-bar {
+  background-color: rgba(180, 130, 50, 0.88); /* %88 Transparan Altın Sarısı */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding-top: 22px;
+  padding-bottom: 22px;
+  transition: all 0.5s ease-in-out;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+
+  &.scrolled {
+    background-color: rgba(180, 130, 50, 0.78); /* %78 Transparan Altın Sarısı */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding-top: 13px;
+    padding-bottom: 13px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* --- Center Logo Layout & Shrunk Transitions --- */
+.logo-container {
+  width: 240px; /* smaller width for logo gap on narrow screens */
+  height: 60px;
+  transition: all 0.5s ease-in-out;
+
+  @media (min-width: 1200px) {
+    width: 290px;
+  }
+
+  @media (min-width: 1400px) {
+    width: 378px;
+  }
+  
+  &.scrolled {
+    width: 190px;
+    height: 48px;
+
+    @media (min-width: 1200px) {
+      width: 230px;
+    }
+
+    @media (min-width: 1400px) {
+      width: 301px;
+    }
+  }
+}
+
+.logo-link {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  transition: all 0.5s ease-in-out;
+}
+
+.logo-mask {
+  display: inline-block;
+  height: 96px; /* smaller logo height on narrow screens */
+  width: 216px; /* 96 * 2.25 */
+  transition: all 0.5s ease-in-out;
+  filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.05));
+
+  @media (min-width: 1200px) {
+    height: 120px;
+    width: 270px; /* 120 * 2.25 */
+  }
+
+  @media (min-width: 1400px) {
+    height: 150px;
+    width: 337.5px; /* 150 * 2.25 */
+  }
+  
+  &:hover {
+    transform: scale(1.03);
+  }
+
+  &.scrolled {
+    height: 76px;
+    width: 171px; /* 76 * 2.25 */
+
+    @media (min-width: 1200px) {
+      height: 92px;
+      width: 207px; /* 92 * 2.25 */
+    }
+
+    @media (min-width: 1400px) {
+      height: 116px;
+      width: 261px; /* 116 * 2.25 */
+    }
+  }
+}
+
+.logo-mask-mobile {
+  display: inline-block;
+  height: 80px; /* Enlarge logo on mobile */
+  width: 180px; /* 80 * 2.25 */
+  transition: all 0.5s ease-in-out;
+  
+  @media (min-width: 768px) {
+    height: 100px; /* Enlarge logo on tablet */
+    width: 225px; /* 100 * 2.25 */
+  }
+}
+
+/* --- Call To Action (CTA) Mail Button --- */
+.cta-button {
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 8px; /* default narrow size */
+  font-weight: 700;
+  padding: 0.5rem 0.75rem;
+  letter-spacing: 0.1em;
+  transition: all 0.4s ease;
+  white-space: nowrap;
+  text-transform: uppercase;
+  
+  @media (min-width: 1200px) {
+    font-size: 9px;
+    font-weight: 800;
+    padding: 0.65rem 1.1rem;
+    letter-spacing: 0.125em;
+  }
+
+  @media (min-width: 1400px) {
+    font-size: 10px;
+    font-weight: 900;
+    padding: 0.75rem 1.5rem;
+    letter-spacing: 0.15em;
+  }
+  
+  &:hover {
+    background-color: #1f2946;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(31, 41, 70, 0.2);
+  }
+}
+
+.cta-icon {
+  color: #B48232;
+  transition: color 0.4s ease;
+}
+
+/* --- Mobile Navigation Drawer (v6 styling) --- */
 .mobile-main-link {
-  @apply text-xl tracking-tighter font-bold text-white/90 hover:text-beeses-gold transition-all py-2 text-left;
-  cursor: pointer;
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  border-bottom: 0 !important;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    opacity: 0.75;
+  }
 }
 
 .mobile-sub-menu {
-  /* Hata Çözümü: Flex yapısını burada kesinleştiriyoruz */
   display: flex !important;
   flex-direction: column !important;
-  gap: 1rem; // Linklerin arasındaki boşluk
-  
+  gap: 0.75rem;
   overflow: hidden;
-  transition: all 0.5s ease-in-out;
-  padding-left: 1.5rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  
-  /* Başlangıçta kapalı */
+  transition: all 0.4s ease-in-out;
+  padding-left: 1.25rem;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.2);
   max-height: 0;
   opacity: 0;
   margin-top: 0;
 
   &.open {
-    /* Açıldığında görünür hale gelir */
-    max-height: 500px; 
+    max-height: 500px;
     opacity: 1;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
   }
 
   a {
-    @apply text-[14px] font-bold text-white/50 hover:text-beeses-gold transition-colors uppercase tracking-[0.15em];
-    display: block; // Linkin tüm satırı kaplamasını sağlar
+    font-size: 11px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.65) !important;
+    transition: color 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    text-align: left;
+
+    &:hover {
+      color: #ffffff !important;
+    }
+  }
+}
+
+/* --- Custom Utilities --- */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
   }
 }

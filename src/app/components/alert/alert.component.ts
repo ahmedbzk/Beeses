@@ -4,11 +4,12 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { AlertService, Alert } from '../../services/alert.service';
 import { Subscription } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-alert',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, TranslateModule],
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.scss',
   animations: [
@@ -43,5 +44,12 @@ export class AlertComponent implements OnInit, OnDestroy {
 
   close() {
     this.alertService.clear();
+  }
+
+  isAdminRoute(): boolean {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname.includes('/admin');
+    }
+    return false;
   }
 }

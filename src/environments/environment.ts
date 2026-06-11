@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost/beeses_api'
+  apiUrl: 'http://127.0.0.1/beeses_api'
 };

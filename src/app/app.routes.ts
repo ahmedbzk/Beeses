@@ -28,8 +28,7 @@ export const routes: Routes = [
       { path: 'components/certificates', component: CertificatesComponent },
       { path: 'components/news', component: NewsListComponent },
       { path: 'components/news/:id', component: NewsDetailComponent },
-      // { path: 'components/references', component: ReferencesComponent },
-      // { path: 'components/team', component: TeamComponent }
+
     ]
   },
   { path: 'products', component: ProductsComponent },
@@ -45,6 +44,5 @@ export const routes: Routes = [
     ]
   },
   { path: 'admin', loadChildren: () => import('./admin/admin.routes').then(m => m.adminRoutes) },
-  { path: 'header-demo', loadComponent: () => import('./pages/header-demo/header-demo.component').then(m => m.HeaderDemoComponent) },
   { path: '**', redirectTo: '' }
 ];

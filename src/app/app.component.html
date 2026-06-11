@@ -1,5 +1,5 @@
 <app-header *ngIf="!isDemoPage"></app-header>
-<app-alert *ngIf="!isDemoPage"></app-alert>
+<app-alert></app-alert>
 
 <main class="min-h-screen" [ngClass]="{'bg-beeses-dark': !isDemoPage}">
   <router-outlet></router-outlet>
