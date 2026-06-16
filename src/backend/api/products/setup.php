@@ -1,9 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, OPTIONS");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once '../db.php';
+
 
 try {
     // Create products table
@@ -43,13 +42,13 @@ try {
                 'category' => 'SQL SERİSİ',
                 'shortDescription' => 'Class-AB Amplifikatör',
                 'description' => 'Özenle tasarlanmış Class-AB besleme yapısı ile doğal, yüksek çözünürlüklü ve uzun ömürlü bir ses performansi sunar.',
-                'image' => 'assets/products/SQL 4400 Serisi-1.png',
+                'image' => 'assets/products/sql44001.2.png',
                 'images' => json_encode([
-                    'assets/products/SQL 4400 Serisi-1.png',
-                    'assets/products/SQL 4400 Serisi-1.png',
-                    'assets/products/SQL 4400 Serisi-1.png',
-                    'assets/products/SQL 4400 Serisi-1.png',
-                    'assets/products/SQL 4400 Serisi-1.png'
+                    'assets/products/sql44001.2.png',
+                    'assets/products/sql44001.2.png',
+                    'assets/products/sql44001.2.png',
+                    'assets/products/sql44001.2.png',
+                    'assets/products/sql44001.2.png'
                 ]),
                 'pdfUrl' => 'assets/docs/Beeses-SQL-4400.pdf',
                 'specs' => json_encode([
@@ -90,13 +89,13 @@ try {
                 'category' => 'SQL SERİSİ',
                 'shortDescription' => 'SQL Amplifikatör',
                 'description' => 'Güçlü ve dinamik ses arayanlar için yüksek performanslı Class-AB amplifikatör.',
-                'image' => 'assets/products/SQL 4200 Serisi-1.png',
+                'image' => 'assets/products/sql42001.2.png',
                 'images' => json_encode([
-                    'assets/products/SQL 4200 Serisi-1.png',
-                    'assets/products/SQL 4200 Serisi-1.png',
-                    'assets/products/SQL 4200 Serisi-1.png',
-                    'assets/products/SQL 4200 Serisi-1.png',
-                    'assets/products/SQL 4200 Serisi-1.png'
+                    'assets/products/sql42001.2.png',
+                    'assets/products/sql42001.2.png',
+                    'assets/products/sql42001.2.png',
+                    'assets/products/sql42001.2.png',
+                    'assets/products/sql42001.2.png'
                 ]),
                 'pdfUrl' => 'assets/docs/Beeses-SQL-4200.pdf',
                 'specs' => json_encode([

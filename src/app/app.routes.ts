@@ -16,9 +16,13 @@ import { NewsDetailComponent } from './pages/corporate/components/news/news-deta
 import { WarrantyComponent } from './pages/contact/warranty/warranty.component';
 import { WarrantyQueryComponent } from './pages/contact/warranty-query/warranty-query.component';
 import { InnovationComponent } from './pages/products/innovation/innovation.component';
+import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
+import { CookiePolicyComponent } from './components/cookie-policy/cookie-policy.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'privacy-policy', component: PrivacyPolicyComponent },
+  { path: 'cookie-policy', component: CookiePolicyComponent },
   {
     path: 'corporate',
     children: [

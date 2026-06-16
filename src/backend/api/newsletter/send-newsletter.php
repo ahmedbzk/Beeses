@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
+require_once '../mail_helper.php';
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -31,14 +30,6 @@ try {
 
     $subject = $data->subject;
     $body    = $data->body;
-    $fromEmail = "noreply@beeses.com";
-    $fromName  = "Beeses Audio";
-
-    $headers  = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: $fromName <$fromEmail>\r\n";
-    $headers .= "Reply-To: $fromEmail\r\n";
-    $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
 
     // HTML mail şablonu
     $htmlTemplate = '<!DOCTYPE html>
@@ -83,9 +74,13 @@ try {
     $failed = 0;
 
     foreach ($subscribers as $email) {
-        if (mail($email, $subject, $htmlTemplate, $headers)) {
-            $sent++;
-        } else {
+        try {
+            if (sendMailSMTP($email, $subject, $htmlTemplate, true)) {
+                $sent++;
+            } else {
+                $failed++;
+            }
+        } catch (Exception $e) {
             $failed++;
         }
     }
@@ -100,6 +95,7 @@ try {
         ':failed'     => $failed
     ]);
 
+        writeAdminLog('newsletter', 'Gönderim', "E-bülten gönderildi (Konu: " . $subject . ")");
     echo json_encode([
         "success" => true,
         "message" => "$sent abone adresine e-posta başarıyla gönderildi.",

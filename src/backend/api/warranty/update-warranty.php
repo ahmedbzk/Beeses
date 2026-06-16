@@ -1,15 +1,13 @@
 <?php
+require_once '../db.php';
 // update-warranty.php - Garanti durumunu güncelleyen API
-header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
-
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
 
-require_once '../db.php';
+
+require_once '../mail_helper.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 $id = $data['id'] ?? null;
@@ -67,6 +65,16 @@ try {
         $stmtDelete = $pdo->prepare($sqlDelete);
         $stmtDelete->execute($ids);
     } else {
+        // Fetch current status to check if it is already updated
+        $stmtStatus = $pdo->prepare("SELECT status FROM warranties WHERE id = ?");
+        $stmtStatus->execute([$id]);
+        $currentStatus = $stmtStatus->fetchColumn();
+
+        if ($currentStatus === $status) {
+            echo json_encode(["success" => true, "message" => "Garanti durumu zaten güncel."]);
+            exit;
+        }
+
         // Tekli Güncelleme
         $sql = "UPDATE warranties SET status = ? WHERE id = ?";
         $stmt = $pdo->prepare($sql);
@@ -97,32 +105,27 @@ try {
             // --- OTOMATİK E-POSTA GÖNDERİMİ VE KAYDI ---
             if (!empty($w['email'])) {
                 $to = $w['email'];
-                $subject = "Beeses Audio - Garanti Başvurusu Hakkında";
+                $subject = "Beeses Audio - Warranty Registration Approved";
                 
                 $start_date_formatted = date('d.m.Y', strtotime($start_date));
                 $end_date_formatted = date('d.m.Y', strtotime($end_date));
                 
-                $message = "Sayın " . $w['full_name'] . ",\n\n";
-                $message .= "Garanti başvurunuz onaylanmıştır. Ürününüzün 2 yıllık garanti süreci başlatılmıştır.\n\n";
-                $message .= "Ürün Bilgileri:\n";
+                $message = "Dear " . $w['full_name'] . ",\n\n";
+                $message .= "Your warranty registration has been approved. The 2-year warranty process for your product has been started.\n\n";
+                $message .= "Product Information:\n";
                 $message .= "Model: " . $w['product_name'] . "\n";
-                $message .= "Seri Numarası: " . strtoupper($w['serial_number']) . "\n";
-                $message .= "Garanti Başlangıç Tarihi: " . $start_date_formatted . "\n";
-                $message .= "Garanti Bitiş Tarihi: " . $end_date_formatted . "\n\n";
-                $message .= "Saygılarımızla,\n";
-                $message .= "Beeses Audio Ekibi";
+                $message .= "Serial Number: " . strtoupper($w['serial_number']) . "\n";
+                $message .= "Warranty Start Date: " . $start_date_formatted . "\n";
+                $message .= "Warranty End Date: " . $end_date_formatted . "\n\n";
+                $message .= "Best regards,\n";
+                $message .= "Beeses Audio Team";
 
-                $from = "info@beeses.com";
-                
-                $headers = "MIME-Version: 1.0" . "\r\n";
-                $headers .= "Content-Type: text/plain; charset=UTF-8" . "\r\n";
-                $headers .= "From: Beeses Audio <" . $from . ">" . "\r\n";
-                $headers .= "Reply-To: " . $from . "\r\n";
-                $headers .= "Bcc: " . $from . "\r\n";
-                $headers .= "X-Mailer: PHP/" . phpversion();
-
-                // Mail fonksiyonunu çalıştır (hatayı bastırmak için @ kullandık)
-                @mail($to, $subject, $message, $headers);
+                // Mail fonksiyonunu çalıştır
+                try {
+                    sendMailSMTP($to, $subject, $message, false);
+                } catch (Exception $e) {
+                    // E-posta gönderilemese bile garanti durumu veritabanında güncellendiği için işlemi kesmiyoruz
+                }
 
                 // Tablo yoksa oluştur
                 $pdo->exec("CREATE TABLE IF NOT EXISTS warranty_emails (
@@ -145,6 +148,7 @@ try {
         }
     }
     
+        writeAdminLog('warranties', 'Güncelleme', "Garanti başvurusu güncellendi (Durum: " . $status . ", ID: " . ($id ?? json_encode($ids)) . ")");
     echo json_encode(["success" => true, "message" => "Garanti durumu başarıyla güncellendi."]);
 } catch (Exception $e) {
     echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()]);

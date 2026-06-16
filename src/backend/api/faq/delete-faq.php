@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
 
 // Try getting id from GET first, then fallback to JSON post data
 $id = $_GET['id'] ?? null;
@@ -33,6 +31,7 @@ try {
     $stmt = $pdo->prepare($query);
     $stmt->execute([$id]);
 
+        writeAdminLog('faq', 'Silme', "Soru silindi (ID: " . $id . ")");
     echo json_encode(array("success" => true, "message" => "Soru başarıyla silindi."));
 } catch (PDOException $e) {
     http_response_code(500);

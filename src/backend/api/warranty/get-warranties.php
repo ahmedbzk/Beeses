@@ -1,10 +1,8 @@
 <?php
-// get-warranties.php - Garanti kayıtlarını listeleyen API
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET");
-
 require_once '../db.php';
+// get-warranties.php - Garanti kayıtlarını listeleyen API
+header("Content-Type: application/json; charset=UTF-8");
+
 
 try {
     // approved_warranties tablosunu otomatik oluştur

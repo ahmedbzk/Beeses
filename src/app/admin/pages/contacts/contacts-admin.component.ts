@@ -53,7 +53,7 @@ import { AlertService } from '../../../services/alert.service';
             <option value="cevaplandi">Cevaplandı</option>
           </select>
           
-          <div *ngIf="getSelectedCount() > 0" class="flex items-center gap-2 animate-fade-in pl-0 lg:pl-3 lg:border-l border-gray-200 h-10">
+          <div *ngIf="hasEditPermission && getSelectedCount() > 0" class="flex items-center gap-2 animate-fade-in pl-0 lg:pl-3 lg:border-l border-gray-200 h-10">
             <span class="text-sm font-bold text-beeses-gold whitespace-nowrap">{{ getSelectedCount() }} Seçili</span>
             <button (click)="executeBulkStatus('okundu')" class="h-10 px-3 rounded-lg bg-yellow-50 text-yellow-600 hover:bg-yellow-500 hover:text-white flex items-center gap-2 transition-colors text-sm font-bold shadow-sm">
               <lucide-icon name="eye" class="w-4 h-4"></lucide-icon> <span class="hidden sm:inline">Okundu İşaretle</span>
@@ -74,21 +74,21 @@ import { AlertService } from '../../../services/alert.service';
         <table class="w-full text-left text-sm text-gray-600">
           <thead class="bg-beeses-dark text-beeses-gold font-bold uppercase text-[10px] tracking-[0.15em] border-b-2 border-beeses-gold shadow-sm">
             <tr>
-              <th class="px-6 py-5 w-10 text-center rounded-tl-xl">
+              <th *ngIf="hasEditPermission" class="px-6 py-5 w-10 text-center rounded-tl-xl">
                 <input type="checkbox" (change)="toggleAll($event)" [checked]="isAllSelected()" class="w-4 h-4 rounded border-gray-300 text-beeses-gold focus:ring-beeses-gold cursor-pointer bg-white/10">
               </th>
-              <th class="px-6 py-4">Tarih</th>
+              <th class="px-6 py-4" [class.rounded-tl-xl]="!hasEditPermission">Tarih</th>
               <th class="px-6 py-4">Müşteri Bilgisi</th>
               <th class="px-6 py-4">Konu</th>
-              <th class="px-6 py-5 text-center">Durum</th>
-              <th class="px-6 py-5 text-center rounded-tr-xl">İşlem</th>
+              <th class="px-6 py-5 text-center" [class.rounded-tr-xl]="!hasEditPermission">Durum</th>
+              <th *ngIf="hasEditPermission" class="px-6 py-5 text-center rounded-tr-xl">İşlem</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 bg-white">
             <tr *ngFor="let item of paginatedContacts; let i = index" 
                 class="transition-colors hover:bg-beeses-gold/5" 
                 [ngClass]="item.selected ? 'bg-beeses-gold/10 border-l-2 border-l-beeses-gold' : (i % 2 === 0 ? 'bg-white' : 'bg-gray-50/40 border-l-2 border-l-transparent')">
-              <td class="px-6 py-4 text-center">
+              <td *ngIf="hasEditPermission" class="px-6 py-4 text-center">
                 <input type="checkbox" [(ngModel)]="item.selected" class="w-4 h-4 rounded border-gray-300 text-beeses-gold focus:ring-beeses-gold cursor-pointer">
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
@@ -116,7 +116,7 @@ import { AlertService } from '../../../services/alert.service';
                   {{ item.status }}
                 </span>
               </td>
-              <td class="px-6 py-4 text-center">
+              <td *ngIf="hasEditPermission" class="px-6 py-4 text-center">
                 <button (click)="openDetail(item)" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:text-beeses-gold hover:border-beeses-gold rounded-lg text-sm font-bold transition-all shadow-sm">
                   <lucide-icon name="search" class="w-4 h-4"></lucide-icon>
                   İncele
@@ -124,7 +124,7 @@ import { AlertService } from '../../../services/alert.service';
               </td>
             </tr>
             <tr *ngIf="paginatedContacts.length === 0">
-              <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+              <td [attr.colspan]="hasEditPermission ? 6 : 4" class="px-6 py-12 text-center text-gray-500">
                 <lucide-icon name="search" class="w-8 h-8 mx-auto mb-3 text-gray-300"></lucide-icon>
                 <p>Eşleşen kayıt bulunamadı.</p>
               </td>
@@ -312,7 +312,23 @@ export class ContactsAdminComponent implements OnInit {
     return this.contacts.filter(c => c.selected).length;
   }
 
+  hasEditPermission = false;
+
   ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('admin_role') || 'admin';
+      const permsRaw = localStorage.getItem('admin_permissions') || '{}';
+      if (role === 'superadmin') {
+        this.hasEditPermission = true;
+      } else {
+        try {
+          const perms = JSON.parse(permsRaw);
+          this.hasEditPermission = !!(perms['contacts'] && perms['contacts'].edit === true);
+        } catch (e) {
+          this.hasEditPermission = false;
+        }
+      }
+    }
     this.loadContacts();
   }
 

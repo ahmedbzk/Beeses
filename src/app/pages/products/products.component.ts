@@ -49,9 +49,7 @@ export class ProductsComponent implements OnInit {
           this.categories = Array.from(catSet);
 
           this.route.queryParams.subscribe(params => {
-            if (params['category']) {
-              this.selectedCategory = params['category'];
-            }
+            this.selectedCategory = params['category'] || null;
             this.applyFilters();
             this.isLoading = false;
           });

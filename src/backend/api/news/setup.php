@@ -1,24 +1,41 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, OPTIONS");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once '../db.php';
+
 
 try {
-    // Recreate the news table
-    $pdo->exec("DROP TABLE IF EXISTS news");
-    $pdo->exec("CREATE TABLE news (
+    // Create the news table safely
+    $pdo->exec("CREATE TABLE IF NOT EXISTS news (
         id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
+        title_en VARCHAR(255) DEFAULT NULL,
         summary TEXT NOT NULL,
+        summary_en TEXT DEFAULT NULL,
         content TEXT DEFAULT NULL,
         category VARCHAR(100) NOT NULL DEFAULT 'Duyuru',
         image VARCHAR(255) DEFAULT '',
+        video_url VARCHAR(500) DEFAULT NULL,
         sections TEXT DEFAULT NULL,
+        sections_en TEXT DEFAULT NULL,
         news_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+    // Ensure title_en, summary_en, sections_en, video_url columns exist if table was already created
+    $columns = $pdo->query("SHOW COLUMNS FROM news")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('title_en', $columns)) {
+        $pdo->exec("ALTER TABLE news ADD COLUMN title_en VARCHAR(255) DEFAULT NULL AFTER title");
+    }
+    if (!in_array('summary_en', $columns)) {
+        $pdo->exec("ALTER TABLE news ADD COLUMN summary_en TEXT DEFAULT NULL AFTER summary");
+    }
+    if (!in_array('sections_en', $columns)) {
+        $pdo->exec("ALTER TABLE news ADD COLUMN sections_en TEXT DEFAULT NULL AFTER sections");
+    }
+    if (!in_array('video_url', $columns)) {
+        $pdo->exec("ALTER TABLE news ADD COLUMN video_url VARCHAR(500) DEFAULT NULL AFTER image");
+    }
 
     $news = [
         [
@@ -26,7 +43,7 @@ try {
             'summary' => 'Beeses Audio, araç içi ses deneyimini zirveye taşıyan yeni nesil Class-AB SQL serisi amfilerini piyasaya sürdü. Yüksek çözünürlüklü ses performansı ve dayanıklı gövde tasarımı ile dikkat çeken seride SQL-4400 ve SQL-4200 modelleri yer alıyor.',
             'content' => '',
             'category' => 'Duyuru',
-            'image' => 'assets/products/SQL 4400 Serisi-1.png',
+            'image' => 'assets/products/sql44001.2.png',
             'sections' => json_encode([
                 [
                     'title' => 'Mükemmel Sesin Peşinde: Yeni Class-AB Serisi',

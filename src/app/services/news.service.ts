@@ -13,6 +13,7 @@ export interface News {
   content_en?: string;
   category: string;
   image: string;
+  video_url?: string;
   sections?: { title?: string; text: string; image: string; }[];
   sections_en?: { title?: string; text: string; image: string; }[];
   news_date: string;

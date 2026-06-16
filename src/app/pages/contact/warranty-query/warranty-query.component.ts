@@ -156,8 +156,8 @@ export class WarrantyQueryComponent implements OnInit {
     const name = productName.toUpperCase();
     if (name.includes('PETEK STEREO')) return 'assets/products/Petek Stereo.png';
     if (name.includes('PETEK MONO')) return 'assets/products/Petek Mono Block.png';
-    if (name.includes('4200')) return 'assets/products/SQL 4200 Serisi-1.png';
-    if (name.includes('4400')) return 'assets/products/SQL 4400 Serisi-1.png';
+    if (name.includes('4200')) return 'assets/products/sql42001.2.png';
+    if (name.includes('4400')) return 'assets/products/sql44001.2.png';
     if (name.includes('OF-1')) return 'assets/products/OF-1 ve BS-O 101.PNG';
     if (name.includes('OF-2')) return 'assets/products/OF-2 ve BS-O 102.PNG';
     

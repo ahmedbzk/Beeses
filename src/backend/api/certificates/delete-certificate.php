@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
 
 // Try getting id from GET first, then fallback to JSON post data
 $id = $_GET['id'] ?? null;
@@ -29,24 +27,17 @@ if (empty($id)) {
 }
 
 try {
-    // Fetch certificate to find file path
-    $stmt = $pdo->prepare("SELECT file_path FROM certificates WHERE id = ?");
+    // Fetch certificate to check if exists
+    $stmt = $pdo->prepare("SELECT id FROM certificates WHERE id = ?");
     $stmt->execute([$id]);
     $cert = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($cert) {
-        // Delete physical file
-        if (!empty($cert['file_path'])) {
-            $file_to_delete = '../' . $cert['file_path'];
-            if (file_exists($file_to_delete)) {
-                unlink($file_to_delete);
-            }
-        }
-
         // Delete database record
         $deleteStmt = $pdo->prepare("DELETE FROM certificates WHERE id = ?");
         $deleteStmt->execute([$id]);
 
+        writeAdminLog('certificates', 'Silme', "Sertifika silindi (ID: " . $id . ")");
         echo json_encode(array("success" => true, "message" => "Sertifika başarıyla silindi."));
     } else {
         http_response_code(404);

@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,11 +7,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
+
+// Ensure name_en and description_en columns exist in certificates table
+try {
+    $columns = $pdo->query("SHOW COLUMNS FROM certificates")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('name_en', $columns)) {
+        $pdo->exec("ALTER TABLE certificates ADD COLUMN name_en VARCHAR(255) DEFAULT NULL AFTER name");
+    }
+    if (!in_array('description_en', $columns)) {
+        $pdo->exec("ALTER TABLE certificates ADD COLUMN description_en TEXT DEFAULT NULL AFTER description");
+    }
+} catch (Exception $e) {
+    // Ignore if table doesn't exist yet
+}
 
 // Fetch multipart/form-data fields
 $name = $_POST['name'] ?? '';
 $description = $_POST['description'] ?? '';
+$name_en = $_POST['name_en'] ?? '';
+$description_en = $_POST['description_en'] ?? '';
 $icon = $_POST['icon'] ?? 'award';
 
 if (empty($name)) {
@@ -22,44 +35,13 @@ if (empty($name)) {
     exit;
 }
 
-$file_path = '';
-
-// Handle file upload
-if (isset($_FILES['certificate_file']) && $_FILES['certificate_file']['error'] == UPLOAD_ERR_OK) {
-    $file_tmp_path = $_FILES['certificate_file']['tmp_name'];
-    $file_name = $_FILES['certificate_file']['name'];
-    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-    
-    $allowed_exts = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'webp'];
-    if (!in_array($file_ext, $allowed_exts)) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Sadece PDF, JPG, JPEG, PNG, GIF ve WEBP formatları yüklenebilir."]);
-        exit;
-    }
-    
-    $upload_dir = '../uploads/certificates/';
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
-    
-    $unique_file_name = time() . '_' . uniqid() . '.' . $file_ext;
-    $dest_path = $upload_dir . $unique_file_name;
-
-    if (move_uploaded_file($file_tmp_path, $dest_path)) {
-        $file_path = 'uploads/certificates/' . $unique_file_name; 
-    } else {
-        http_response_code(500);
-        echo json_encode(["success" => false, "message" => "Dosya yüklenirken bir hata oluştu."]);
-        exit;
-    }
-}
-
 try {
-    $insert = "INSERT INTO certificates (name, description, icon, file_path) VALUES (?, ?, ?, ?)";
+    $insert = "INSERT INTO certificates (name, description, name_en, description_en, icon) VALUES (?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($insert);
-    $stmt->execute([$name, $description, $icon, $file_path]);
+    $stmt->execute([$name, $description, $name_en, $description_en, $icon]);
     
     http_response_code(201);
+        writeAdminLog('certificates', 'Ekleme', "Sertifika eklendi: " . $name);
     echo json_encode(["success" => true, "message" => "Sertifika başarıyla eklendi.", "id" => $pdo->lastInsertId()]);
 } catch (PDOException $e) {
     http_response_code(500);

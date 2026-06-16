@@ -149,10 +149,24 @@ export class ProductDetailComponent implements OnInit {
 
   getPdfUrl(): string | undefined {
     if (!this.product) return undefined;
+    let rawPdf: string | undefined;
     if (this.translate.currentLang === 'en' && this.product.pdfUrl_en) {
-      return this.product.pdfUrl_en;
+      rawPdf = this.product.pdfUrl_en;
+    } else {
+      rawPdf = this.product.pdfUrl;
     }
-    return this.product.pdfUrl;
+    if (!rawPdf) return undefined;
+    
+    let relativePath = rawPdf;
+    if (rawPdf.includes('backend/api/')) {
+      relativePath = rawPdf.split('backend/api/')[1];
+    } else if (rawPdf.includes('localhost/beeses_api/')) {
+      relativePath = rawPdf.split('localhost/beeses_api/')[1];
+    } else if (rawPdf.startsWith('http')) {
+      return rawPdf;
+    }
+    
+    return `${this.apiUrl}/serve-pdf.php?path=${encodeURIComponent(relativePath)}`;
   }
 
   getCategoryTranslationKey(cat: string | undefined): string {

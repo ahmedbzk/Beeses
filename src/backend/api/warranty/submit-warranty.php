@@ -1,14 +1,12 @@
 <?php
+require_once '../db.php';
 // submit-warranty.php - Garanti formunu ve faturayı kaydetme
-header("Access-Control-Allow-Origin: *"); // Angular'dan gelen isteklere izin ver (CORS)
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
-
+// Angular'dan gelen isteklere izin ver (CORS)
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0); // Preflight isteklerini hızlıca geç
 }
 
-require_once '../db.php';
+
 
 // Form verilerini al
 $product_name = $_POST['product_name'] ?? '';

@@ -31,7 +31,7 @@ import { AlertService } from '../../../services/alert.service';
           <input type="text" [(ngModel)]="searchQuery" (input)="currentPage = 1" class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-beeses-gold focus:border-beeses-gold block w-full pl-10 p-2.5 outline-none h-10 transition-colors" placeholder="Sorularda arama yapın...">
         </div>
 
-        <button (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full sm:w-auto justify-center">
+        <button *ngIf="hasEditPermission" (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full sm:w-auto justify-center">
           <lucide-icon name="plus" class="w-4 h-4"></lucide-icon> Yeni Soru Ekle
         </button>
       </div>
@@ -47,8 +47,8 @@ import { AlertService } from '../../../services/alert.service';
             <tr>
               <th class="px-6 py-4 w-16 text-center">ID</th>
               <th class="px-6 py-4">Soru</th>
-              <th class="px-6 py-4">Cevap</th>
-              <th class="px-6 py-5 text-center w-28 rounded-tr-xl">İşlem</th>
+              <th class="px-6 py-4" [class.rounded-tr-xl]="!hasEditPermission">Cevap</th>
+              <th *ngIf="hasEditPermission" class="px-6 py-5 text-center w-28 rounded-tr-xl">İşlem</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 bg-white">
@@ -66,7 +66,7 @@ import { AlertService } from '../../../services/alert.service';
                 <div class="line-clamp-2" [title]="item.answer">{{ item.answer }}</div>
               </td>
 
-              <td class="px-6 py-4 text-center whitespace-nowrap">
+              <td *ngIf="hasEditPermission" class="px-6 py-4 text-center whitespace-nowrap">
                 <div class="flex items-center justify-center gap-2">
                   <button (click)="openEditModal(item)" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white rounded-lg transition-colors cursor-pointer" title="Düzenle">
                     <lucide-icon name="sliders" class="w-4 h-4"></lucide-icon>
@@ -78,7 +78,7 @@ import { AlertService } from '../../../services/alert.service';
               </td>
             </tr>
             <tr *ngIf="paginatedFaqs.length === 0">
-              <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+              <td [attr.colspan]="hasEditPermission ? 4 : 3" class="px-6 py-12 text-center text-gray-500">
                 <lucide-icon name="search" class="w-8 h-8 mx-auto mb-3 text-gray-300"></lucide-icon>
                 <p>Eşleşen kayıt bulunamadı.</p>
               </td>
@@ -187,7 +187,23 @@ export class FaqAdminComponent implements OnInit {
     answer_en: ''
   };
 
+  hasEditPermission = false;
+
   ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('admin_role') || 'admin';
+      const permsRaw = localStorage.getItem('admin_permissions') || '{}';
+      if (role === 'superadmin') {
+        this.hasEditPermission = true;
+      } else {
+        try {
+          const perms = JSON.parse(permsRaw);
+          this.hasEditPermission = !!(perms['faq'] && perms['faq'].edit === true);
+        } catch (e) {
+          this.hasEditPermission = false;
+        }
+      }
+    }
     this.loadFaqs();
   }
 

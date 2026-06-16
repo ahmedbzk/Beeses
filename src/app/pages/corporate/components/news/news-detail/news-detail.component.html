@@ -52,6 +52,34 @@
         </p>
       </div>
 
+      <!-- Video Player Preview (if video_url is present) -->
+      <div *ngIf="news.video_url" class="max-w-4xl mx-auto animate-on-scroll">
+        <a [href]="news.video_url" target="_blank" class="group relative block w-full aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl border border-white/10 cursor-pointer">
+          <!-- Thumbnail Image -->
+          <img [src]="getVideoThumbnail(news.video_url)" [alt]="news.title" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+          
+          <!-- Dark overlay and centering wrapper -->
+          <div class="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
+            
+            <!-- Premium play button decoration -->
+            <div class="w-20 h-20 bg-beeses-gold/90 group-hover:bg-beeses-gold group-hover:scale-110 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(181,129,49,0.5)] transition-all duration-500 relative z-10">
+              <!-- Pulsing outer ring -->
+              <span class="absolute inset-0 rounded-full bg-beeses-gold/40 animate-ping opacity-75"></span>
+              
+              <!-- Play Icon -->
+              <lucide-icon name="play" class="w-8 h-8 text-black fill-black relative z-20"></lucide-icon>
+            </div>
+
+          </div>
+          
+          <!-- Bottom subtle badge or label -->
+          <div class="absolute bottom-6 left-6 z-20 bg-black/60 px-4 py-2 rounded-xl text-white text-xs font-bold tracking-wider uppercase backdrop-blur-md flex items-center gap-2 border border-white/5">
+            <lucide-icon name="video" class="w-4 h-4 text-beeses-gold"></lucide-icon>
+            <span>{{ 'NEWS_DETAIL_WATCH_VIDEO' | translate }}</span>
+          </div>
+        </a>
+      </div>
+
       <!-- Dynamic Editorial Sections -->
       <div class="space-y-24 md:space-y-32">
         <div *ngFor="let sec of translatedSections; let i = index" class="editorial-section animate-on-scroll">
@@ -59,7 +87,7 @@
           <!-- Layout A: Cinematic Banner (Section 3 - index 2, if both text and image are present) -->
           <div *ngIf="i === 2 && sec.text && sec.image" class="space-y-8 bg-white rounded-3xl p-6 md:p-10 shadow-xl border border-gray-100/50">
             <div *ngIf="sec.title" class="mb-6">
-              <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">03 / {{ 'NEWS_DETAIL_STAGE' | translate }}</span>
+              <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">03</span>
               <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
               <div class="w-12 h-1 bg-beeses-gold mt-3 rounded-full"></div>
             </div>
@@ -85,7 +113,7 @@
               <!-- Text Card -->
               <div class="lg:col-span-7 bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 z-10 lg:-mr-16 relative">
                 <div *ngIf="sec.title" class="mb-4">
-                  <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }} / {{ 'NEWS_DETAIL_STAGE' | translate }}</span>
+                  <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }}</span>
                   <h3 class="text-xl sm:text-2xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
                   <div class="w-12 h-0.5 bg-beeses-gold mt-2 rounded-full"></div>
                 </div>
@@ -114,7 +142,7 @@
               <!-- Text Card on Right -->
               <div class="lg:col-span-7 lg:order-2 order-1 bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 z-10 lg:-ml-16 relative">
                 <div *ngIf="sec.title" class="mb-4">
-                  <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }} / {{ 'NEWS_DETAIL_STAGE' | translate }}</span>
+                  <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }}</span>
                   <h3 class="text-xl sm:text-2xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
                   <div class="w-12 h-0.5 bg-beeses-gold mt-2 rounded-full"></div>
                 </div>
@@ -129,7 +157,7 @@
           <!-- Layout C: Text Only -->
           <div *ngIf="sec.text && !sec.image" class="max-w-4xl mx-auto bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100">
             <div *ngIf="sec.title" class="mb-6">
-              <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }} / {{ 'NEWS_DETAIL_STAGE' | translate }}</span>
+              <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }}</span>
               <h3 class="text-xl sm:text-2xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
               <div class="w-12 h-0.5 bg-beeses-gold mt-2 rounded-full"></div>
             </div>
@@ -141,7 +169,7 @@
           <!-- Layout D: Image Only -->
           <div *ngIf="!sec.text && sec.image" class="max-w-4xl mx-auto bg-white rounded-3xl p-6 shadow-xl border border-gray-100">
             <div *ngIf="sec.title" class="mb-6">
-              <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }} / {{ 'NEWS_DETAIL_STAGE' | translate }}</span>
+              <span class="text-beeses-gold text-[10px] font-black tracking-widest uppercase mb-1 block">{{ i + 1 | number:'2.0-0' }}</span>
               <h3 class="text-xl sm:text-2xl font-extrabold text-beeses-dark uppercase leading-tight">{{ sec.title }}</h3>
               <div class="w-12 h-0.5 bg-beeses-gold mt-2 rounded-full"></div>
             </div>

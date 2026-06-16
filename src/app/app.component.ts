@@ -130,6 +130,12 @@ export class AppComponent implements OnInit {
       } else if (path.includes('/contact')) {
         pageTitle = 'İletişim ve Destek | Beeses Audio';
         pageDesc = 'Bizimle doğrudan iletişime geçmek, öneri, istek veya teknik destek talebi göndermek için iletişim formumuzu kullanabilirsiniz.';
+      } else if (path.includes('/privacy-policy')) {
+        pageTitle = 'Gizlilik Politikası | Beeses Audio';
+        pageDesc = 'Beeses Audio Technology kişisel verilerin korunması ve gizlilik politikası detayları.';
+      } else if (path.includes('/cookie-policy')) {
+        pageTitle = 'Çerez Ayarları | Beeses Audio';
+        pageDesc = 'Beeses Audio Technology internet sitesi çerez kullanımı ve aydınlatma metni.';
       } else {
         pageTitle = 'Beeses Audio | Premium Ses Teknolojileri';
         pageDesc = 'Beeses Audio, yüksek performanslı ses amplifikatörleri ve premium ses çözümleri.';
@@ -173,6 +179,12 @@ export class AppComponent implements OnInit {
       } else if (path.includes('/contact')) {
         pageTitle = 'Contact & Support | Beeses Audio';
         pageDesc = 'Use our contact form to get in touch directly, send suggestions, requests or technical support requests.';
+      } else if (path.includes('/privacy-policy')) {
+        pageTitle = 'Privacy Policy | Beeses Audio';
+        pageDesc = 'Beeses Audio Technology personal data protection and privacy policy details.';
+      } else if (path.includes('/cookie-policy')) {
+        pageTitle = 'Cookie Policy | Beeses Audio';
+        pageDesc = 'Beeses Audio Technology website cookies usage and disclosure text.';
       } else {
         pageTitle = 'Beeses Audio | Premium Audio Technologies';
         pageDesc = 'Beeses Audio, high-performance audio amplifiers and premium sound solutions.';

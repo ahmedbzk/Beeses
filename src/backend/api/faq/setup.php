@@ -1,18 +1,28 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, OPTIONS");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once '../db.php';
+
 
 try {
     // Create faqs table
     $pdo->exec("CREATE TABLE IF NOT EXISTS faqs (
         id INT AUTO_INCREMENT PRIMARY KEY,
         question TEXT NOT NULL,
+        question_en TEXT DEFAULT NULL,
         answer TEXT NOT NULL,
+        answer_en TEXT DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+    // Ensure question_en and answer_en columns exist if table was already created without them
+    $columns = $pdo->query("SHOW COLUMNS FROM faqs")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('question_en', $columns)) {
+        $pdo->exec("ALTER TABLE faqs ADD COLUMN question_en TEXT DEFAULT NULL AFTER question");
+    }
+    if (!in_array('answer_en', $columns)) {
+        $pdo->exec("ALTER TABLE faqs ADD COLUMN answer_en TEXT DEFAULT NULL AFTER answer");
+    }
 
     // Seed faqs table if empty
     $stmtFaq = $pdo->query("SELECT COUNT(*) FROM faqs");

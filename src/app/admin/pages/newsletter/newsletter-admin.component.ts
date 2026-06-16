@@ -82,7 +82,7 @@ import { AlertService } from '../../../services/alert.service';
                   <th class="px-6 py-4">#</th>
                   <th class="px-6 py-4">E-posta Adresi</th>
                   <th class="px-6 py-4 whitespace-nowrap">Abone Tarihi</th>
-                  <th class="px-6 py-4 text-center">İşlem</th>
+                  <th *ngIf="hasEditPermission" class="px-6 py-4 text-center">İşlem</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-100">
@@ -103,7 +103,7 @@ import { AlertService } from '../../../services/alert.service';
                   <td class="px-6 py-3.5 whitespace-nowrap text-gray-500 text-xs">
                     {{ sub.subscribed_at | date:'dd.MM.yyyy HH:mm' }}
                   </td>
-                  <td class="px-6 py-3.5 text-center">
+                  <td *ngIf="hasEditPermission" class="px-6 py-3.5 text-center">
                     <button (click)="askDeleteSubscriber(sub)"
                             class="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 border border-red-100 text-red-500 hover:bg-red-500 hover:text-white rounded-lg text-xs font-bold transition-all">
                       <lucide-icon name="trash" class="w-3.5 h-3.5"></lucide-icon>
@@ -112,7 +112,7 @@ import { AlertService } from '../../../services/alert.service';
                   </td>
                 </tr>
                 <tr *ngIf="filteredSubscribers.length === 0">
-                  <td colspan="4" class="px-6 py-12 text-center text-gray-400">
+                  <td [attr.colspan]="hasEditPermission ? 4 : 3" class="px-6 py-12 text-center text-gray-400">
                     <lucide-icon name="users" class="w-8 h-8 mx-auto mb-2 text-gray-200"></lucide-icon>
                     <p class="text-sm">Abone bulunamadı.</p>
                   </td>
@@ -151,7 +151,7 @@ import { AlertService } from '../../../services/alert.service';
         <div class="xl:col-span-2 space-y-5">
 
           
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div *ngIf="hasEditPermission" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="p-6 border-b border-gray-100 bg-gray-50/50">
               <h2 class="text-base font-bold text-beeses-dark flex items-center gap-2">
                 <lucide-icon name="send" class="w-5 h-5 text-beeses-gold"></lucide-icon>
@@ -335,6 +335,27 @@ export class NewsletterAdminComponent implements OnInit {
 
   Math = Math;
 
+  hasEditPermission = false;
+
+  ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('admin_role') || 'admin';
+      const permsRaw = localStorage.getItem('admin_permissions') || '{}';
+      if (role === 'superadmin') {
+        this.hasEditPermission = true;
+      } else {
+        try {
+          const perms = JSON.parse(permsRaw);
+          this.hasEditPermission = !!(perms['newsletter'] && perms['newsletter'].edit === true);
+        } catch (e) {
+          this.hasEditPermission = false;
+        }
+      }
+    }
+    this.loadSubscribers();
+    this.loadLogs();
+  }
+
   get filteredSubscribers() {
     if (!this.searchQuery.trim()) return this.subscribers;
     const q = this.searchQuery.toLowerCase();
@@ -395,11 +416,6 @@ export class NewsletterAdminComponent implements OnInit {
 
   getTotalSent(): number {
     return this.logs.reduce((sum, l) => sum + (l.sent_count || 0), 0);
-  }
-
-  ngOnInit() {
-    this.loadSubscribers();
-    this.loadLogs();
   }
 
   loadSubscribers() {

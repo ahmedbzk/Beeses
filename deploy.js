@@ -44,17 +44,32 @@ async function deploy() {
 
         console.log("✅ Sunucu bağlantısı başarılı!");
         
+        // 3. Frontend (Angular) Dosyalarını Yükle
         const remotePath = process.env.FTP_REMOTE_PATH || "/public_html";
         console.log(`📂 Hedef sunucu klasörü ayarlanıyor/kontrol ediliyor: "${remotePath}"`);
         await client.ensureDir(remotePath);
 
-        console.log(`📤 Dosyalar yükleniyor: "${localDir}" -> "${remotePath}"`);
-        console.log("Lütfen işlemin tamamlanmasını bekleyin, bu işlem internet hızınıza bağlı olarak biraz sürebilir...");
-        
-        // Klasörün tamamını sunucuya senkronize eder
+        console.log(`📤 Frontend dosyaları yükleniyor: "${localDir}" -> "${remotePath}"`);
+        console.log("Lütfen işlemin tamamlanmasını bekleyin...");
         await client.uploadFromDir(localDir);
+        console.log("✅ Frontend başarıyla yüklendi!");
 
-        console.log("\n🚀 Tebrikler! FTP Dağıtımı başarıyla tamamlandı!");
+        // 4. Backend (PHP API) Dosyalarını Yükle
+        const localBackendDir = path.join(__dirname, "src/backend/api");
+        const remoteBackendPath = path.posix.join(remotePath, "backend/api");
+        
+        if (fs.existsSync(localBackendDir)) {
+            console.log(`\n📂 Backend hedef klasörü ayarlanıyor/kontrol ediliyor: "${remoteBackendPath}"`);
+            await client.ensureDir(remoteBackendPath);
+
+            console.log(`📤 Backend dosyaları yükleniyor: "${localBackendDir}" -> "${remoteBackendPath}"`);
+            await client.uploadFromDir(localBackendDir);
+            console.log("✅ Backend API başarıyla yüklendi!");
+        } else {
+            console.warn(`⚠️ UYARI: Yerel backend dizini bulunamadı: ${localBackendDir}`);
+        }
+
+        console.log("\n🚀 Tebrikler! Tüm FTP Dağıtım işlemleri başarıyla tamamlandı!");
         console.log("========================================================================\n");
     } catch (err) {
         console.error("\n========================================================================");

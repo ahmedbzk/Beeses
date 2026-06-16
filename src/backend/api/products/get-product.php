@@ -1,9 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once '../db.php';
+
 
 $slug = $_GET['slug'] ?? $_GET['id'] ?? '';
 

@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
 
 $title = $_POST['title'] ?? '';
 $title_en = $_POST['title_en'] ?? '';
@@ -79,6 +77,7 @@ try {
 
     $id = $pdo->lastInsertId();
 
+        writeAdminLog('innovations', 'Ekleme', "İnovasyon eklendi: " . $title);
     echo json_encode([
         "success" => true,
         "message" => "İnovasyon projesi başarıyla eklendi.",

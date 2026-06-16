@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
 
 $id = $_GET['id'] ?? null;
 
@@ -34,6 +32,7 @@ try {
 
     $stmt = $pdo->prepare("DELETE FROM news WHERE id = ?");
     $stmt->execute([$id]);
+        writeAdminLog('news', 'Silme', "Haber silindi (ID: " . $id . ")");
     echo json_encode(["success" => true, "message" => "Haber başarıyla silindi."]);
 } catch (PDOException $e) {
     echo json_encode(["success" => false, "message" => "Hata: " . $e->getMessage()]);

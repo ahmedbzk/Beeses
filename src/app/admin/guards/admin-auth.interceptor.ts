@@ -13,7 +13,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const username = localStorage.getItem('admin_username');
 
     // Only intercept requests going to our backend API
-    if (token && adminId && username && (req.url.includes('/beeses_api') || req.url.includes('127.0.0.1/beeses_api'))) {
+    if (token && adminId && username && (req.url.includes('/backend/api') || req.url.includes('/beeses_api') || req.url.includes('127.0.0.1'))) {
       const cloned = req.clone({
         setHeaders: {
           'X-Admin-Id': adminId,

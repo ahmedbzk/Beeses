@@ -1,15 +1,14 @@
 <?php
+require_once '../db.php';
 // send-mail.php - Garanti admin panelinden kullanıcıya mail gönderme
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
 
-require_once '../db.php';
+
+require_once '../mail_helper.php';
 
 // Gelen JSON verisini oku
 $data = json_decode(file_get_contents("php://input"));
@@ -25,17 +24,6 @@ if (
     $message = $data->message;
     $warranty_id = $data->warranty_id;
 
-    // Gönderici e-posta adresi (cPanel / Sunucu üzerindeki alan adıyla eşleşmesi önerilir)
-    $from = "info@beeses.com"; 
-    
-    // E-posta başlıklarını düzenle (UTF-8 desteği ile)
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-Type: text/plain; charset=UTF-8" . "\r\n";
-    $headers .= "From: Beeses Audio <" . $from . ">" . "\r\n";
-    $headers .= "Reply-To: " . $from . "\r\n";
-    $headers .= "Bcc: " . $from . "\r\n"; // Gönderilen mailin bir kopyasını kendi kutumuza düşürüyoruz
-    $headers .= "X-Mailer: PHP/" . phpversion();
-
     // Mail gönderme fonksiyonu
     try {
         // Mail kayıt tablosunu otomatik oluştur (Her ihtimale karşı)
@@ -47,12 +35,13 @@ if (
             sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
-        $mail_sent = mail($to, $subject, $message, $headers);
+        $mail_sent = sendMailSMTP($to, $subject, $message, false);
         if ($mail_sent) {
             // Gönderilen e-postayı veritabanına kaydet
             $insert = $pdo->prepare("INSERT INTO warranty_emails (warranty_id, subject, message) VALUES (?, ?, ?)");
             $insert->execute([$warranty_id, $subject, $message]);
 
+                        writeAdminLog('warranties', 'E-posta Gönderimi', "Kullanıcıya mail gönderildi (Alıcı: " . $to . ", Konu: " . $subject . ", Garanti ID: " . $warranty_id . ")");
             echo json_encode([
                 "success" => true,
                 "message" => "E-posta başarıyla gönderildi ve kaydedildi."

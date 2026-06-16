@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
 
 $id = $_GET['id'] ?? null;
 
@@ -58,6 +56,7 @@ try {
         $deleteStmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
         $deleteStmt->execute([$id]);
 
+                writeAdminLog('products', 'Silme', "Ürün silindi (ID: " . $id . ")");
         echo json_encode(["success" => true, "message" => "Urun ve iliskili tum dosyalar basariyla silindi."]);
     } else {
         http_response_code(404);

@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
 
 $data = json_decode(file_get_contents("php://input"), true);
 if (!$data) {
@@ -54,6 +52,7 @@ try {
     ]);
 
     http_response_code(200);
+        writeAdminLog('distributors', 'Güncelleme', "Distribütör güncellendi: " . $company_name);
     echo json_encode(array("success" => true, "message" => "Distribütör başarıyla güncellendi."));
 } catch (PDOException $e) {
     http_response_code(500);

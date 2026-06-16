@@ -46,14 +46,14 @@ import { environment } from '../../../../environments/environment';
         </div>
 
         <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
-          <div *ngIf="getSelectedCount() > 0" class="flex items-center gap-2 animate-fade-in pl-0 lg:pl-3 lg:border-l border-gray-200 h-10">
+          <div *ngIf="hasEditPermission && getSelectedCount() > 0" class="flex items-center gap-2 animate-fade-in pl-0 lg:pl-3 lg:border-l border-gray-200 h-10">
             <span class="text-sm font-bold text-beeses-gold whitespace-nowrap">{{ getSelectedCount() }} Seçili</span>
             <button (click)="executeBulkDelete()" class="h-10 px-3 rounded-lg bg-red-50 text-red-600 hover:bg-red-500 hover:text-white flex items-center gap-2 transition-colors text-sm font-bold shadow-sm cursor-pointer">
               <lucide-icon name="trash" class="w-4 h-4"></lucide-icon> <span class="hidden sm:inline">Toplu Sil</span>
             </button>
           </div>
           
-          <button (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10">
+          <button *ngIf="hasEditPermission" (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10">
             <lucide-icon name="plus" class="w-4 h-4"></lucide-icon> Yeni Haber Ekle
           </button>
         </div>
@@ -68,14 +68,14 @@ import { environment } from '../../../../environments/environment';
         <table class="w-full text-left text-sm text-gray-600">
           <thead class="bg-beeses-dark text-beeses-gold font-bold uppercase text-[10px] tracking-[0.15em] border-b-2 border-beeses-gold shadow-sm">
             <tr>
-              <th class="px-6 py-5 w-10 text-center rounded-tl-xl">
+              <th *ngIf="hasEditPermission" class="px-6 py-5 w-10 text-center rounded-tl-xl">
                 <input type="checkbox" (change)="toggleAll($event)" [checked]="isAllSelected()" class="w-4 h-4 rounded border-gray-300 text-beeses-gold focus:ring-beeses-gold cursor-pointer bg-white/10">
               </th>
-              <th class="px-6 py-4">Tarih</th>
+              <th class="px-6 py-4" [class.rounded-tl-xl]="!hasEditPermission">Tarih</th>
               <th class="px-6 py-4 w-24">Görsel</th>
               <th class="px-6 py-4">Haber Bilgisi</th>
-              <th class="px-6 py-4">Kategori</th>
-              <th class="px-6 py-5 text-center rounded-tr-xl">İşlem</th>
+              <th class="px-6 py-4" [class.rounded-tr-xl]="!hasEditPermission">Kategori</th>
+              <th *ngIf="hasEditPermission" class="px-6 py-5 text-center rounded-tr-xl">İşlem</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 bg-white">
@@ -83,7 +83,7 @@ import { environment } from '../../../../environments/environment';
                 class="transition-colors hover:bg-beeses-gold/5" 
                 [ngClass]="item.selected ? 'bg-beeses-gold/10 border-l-2 border-l-beeses-gold' : (i % 2 === 0 ? 'bg-white' : 'bg-gray-50/40 border-l-2 border-l-transparent')">
               
-              <td class="px-6 py-4 text-center">
+              <td *ngIf="hasEditPermission" class="px-6 py-4 text-center">
                 <input type="checkbox" [(ngModel)]="item.selected" class="w-4 h-4 rounded border-gray-300 text-beeses-gold focus:ring-beeses-gold cursor-pointer">
               </td>
 
@@ -112,7 +112,7 @@ import { environment } from '../../../../environments/environment';
                 </span>
               </td>
 
-              <td class="px-6 py-4 text-center whitespace-nowrap">
+              <td *ngIf="hasEditPermission" class="px-6 py-4 text-center whitespace-nowrap">
                 <div class="flex items-center justify-center gap-2">
                   <button *ngIf="getSelectedCount() <= 1" (click)="openEditModal(item)" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white rounded-lg transition-colors cursor-pointer" title="Düzenle">
                     <lucide-icon name="sliders" class="w-4 h-4"></lucide-icon>
@@ -124,7 +124,7 @@ import { environment } from '../../../../environments/environment';
               </td>
             </tr>
             <tr *ngIf="paginatedNews.length === 0">
-              <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+              <td [attr.colspan]="hasEditPermission ? 6 : 4" class="px-6 py-12 text-center text-gray-500">
                 <lucide-icon name="search" class="w-8 h-8 mx-auto mb-3 text-gray-300"></lucide-icon>
                 <p>Eşleşen kayıt bulunamadı.</p>
               </td>
@@ -229,6 +229,11 @@ import { environment } from '../../../../environments/environment';
                 <img [src]="imagePreviewUrl ? imagePreviewUrl : getImageUrl(formData.image)" class="w-full h-full object-cover">
               </div>
             </div>
+          </div>
+
+          <div class="pt-2">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Video URL'si (İsteğe Bağlı)</label>
+            <input type="text" [(ngModel)]="formData.video_url" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all" placeholder="Örn. https://www.youtube.com/watch?v=... veya mp4 linki">
           </div>
 
           <div class="border-t border-gray-100 pt-5">
@@ -455,7 +460,23 @@ export class NewsAdminComponent implements OnInit {
     return this.news.filter(item => item.selected).length;
   }
 
+  hasEditPermission = false;
+
   ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('admin_role') || 'admin';
+      const permsRaw = localStorage.getItem('admin_permissions') || '{}';
+      if (role === 'superadmin') {
+        this.hasEditPermission = true;
+      } else {
+        try {
+          const perms = JSON.parse(permsRaw);
+          this.hasEditPermission = !!(perms['news'] && perms['news'].edit === true);
+        } catch (e) {
+          this.hasEditPermission = false;
+        }
+      }
+    }
     this.loadNews();
   }
 
@@ -496,7 +517,8 @@ export class NewsAdminComponent implements OnInit {
       category: 'Haber',
       image: '',
       summary: '',
-      summary_en: ''
+      summary_en: '',
+      video_url: ''
     };
     this.showModal = true;
   }
@@ -612,6 +634,7 @@ export class NewsAdminComponent implements OnInit {
     formDataPayload.append('summary', this.formData.summary || '');
     formDataPayload.append('title_en', this.formData.title_en || '');
     formDataPayload.append('summary_en', this.formData.summary_en || '');
+    formDataPayload.append('video_url', this.formData.video_url || '');
     
     if (this.formData.image) {
       formDataPayload.append('image', this.formData.image);

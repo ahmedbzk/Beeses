@@ -153,9 +153,9 @@
       <!-- Specs Content -->
       <div *ngIf="activeTab === 'specs'" class="animate-fade-in pb-12">
         <div class="flex flex-col gap-4 max-w-4xl mx-auto">
-          <div *ngFor="let spec of (translate.currentLang === 'en' && product.specs_en ? product.specs_en : product.specs)" class="flex flex-col sm:flex-row sm:items-end justify-between py-4 border-b border-gray-800/50 group hover:border-gray-500 transition-colors">
-            <span class="text-beeses-gold text-sm font-light tracking-wide mb-2 sm:mb-0">{{ spec.name }}</span>
-            <span class="text-white text-sm font-bold sm:text-right tracking-wide">{{ spec.value }}</span>
+          <div *ngFor="let spec of (translate.currentLang === 'en' && product.specs_en ? product.specs_en : product.specs)" class="flex flex-row items-center justify-between gap-4 py-4 border-b border-gray-800/50 group hover:border-gray-500 transition-colors">
+            <span class="text-beeses-gold text-sm font-light tracking-wide shrink-0">{{ spec.name }}</span>
+            <span class="text-white text-sm font-bold text-right tracking-wide">{{ spec.value }}</span>
           </div>
         </div>
       </div>

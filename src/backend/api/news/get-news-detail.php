@@ -1,9 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once '../db.php';
+
 
 $id = $_GET['id'] ?? '';
 
@@ -22,6 +21,12 @@ try {
             $item['sections'] = json_decode($item['sections'], true);
         } else {
             $item['sections'] = [];
+        }
+        
+        if (!empty($item['sections_en'])) {
+            $item['sections_en'] = json_decode($item['sections_en'], true);
+        } else {
+            $item['sections_en'] = [];
         }
         echo json_encode(["success" => true, "data" => $item]);
     } else {

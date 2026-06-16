@@ -47,7 +47,7 @@ import { AlertService } from '../../../services/alert.service';
           <div class="text-sm text-gray-500">
             Sistemde kayıtlı yöneticileri ve erişim yetkilerini buradan düzenleyebilirsiniz.
           </div>
-          <button (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full sm:w-auto justify-center">
+          <button *ngIf="hasEditPermission" (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full sm:w-auto justify-center">
             <lucide-icon name="plus" class="w-4 h-4"></lucide-icon> Yeni Yönetici Ekle
           </button>
         </div>
@@ -64,8 +64,8 @@ import { AlertService } from '../../../services/alert.service';
                 <th class="px-6 py-4 w-16 text-center">ID</th>
                 <th class="px-6 py-4">Kullanıcı Adı</th>
                 <th class="px-6 py-4">Erişim İzinleri</th>
-                <th class="px-6 py-4">Kayıt Tarihi</th>
-                <th class="px-6 py-5 text-center w-28 rounded-tr-xl">İşlem</th>
+                <th class="px-6 py-4" [class.rounded-tr-xl]="!hasEditPermission">Kayıt Tarihi</th>
+                <th *ngIf="hasEditPermission" class="px-6 py-5 text-center w-28 rounded-tr-xl">İşlem</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 bg-white">
@@ -85,7 +85,7 @@ import { AlertService } from '../../../services/alert.service';
                   </div>
                 </td>
                 <td class="px-6 py-4 text-gray-500">{{ item.created_at | date:'dd.MM.yyyy HH:mm' }}</td>
-                <td class="px-6 py-4 text-center whitespace-nowrap">
+                <td *ngIf="hasEditPermission" class="px-6 py-4 text-center whitespace-nowrap">
                   <div class="flex items-center justify-center gap-2">
                     <button (click)="openEditModal(item)" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white rounded-lg transition-colors cursor-pointer" title="Düzenle">
                       <lucide-icon name="sliders" class="w-4 h-4"></lucide-icon>
@@ -349,6 +349,7 @@ export class AdminsAdminComponent implements OnInit {
   showModal = false;
   editingItem: Admin | null = null;
   adminRole = 'admin';
+  hasEditPermission = false;
 
   searchQuery = '';
   filterUsername = '';
@@ -396,6 +397,7 @@ export class AdminsAdminComponent implements OnInit {
           this.router.navigate(['/admin/dashboard']);
           return;
         }
+        this.hasEditPermission = this.adminRole === 'superadmin' || !!(perms['admins'] && perms['admins'].edit === true);
       } catch (e) {
         this.router.navigate(['/admin/dashboard']);
         return;

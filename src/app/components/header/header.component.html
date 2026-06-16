@@ -45,10 +45,11 @@
         </div>
 
         <div class="relative group/nav flex items-center py-4 cursor-pointer">
-          <a routerLink="/products" class="nav-link flex items-center gap-1.5 cursor-pointer">
+          <span class="nav-link flex items-center gap-1.5 cursor-default">
             {{ 'NAV_PRODUCTS' | translate }} <lucide-icon name="chevron-down" class="w-3.5 h-3.5 opacity-55"></lucide-icon>
-          </a>
+          </span>
           <div class="dropdown-menu">
+            <a routerLink="/products">{{ 'PRODUCTS_CATEGORY_ALL' | translate }}</a>
             <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }">{{ 'HEADER_SQL_SERIES' | translate }}</a>
             <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }">{{ 'HEADER_OF_SERIES' | translate }}</a>
             <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }">{{ 'HEADER_PETEK_SERIES' | translate }}</a>
@@ -77,12 +78,12 @@
           </span>
           <div class="dropdown-menu">
             <a routerLink="/contact">{{ 'NAV_CONTACT_FORM' | translate }}</a>
-            <a routerLink="/contact/warranty-query">{{ 'NAV_WARRANTY_QUERY' | translate }}</a>
             <a routerLink="/contact/warranty">{{ 'NAV_WARRANTY_REG' | translate }}</a>
+            <a routerLink="/contact/warranty-query">{{ 'NAV_WARRANTY_QUERY' | translate }}</a>
           </div>
         </div>
 
-        <a href="mailto:info@iotek.com.tr?subject=Beeses Audio İletişim" 
+        <a href="mailto:info@beesesaudio.com?subject=Beeses Audio İletişim" 
            class="cta-button flex items-center gap-2 rounded-full shadow-xl cursor-pointer">
           <lucide-icon name="mail" class="w-4 h-4 cta-icon"></lucide-icon>
           <span>{{ 'BUTTON_CONTACT' | translate }}</span>
@@ -110,7 +111,7 @@
 
         <!-- Right Side: Black Mail Button -->
         <div class="flex-1 flex justify-end items-center">
-          <a href="mailto:info@iotek.com.tr?subject=Beeses Audio İletişim"
+          <a href="mailto:info@beesesaudio.com?subject=Beeses Audio İletişim"
              class="flex items-center justify-center w-10 h-10 md:w-11 md:h-11 bg-black hover:bg-beeses-dark text-white rounded-full transition-all duration-300 shadow-md cursor-pointer">
             <lucide-icon name="mail" class="w-4.5 h-4.5 md:w-5 md:h-5 text-beeses-gold"></lucide-icon>
           </a>
@@ -183,6 +184,7 @@
             </button>
           </div>
           <div class="mobile-sub-menu" [ngClass]="{'open': isMobileUrunlerOpen}">
+            <a routerLink="/products" (click)="toggleSideMenu()">{{ 'PRODUCTS_CATEGORY_ALL' | translate }}</a>
             <a routerLink="/products" [queryParams]="{ category: 'SQL SERİSİ' }" (click)="toggleSideMenu()">{{ 'HEADER_SQL_SERIES' | translate }}</a>
             <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }" (click)="toggleSideMenu()">{{ 'HEADER_OF_SERIES' | translate }}</a>
             <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }" (click)="toggleSideMenu()">{{ 'HEADER_PETEK_SERIES' | translate }}</a>
@@ -203,8 +205,8 @@
           </div>
           <div class="mobile-sub-menu" [ngClass]="{'open': isMobileIletisimOpen}">
             <a routerLink="/contact" (click)="toggleSideMenu()">{{ 'NAV_CONTACT_FORM' | translate }}</a>
-            <a routerLink="/contact/warranty-query" (click)="toggleSideMenu()">{{ 'NAV_WARRANTY_QUERY' | translate }}</a>
             <a routerLink="/contact/warranty" (click)="toggleSideMenu()">{{ 'NAV_WARRANTY_REG' | translate }}</a>
+            <a routerLink="/contact/warranty-query" (click)="toggleSideMenu()">{{ 'NAV_WARRANTY_QUERY' | translate }}</a>
           </div>
         </div>
       </nav>

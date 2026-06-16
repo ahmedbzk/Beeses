@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
 
 $data = json_decode(file_get_contents("php://input"), true);
 if (!$data) {
@@ -19,6 +17,8 @@ if (!$data) {
 $id = $data['id'] ?? null;
 $question = $data['question'] ?? '';
 $answer = $data['answer'] ?? '';
+$question_en = $data['question_en'] ?? '';
+$answer_en = $data['answer_en'] ?? '';
 
 if (empty($id) || empty($question) || empty($answer)) {
     http_response_code(400);
@@ -27,10 +27,11 @@ if (empty($id) || empty($question) || empty($answer)) {
 }
 
 try {
-    $query = "UPDATE faqs SET question = ?, answer = ? WHERE id = ?";
+    $query = "UPDATE faqs SET question = ?, answer = ?, question_en = ?, answer_en = ? WHERE id = ?";
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$question, $answer, $id]);
+    $stmt->execute([$question, $answer, $question_en, $answer_en, $id]);
 
+        writeAdminLog('faq', 'Güncelleme', "Soru güncellendi: " . $question);
     echo json_encode(array("success" => true, "message" => "Soru başarıyla güncellendi."));
 } catch (PDOException $e) {
     http_response_code(500);

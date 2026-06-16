@@ -32,7 +32,7 @@ import { environment } from '../../../../environments/environment';
           <input type="text" [(ngModel)]="searchQuery" class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-beeses-gold focus:border-beeses-gold block w-full pl-10 p-2.5 outline-none h-10 transition-colors" placeholder="Sertifikalarda arama yapın...">
         </div>
 
-        <button (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full sm:w-auto justify-center">
+        <button *ngIf="hasEditPermission" (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full sm:w-auto justify-center">
           <lucide-icon name="plus" class="w-4 h-4"></lucide-icon> Yeni Sertifika Ekle
         </button>
       </div>
@@ -49,9 +49,8 @@ import { environment } from '../../../../environments/environment';
               <th class="px-6 py-4 w-16 text-center">ID</th>
               <th class="px-6 py-4 w-16 text-center">Simge</th>
               <th class="px-6 py-4">Sertifika Adı</th>
-              <th class="px-6 py-4">Açıklama</th>
-              <th class="px-6 py-4">Dosya</th>
-              <th class="px-6 py-5 text-center w-28 rounded-tr-xl">İşlem</th>
+              <th class="px-6 py-4" [class.rounded-tr-xl]="!hasEditPermission">Açıklama</th>
+              <th *ngIf="hasEditPermission" class="px-6 py-5 text-center w-28 rounded-tr-xl">İşlem</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 bg-white">
@@ -75,19 +74,7 @@ import { environment } from '../../../../environments/environment';
                 <div class="line-clamp-2" [title]="item.description">{{ item.description }}</div>
               </td>
 
-              <td class="px-6 py-4">
-                <div *ngIf="item.file_path; else noFile">
-                  <a [href]="apiUrl + '/' + item.file_path" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 hover:bg-green-600 hover:text-white rounded-full text-xs font-bold transition-all" title="Belgeyi Görüntüle">
-                    <lucide-icon name="external-link" class="w-3.5 h-3.5"></lucide-icon>
-                    Görüntüle
-                  </a>
-                </div>
-                <ng-template #noFile>
-                  <span class="text-xs text-gray-400 italic">Yüklenmemiş</span>
-                </ng-template>
-              </td>
-
-              <td class="px-6 py-4 text-center whitespace-nowrap">
+              <td *ngIf="hasEditPermission" class="px-6 py-4 text-center whitespace-nowrap">
                 <div class="flex items-center justify-center gap-2">
                   <button (click)="openEditModal(item)" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white rounded-lg transition-colors cursor-pointer" title="Düzenle">
                     <lucide-icon name="sliders" class="w-4 h-4"></lucide-icon>
@@ -99,7 +86,7 @@ import { environment } from '../../../../environments/environment';
               </td>
             </tr>
             <tr *ngIf="filteredCertificates.length === 0">
-              <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+              <td [attr.colspan]="hasEditPermission ? 5 : 4" class="px-6 py-12 text-center text-gray-500">
                 <lucide-icon name="search" class="w-8 h-8 mx-auto mb-3 text-gray-300"></lucide-icon>
                 <p>Eşleşen kayıt bulunamadı.</p>
               </td>
@@ -169,30 +156,7 @@ import { environment } from '../../../../environments/environment';
             </select>
           </div>
 
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
-              Sertifika Belgesi (PDF / Görsel)
-            </label>
-            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-200 border-dashed rounded-xl bg-gray-50/50 hover:bg-gray-50 transition-colors relative">
-              <div class="space-y-1 text-center">
-                <lucide-icon name="upload-cloud" class="mx-auto h-12 w-12 text-gray-400"></lucide-icon>
-                <div class="flex text-sm text-gray-600 justify-center">
-                  <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-semibold text-beeses-gold hover:text-beeses-dark focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-beeses-gold">
-                    <span>Dosya yükleyin</span>
-                    <input id="file-upload" type="file" (change)="onFileSelected($event)" accept=".pdf,image/*" class="sr-only">
-                  </label>
-                </div>
-                <p class="text-xs text-gray-400">PDF, PNG, JPG, JPEG, WEBP (maks. 5MB)</p>
-                <p *ngIf="selectedFileName" class="text-xs font-bold text-beeses-gold mt-2 flex items-center justify-center gap-1">
-                  <lucide-icon name="file-text" class="w-3.5 h-3.5"></lucide-icon>
-                  {{ selectedFileName }}
-                </p>
-              </div>
-            </div>
-            <p *ngIf="editingItem && editingItem.file_path && !selectedFileName" class="text-xs text-gray-400 mt-2">
-              Mevcut dosya: <span class="font-semibold text-beeses-dark">{{ getFileNameFromPath(editingItem.file_path) }}</span> (Yeni dosya seçilmezse korunur.)
-            </p>
-          </div>
+
         </div>
 
         <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
@@ -231,8 +195,23 @@ export class CertificatesAdminComponent implements OnInit {
     description_en: '',
     icon: 'award'
   };
+  hasEditPermission = false;
 
   ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('admin_role') || 'admin';
+      const permsRaw = localStorage.getItem('admin_permissions') || '{}';
+      if (role === 'superadmin') {
+        this.hasEditPermission = true;
+      } else {
+        try {
+          const perms = JSON.parse(permsRaw);
+          this.hasEditPermission = !!(perms['certificates'] && perms['certificates'].edit === true);
+        } catch (e) {
+          this.hasEditPermission = false;
+        }
+      }
+    }
     this.loadCertificates();
   }
 

@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
 
 $id = $_POST['id'] ?? '';
 $title = $_POST['title'] ?? '';
@@ -125,6 +123,7 @@ try {
         ':image' => $image_path
     ]);
 
+        writeAdminLog('innovations', 'Güncelleme', "İnovasyon güncellendi: " . $title);
     echo json_encode([
         "success" => true,
         "message" => "İnovasyon projesi başarıyla güncellendi."

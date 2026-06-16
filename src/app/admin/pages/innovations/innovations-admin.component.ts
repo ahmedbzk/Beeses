@@ -34,7 +34,23 @@ export class InnovationsAdminComponent implements OnInit {
 
   notification: { type: 'success' | 'error', message: string } | null = null;
 
+  hasEditPermission = false;
+
   ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('admin_role') || 'admin';
+      const permsRaw = localStorage.getItem('admin_permissions') || '{}';
+      if (role === 'superadmin') {
+        this.hasEditPermission = true;
+      } else {
+        try {
+          const perms = JSON.parse(permsRaw);
+          this.hasEditPermission = !!(perms['innovations'] && perms['innovations'].edit === true);
+        } catch (e) {
+          this.hasEditPermission = false;
+        }
+      }
+    }
     this.loadInnovations();
   }
 

@@ -46,7 +46,7 @@ import { AlertService } from '../../../services/alert.service';
         </div>
 
         <div class="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
-          <button (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10">
+          <button *ngIf="hasEditPermission" (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full lg:w-auto justify-center">
             <lucide-icon name="plus" class="w-4 h-4"></lucide-icon> Yeni Distribütör Ekle
           </button>
         </div>
@@ -67,7 +67,7 @@ import { AlertService } from '../../../services/alert.service';
               <th class="px-6 py-4">Temsilci</th>
               <th class="px-6 py-4">İletişim</th>
               <th class="px-6 py-4">Sosyal Medya</th>
-              <th class="px-6 py-5 text-center">İşlem</th>
+              <th *ngIf="hasEditPermission" class="px-6 py-5 text-center">İşlem</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 bg-white">
@@ -128,7 +128,7 @@ import { AlertService } from '../../../services/alert.service';
                 </div>
               </td>
 
-              <td class="px-6 py-4 text-center whitespace-nowrap">
+              <td *ngIf="hasEditPermission" class="px-6 py-4 text-center whitespace-nowrap">
                 <div class="flex items-center justify-center gap-2">
                   <button (click)="openEditModal(item)" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white rounded-lg transition-colors" title="Düzenle">
                     <lucide-icon name="sliders" class="w-4 h-4"></lucide-icon>
@@ -140,7 +140,7 @@ import { AlertService } from '../../../services/alert.service';
               </td>
             </tr>
             <tr *ngIf="paginatedDistributors.length === 0">
-              <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+              <td [attr.colspan]="hasEditPermission ? 7 : 6" class="px-6 py-12 text-center text-gray-500">
                 <lucide-icon name="search" class="w-8 h-8 mx-auto mb-3 text-gray-300"></lucide-icon>
                 <p>Eşleşen kayıt bulunamadı.</p>
               </td>
@@ -371,7 +371,23 @@ export class DistributorsAdminComponent implements OnInit {
     });
   }
 
+  hasEditPermission = false;
+
   ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('admin_role') || 'admin';
+      const permsRaw = localStorage.getItem('admin_permissions') || '{}';
+      if (role === 'superadmin') {
+        this.hasEditPermission = true;
+      } else {
+        try {
+          const perms = JSON.parse(permsRaw);
+          this.hasEditPermission = !!(perms['distributors'] && perms['distributors'].edit === true);
+        } catch (e) {
+          this.hasEditPermission = false;
+        }
+      }
+    }
     this.loadDistributors();
   }
 

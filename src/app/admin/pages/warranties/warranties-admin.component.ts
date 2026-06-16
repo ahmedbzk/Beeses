@@ -75,7 +75,7 @@ import { environment } from '../../../../environments/environment';
             </ng-container>
           </select>
           
-          <div *ngIf="activeTab === 'applications' && getSelectedCount() > 0" class="flex items-center gap-2 animate-fade-in pl-0 lg:pl-3 lg:border-l border-gray-200 h-10">
+          <div *ngIf="hasEditPermission && activeTab === 'applications' && getSelectedCount() > 0" class="flex items-center gap-2 animate-fade-in pl-0 lg:pl-3 lg:border-l border-gray-200 h-10">
             <span class="text-sm font-bold text-beeses-gold whitespace-nowrap">{{ getSelectedCount() }} Seçili</span>
             <button (click)="openBulkConfirmModal('rejected')" class="h-10 px-3 rounded-lg bg-red-50 text-red-600 hover:bg-red-500 hover:text-white flex items-center gap-2 transition-colors text-sm font-bold shadow-sm">
               <lucide-icon name="x" class="w-4 h-4"></lucide-icon> <span class="hidden sm:inline">Toplu Reddet</span>
@@ -93,17 +93,17 @@ import { environment } from '../../../../environments/environment';
         <table class="w-full text-left text-sm text-gray-600">
           <thead *ngIf="activeTab === 'applications'" class="bg-beeses-dark text-beeses-gold font-bold uppercase text-[10px] tracking-[0.15em] border-b-2 border-beeses-gold shadow-sm">
             <tr>
-              <th class="px-6 py-5 w-10 text-center rounded-tl-xl">
+              <th *ngIf="hasEditPermission" class="px-6 py-5 w-10 text-center rounded-tl-xl">
                 <input type="checkbox" (change)="toggleAll($event)" [checked]="isAllSelected()" class="w-4 h-4 rounded border-gray-300 text-beeses-gold focus:ring-beeses-gold cursor-pointer bg-white/10">
               </th>
-              <th class="px-6 py-4">Tarih</th>
+              <th class="px-6 py-4" [class.rounded-tl-xl]="!hasEditPermission">Tarih</th>
               <th class="px-6 py-4">Müşteri Bilgisi</th>
               <th class="px-6 py-4">Ülke / Telefon</th>
               <th class="px-6 py-4">Ürün Adı</th>
               <th class="px-6 py-4">Seri No</th>
               <th class="px-6 py-4 text-center">Fatura</th>
-              <th class="px-6 py-5 text-center">Durum</th>
-              <th class="px-6 py-5 text-center rounded-tr-xl">İşlem</th>
+              <th class="px-6 py-5 text-center" [class.rounded-tr-xl]="!hasEditPermission">Durum</th>
+              <th *ngIf="hasEditPermission" class="px-6 py-5 text-center rounded-tr-xl">İşlem</th>
             </tr>
           </thead>
           
@@ -114,8 +114,8 @@ import { environment } from '../../../../environments/environment';
               <th class="px-6 py-4">Seri No</th>
               <th class="px-6 py-4">Müşteri Bilgisi</th>
               <th class="px-6 py-4 text-center">Garanti Başlangıç/Bitiş Tarihleri</th>
-              <th class="px-6 py-5 text-center">Garanti Durumu</th>
-              <th class="px-6 py-5 text-center rounded-tr-xl">İşlem</th>
+              <th class="px-6 py-5 text-center" [class.rounded-tr-xl]="!hasEditPermission">Garanti Durumu</th>
+              <th *ngIf="hasEditPermission" class="px-6 py-5 text-center rounded-tr-xl">İşlem</th>
             </tr>
           </thead>
 
@@ -124,7 +124,7 @@ import { environment } from '../../../../environments/environment';
               <tr *ngFor="let item of paginatedWarranties; let i = index" 
                   class="transition-colors hover:bg-beeses-gold/5" 
                   [ngClass]="item.selected ? 'bg-beeses-gold/10 border-l-2 border-l-beeses-gold' : (i % 2 === 0 ? 'bg-white' : 'bg-gray-50/40 border-l-2 border-l-transparent')">
-                <td class="px-6 py-4 text-center">
+                <td *ngIf="hasEditPermission" class="px-6 py-4 text-center">
                   <input type="checkbox" [(ngModel)]="item.selected" class="w-4 h-4 rounded border-gray-300 text-beeses-gold focus:ring-beeses-gold cursor-pointer">
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -137,7 +137,7 @@ import { environment } from '../../../../environments/environment';
                   <div class="font-bold text-beeses-dark">{{ item.full_name }}</div>
                   <div class="flex items-center gap-1.5 mt-0.5">
                     <span class="text-xs text-gray-400">{{ item.email }}</span>
-                    <button (click)="openEmailModal(item.email, item.full_name, item.id)" class="text-beeses-gold hover:text-beeses-dark transition-colors cursor-pointer" title="E-posta Gönder">
+                    <button *ngIf="hasEditPermission" (click)="openEmailModal(item.email, item.full_name, item.id)" class="text-beeses-gold hover:text-beeses-dark transition-colors cursor-pointer" title="E-posta Gönder">
                       <lucide-icon name="mail" class="w-3.5 h-3.5"></lucide-icon>
                     </button>
                   </div>
@@ -174,7 +174,7 @@ import { environment } from '../../../../environments/environment';
                     </span>
                   </div>
                 </td>
-                <td class="px-6 py-4 text-center">
+                <td *ngIf="hasEditPermission" class="px-6 py-4 text-center">
                   <button (click)="openDetail(item)" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:text-beeses-gold hover:border-beeses-gold rounded-lg text-sm font-bold transition-all shadow-sm">
                     <lucide-icon name="search" class="w-4 h-4"></lucide-icon>
                     İncele
@@ -237,7 +237,7 @@ import { environment } from '../../../../environments/environment';
             </ng-container>
 
             <tr *ngIf="filteredWarranties.length === 0">
-              <td [attr.colspan]="activeTab === 'applications' ? 9 : 8" class="px-6 py-12 text-center text-gray-500">
+              <td [attr.colspan]="activeTab === 'applications' ? (hasEditPermission ? 9 : 7) : (hasEditPermission ? 7 : 6)" class="px-6 py-12 text-center text-gray-500">
                 <lucide-icon name="search" class="w-8 h-8 mx-auto mb-3 text-gray-300"></lucide-icon>
                 <p>Eşleşen kayıt bulunamadı.</p>
               </td>
@@ -501,6 +501,25 @@ import { environment } from '../../../../environments/environment';
   `
 })
 export class WarrantiesAdminComponent implements OnInit {
+  hasEditPermission = false;
+
+  ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('admin_role') || 'admin';
+      const permsRaw = localStorage.getItem('admin_permissions') || '{}';
+      if (role === 'superadmin') {
+        this.hasEditPermission = true;
+      } else {
+        try {
+          const perms = JSON.parse(permsRaw);
+          this.hasEditPermission = !!(perms['warranties'] && perms['warranties'].edit === true);
+        } catch (e) {
+          this.hasEditPermission = false;
+        }
+      }
+    }
+    this.loadWarranties();
+  }
   private http = inject(HttpClient);
   apiUrl = environment.apiUrl;
   
@@ -620,10 +639,6 @@ export class WarrantiesAdminComponent implements OnInit {
 
   getSelectedCount() {
     return this.warranties.filter(w => w.selected).length;
-  }
-
-  ngOnInit() {
-    this.loadWarranties();
   }
 
   loadWarranties() {

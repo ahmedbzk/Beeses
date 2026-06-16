@@ -45,7 +45,7 @@ import { environment } from '../../../../environments/environment';
           </div>
         </div>
 
-        <button (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full lg:w-auto justify-center">
+        <button *ngIf="hasEditPermission" (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-beeses-gold hover:bg-beeses-dark text-white rounded-lg text-sm font-bold transition-all shadow-sm cursor-pointer h-10 w-full lg:w-auto justify-center">
           <lucide-icon name="plus" class="w-4 h-4"></lucide-icon> Yeni Ürün Ekle
         </button>
       </div>
@@ -65,8 +65,8 @@ import { environment } from '../../../../environments/environment';
               <th class="px-6 py-4 w-24">Görsel</th>
               <th class="px-6 py-4">Ürün Bilgisi (Adı / Slug)</th>
               <th class="px-6 py-4">Kategori</th>
-              <th class="px-6 py-4 w-28">Döküman</th>
-              <th class="px-6 py-5 text-center w-28 rounded-tr-xl">İşlem</th>
+              <th class="px-6 py-4 w-28" [class.rounded-tr-xl]="!hasEditPermission">Döküman</th>
+              <th *ngIf="hasEditPermission" class="px-6 py-5 text-center w-28 rounded-tr-xl">İşlem</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 bg-white">
@@ -97,7 +97,7 @@ import { environment } from '../../../../environments/environment';
               
               <td class="px-6 py-4">
                 <div *ngIf="item.pdfUrl; else noPdf">
-                  <a [href]="getImageUrl(item.pdfUrl)" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 text-red-700 hover:bg-red-600 hover:text-white rounded-full text-[10px] font-bold transition-all">
+                  <a [href]="getAdminPdfUrl(item.pdfUrl)" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 text-red-700 hover:bg-red-600 hover:text-white rounded-full text-[10px] font-bold transition-all">
                     <lucide-icon name="file-text" class="w-3 h-3"></lucide-icon> PDF
                   </a>
                 </div>
@@ -106,7 +106,7 @@ import { environment } from '../../../../environments/environment';
                 </ng-template>
               </td>
 
-              <td class="px-6 py-4 text-center whitespace-nowrap">
+              <td *ngIf="hasEditPermission" class="px-6 py-4 text-center whitespace-nowrap">
                 <div class="flex items-center justify-center gap-2">
                   <button (click)="openEditModal(item)" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white rounded-lg transition-colors cursor-pointer" title="Düzenle">
                     <lucide-icon name="sliders" class="w-4 h-4"></lucide-icon>
@@ -117,8 +117,8 @@ import { environment } from '../../../../environments/environment';
                 </div>
               </td>
             </tr>
-            <tr *ngIf="filteredProducts.length === 0">
-              <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+             <tr *ngIf="filteredProducts.length === 0">
+              <td [attr.colspan]="hasEditPermission ? 6 : 5" class="px-6 py-12 text-center text-gray-500">
                 <lucide-icon name="search" class="w-8 h-8 mx-auto mb-3 text-gray-300"></lucide-icon>
                 <p>Eşleşen kayıt bulunamadı.</p>
               </td>
@@ -656,7 +656,23 @@ export class ProductsAdminComponent implements OnInit {
   featuresList: ProductFeature[] = [];
   featuresList_en: ProductFeature[] = [];
 
+  hasEditPermission = false;
+
   ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('admin_role') || 'admin';
+      const permsRaw = localStorage.getItem('admin_permissions') || '{}';
+      if (role === 'superadmin') {
+        this.hasEditPermission = true;
+      } else {
+        try {
+          const perms = JSON.parse(permsRaw);
+          this.hasEditPermission = !!(perms['products'] && perms['products'].edit === true);
+        } catch (e) {
+          this.hasEditPermission = false;
+        }
+      }
+    }
     this.loadProducts();
   }
 
@@ -798,6 +814,11 @@ export class ProductsAdminComponent implements OnInit {
       return path;
     }
     return `${this.apiUrl}/${path}`;
+  }
+
+  getAdminPdfUrl(path: string | undefined): string {
+    if (!path) return '';
+    return `${this.apiUrl}/serve-pdf.php?path=${encodeURIComponent(path)}`;
   }
 
   swapPrimaryWithGallery(idx: number) {

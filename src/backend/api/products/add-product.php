@@ -1,7 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -9,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../db.php';
+
 
 $slug = $_POST['slug'] ?? '';
 $name = $_POST['name'] ?? '';
@@ -139,6 +137,7 @@ try {
     ]);
 
     http_response_code(201);
+        writeAdminLog('products', 'Ekleme', "Ürün eklendi: " . $name);
     echo json_encode(["success" => true, "message" => "Urun basariyla eklendi.", "id" => $pdo->lastInsertId()]);
 } catch (PDOException $e) {
     // If database insert fails, clean up uploaded files

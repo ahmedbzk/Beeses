@@ -1,10 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Allow-Headers: Content-Type");
+require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 
-require_once '../db.php';
+
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -18,6 +16,7 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $data['id']]);
 
+        writeAdminLog('innovations', 'Silme', "İnovasyon silindi (ID: " . $data['id'] . ")");
     echo json_encode([
         "success" => true,
         "message" => "İnovasyon projesi başarıyla silindi."

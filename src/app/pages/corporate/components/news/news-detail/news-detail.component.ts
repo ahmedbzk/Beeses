@@ -93,6 +93,22 @@ export class NewsDetailComponent implements OnInit {
     return `${this.apiUrl}/${imagePath}`;
   }
 
+  getYoutubeId(url: string | undefined): string | null {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  }
+
+  getVideoThumbnail(url: string | undefined): string {
+    if (!url) return this.getImageUrl(this.news?.image);
+    const youtubeId = this.getYoutubeId(url);
+    if (youtubeId) {
+      return `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+    }
+    return this.getImageUrl(this.news?.image);
+  }
+
   openLightbox(image: string) {
     this.selectedLightboxImage = image;
   }

@@ -2,6 +2,50 @@
   @apply bg-beeses-dark border-t border-white/5 relative overflow-hidden;
 }
 
+/* ── Ana grid: mobil tek sütun, tablet iki aşama, masaüstü yan yana ── */
+.footer-grid {
+  display: grid;
+  gap: 3rem;
+
+  /* Mobile (<640px): her şey tek sütun */
+  grid-template-columns: 1fr;
+
+  /* Tablet (640-1023px): logo üstte tam genişlik, altında linkler */
+  @media (min-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+
+  /* Desktop (1024px+): logo solda, linkler sağda */
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 4fr;
+    gap: 4rem;
+  }
+}
+
+/* Marka sütunu: tablet'te ortalı, masaüstünde sola yaslanmış */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 1024px) {
+    align-items: flex-start;
+  }
+}
+
+/* Links grid: tablet 2x2, masaüstü 4 sütun */
+.footer-links-grid {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: 1fr 1fr; /* her zaman en az 2 sütun */
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* ── Footer alt kolonları ── */
 .footer-col {
   @apply flex flex-col;
 }
@@ -12,10 +56,10 @@
 
 .footer-links {
   @apply flex flex-col gap-5;
-  
+
   li a {
     @apply text-beeses-silver/50 text-[11px] font-bold tracking-[0.2em] uppercase transition-all duration-300 inline-block;
-    
+
     &:hover {
       @apply text-beeses-gold translate-x-2;
     }
@@ -27,9 +71,9 @@
 
   .info-item {
     @apply flex items-center gap-4 text-beeses-silver/50 text-[11px] leading-relaxed;
-    
+
     .icon-wrapper {
-      @apply w-5 flex items-center justify-center text-beeses-gold/40;
+      @apply w-5 flex-shrink-0 flex items-center justify-center text-beeses-gold/40;
       lucide-icon { @apply w-4 h-4; }
     }
 
@@ -38,10 +82,9 @@
 }
 
 .social-icon {
-  // İkonu tam merkezde tutan flex yapısı
-  @apply w-11 h-11 rounded-full border border-white/5 flex items-center justify-center 
+  @apply w-11 h-11 rounded-full border border-white/5 flex items-center justify-center
          text-beeses-silver/30 transition-all duration-500 bg-white/[0.02] p-0;
-  line-height: 0; // İkonun yukarı kayma eğilimini sıfırlar
+  line-height: 0;
 
   &:hover {
     @apply border-beeses-gold text-beeses-gold -translate-y-1 bg-beeses-gold/5;
@@ -49,15 +92,16 @@
 
   lucide-icon {
     @apply w-4 h-4;
-    display: flex; // İkonun kendi iç hizalamasını zorlar
+    display: flex;
     align-items: center;
     justify-content: center;
   }
 }
 
+/* ── Footer alt bar ── */
 .footer-bottom {
-  @apply mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6;
-  
+  @apply mt-20 pt-10 border-t border-white/5 flex flex-col lg:flex-row justify-between items-center gap-4;
+
   p {
     @apply text-beeses-silver/20 text-[10px] font-bold tracking-[0.2em] uppercase;
   }
