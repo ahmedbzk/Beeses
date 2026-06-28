@@ -6,8 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-
-
 // Get JSON post data
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -46,11 +44,13 @@ try {
     $stmt = $pdo->prepare($query);
     $stmt->execute([$username, $hashed_password, $role, $permissions_json]);
 
-        writeAdminLog('admins', 'Ekleme', "Yeni yönetici eklendi: " . $username . " (Rol: " . $role . ")");
+    http_response_code(201);
+    $newId = $pdo->lastInsertId();
+    writeAdminLog('admins', 'Ekleme', "Yeni yönetici eklendi: " . $username . " (Rol: " . $role . ")");
     echo json_encode([
         "success" => true,
         "message" => "Yönetici başarıyla eklendi.",
-        "id" => $pdo->lastInsertId()
+        "id" => $newId
     ]);
 } catch (PDOException $e) {
     http_response_code(500);

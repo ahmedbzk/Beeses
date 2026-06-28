@@ -7,8 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-
-
 // Get JSON post data
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -52,8 +50,9 @@ try {
     ]);
 
     http_response_code(201);
-        writeAdminLog('distributors', 'Ekleme', "Distribütör eklendi: " . $company_name);
-    echo json_encode(array("success" => true, "message" => "Distribütör başarıyla eklendi.", "id" => $pdo->lastInsertId()));
+    $newId = $pdo->lastInsertId();
+    writeAdminLog('distributors', 'Ekleme', "Distribütör eklendi: " . $company_name);
+    echo json_encode(array("success" => true, "message" => "Distribütör başarıyla eklendi.", "id" => $newId));
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(array("success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()));

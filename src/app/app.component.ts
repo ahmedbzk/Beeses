@@ -63,9 +63,16 @@ export class AppComponent implements OnInit {
     ).subscribe((event: any) => {
       this.checkIfDemoPage(event.url);
       this.updateSEO(event.url);
-      
+
       if (isPlatformBrowser(this.platformId)) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Track page view in Google Analytics
+        if ((window as any).gtag) {
+          (window as any).gtag('config', 'G-SG9J89X4Y6', {
+            'page_path': event.urlAfterRedirects || event.url
+          });
+        }
       }
     });
   }
@@ -77,7 +84,7 @@ export class AppComponent implements OnInit {
   private updateSEO(url: string) {
     const path = url.split('?')[0]; // Remove query params
     const lang = this.translate.currentLang || 'tr';
-    
+
     // Skip SEO update for admin pages
     if (path.includes('/admin')) {
       this.titleService.setTitle('Yonetici Paneli | Beeses Audio');
@@ -115,6 +122,9 @@ export class AppComponent implements OnInit {
       } else if (path.includes('/products/innovation')) {
         pageTitle = 'İnovasyon ve Sesin Geleceği | Ar-Ge - Beeses Audio';
         pageDesc = 'JFET giriş katı, Cosmo toroidal trafo ve akıllı termal yönetim gibi Beeses Audio\'nun patentli Ar-Ge ses teknolojilerini keşfedin.';
+      } else if (path.includes('/products/manuals')) {
+        pageTitle = 'Kullanım Kılavuzları ve Teknik Dökümanlar | Beeses Audio';
+        pageDesc = 'Tüm Beeses Audio ürünlerinin güncel kullanım kılavuzlarını ve dökümanlarını buradan inceleyin ve PDF olarak indirin.';
       } else if (path.includes('/products') && !path.includes('/products/')) { // exact list page
         pageTitle = 'Ürünlerimiz | Profesyonel Amplifikatör Çözümleri | Beeses Audio';
         pageDesc = 'Ses deneyimini zirveye taşıyan yüksek mühendislik eseri amfi serilerimizi inceleyin: SQL, OF ve Petek serisi amfiler.';
@@ -164,6 +174,9 @@ export class AppComponent implements OnInit {
       } else if (path.includes('/products/innovation')) {
         pageTitle = 'Innovation & Future of Sound | R&D - Beeses Audio';
         pageDesc = 'Discover patented R&D audio technologies of Beeses Audio, including JFET input stage, Cosmo toroidal transformer, and smart thermal management.';
+      } else if (path.includes('/products/manuals')) {
+        pageTitle = 'User Manuals & Technical Documents | Beeses Audio';
+        pageDesc = 'View and download the latest user manuals and technical documents for all Beeses Audio products as PDF.';
       } else if (path.includes('/products') && !path.includes('/products/')) {
         pageTitle = 'Products | Professional Amplifier Solutions | Beeses Audio';
         pageDesc = 'Review our highly engineered amplifier series that take the audio experience to the peak: SQL, OF and Petek series.';
@@ -195,7 +208,7 @@ export class AppComponent implements OnInit {
       this.titleService.setTitle(pageTitle);
       this.metaService.updateTag({ name: 'description', content: pageDesc });
       this.metaService.updateTag({ name: 'keywords', content: pageKeywords });
-      
+
       // OpenGraph SEO Meta Tags (For Facebook/WhatsApp/Social Media previews)
       this.metaService.updateTag({ property: 'og:title', content: pageTitle });
       this.metaService.updateTag({ property: 'og:description', content: pageDesc });

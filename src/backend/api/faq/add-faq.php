@@ -7,8 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-
-
 $data = json_decode(file_get_contents("php://input"), true);
 if (!$data) {
     $data = $_POST;
@@ -31,8 +29,9 @@ try {
     $stmt->execute([$question, $answer, $question_en, $answer_en]);
 
     http_response_code(201);
-        writeAdminLog('faq', 'Ekleme', "Soru eklendi: " . $question);
-    echo json_encode(array("success" => true, "message" => "Soru başarıyla eklendi.", "id" => $pdo->lastInsertId()));
+    $newId = $pdo->lastInsertId();
+    writeAdminLog('faq', 'Ekleme', "Soru eklendi: " . $question);
+    echo json_encode(array("success" => true, "message" => "Soru başarıyla eklendi.", "id" => $newId));
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(array("success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()));

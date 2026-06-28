@@ -45,8 +45,23 @@ export class ProductsComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.products = response.data;
+          const categoryOrder = ['PETEK SERİSİ', 'OF SERİSİ', 'SQL SERİSİ'];
+          
+          this.products.sort((a, b) => {
+            const idxA = categoryOrder.indexOf(a.category);
+            const idxB = categoryOrder.indexOf(b.category);
+            if (idxA !== idxB) {
+              return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+            }
+            return a.slug.localeCompare(b.slug);
+          });
+
           const catSet = new Set(this.products.map(p => p.category));
-          this.categories = Array.from(catSet);
+          this.categories = Array.from(catSet).sort((a, b) => {
+            const idxA = categoryOrder.indexOf(a);
+            const idxB = categoryOrder.indexOf(b);
+            return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+          });
 
           this.route.queryParams.subscribe(params => {
             this.selectedCategory = params['category'] || null;

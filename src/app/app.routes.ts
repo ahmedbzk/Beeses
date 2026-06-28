@@ -37,6 +37,7 @@ export const routes: Routes = [
   },
   { path: 'products', component: ProductsComponent },
   { path: 'products/innovation', component: InnovationComponent },
+  { path: 'products/manuals', loadComponent: () => import('./pages/products/manuals/manuals.component').then(m => m.ManualsComponent) },
   { path: 'products/:id', component: ProductDetailComponent },
   { path: 'distributors', component: DistributorsComponent },
   {

@@ -27,7 +27,7 @@ export const translations = {
     ALERT_ERROR: 'Hata Oluştu',
 
     CONTACT_CALL_US: 'Doğrudan Arama İçin',
-    CONTACT_FORM_TITLE: 'İletişim Talep Formu',
+    CONTACT_FORM_TITLE: 'Talep Formu',
     CONTACT_FORM_SUBTITLE: 'Sorularınız, iş birliği talepleriniz veya önerileriniz için formu doldurabilirsiniz. Ekibimiz en kısa sürede size dönüş sağlayacaktır.',
     CONTACT_INFO_TITLE: 'İletişim Bilgileri',
     CONTACT_INFO_SUBTITLE: 'Bizimle doğrudan iletişime geçmek için aşağıdaki kanalları kullanabilirsiniz.',
@@ -304,6 +304,10 @@ export const translations = {
     HEADER_OF_SERIES: 'OF SERİSİ',
     HEADER_PETEK_SERIES: 'PETEK SERİSİ',
     HEADER_INNOVATION: 'İNOVASYON & GELECEK',
+    HEADER_MANUALS: 'KULLANIM KILAVUZLARI',
+    PRODUCTS_MANUAL: 'Kullanım Kılavuzu',
+    PRODUCTS_MANUAL_DOWNLOAD: 'Kullanım Kılavuzunu İndir (PDF)',
+    PRODUCTS_NO_MANUAL: 'Bu ürün için henüz bir kullanım kılavuzu bulunmamaktadır.',
 
     // Warranty Additions
     COUNTRY_TAIWAN: 'Tayvan',
@@ -400,7 +404,7 @@ export const translations = {
     ALERT_ERROR: 'An Error Occurred',
 
     CONTACT_CALL_US: 'For Direct Calls',
-    CONTACT_FORM_TITLE: 'Contact Request Form',
+    CONTACT_FORM_TITLE: 'Request Form',
     CONTACT_FORM_SUBTITLE: 'You can fill out the form for your questions, collaboration requests or suggestions. Our team will get back to you as soon as possible.',
     CONTACT_INFO_TITLE: 'Contact Information',
     CONTACT_INFO_SUBTITLE: 'You can use the following channels to contact us directly.',
@@ -677,6 +681,10 @@ export const translations = {
     HEADER_OF_SERIES: 'OF SERIES',
     HEADER_PETEK_SERIES: 'PETEK SERIES',
     HEADER_INNOVATION: 'INNOVATION & FUTURE',
+    HEADER_MANUALS: 'USER MANUALS',
+    PRODUCTS_MANUAL: 'User Manual',
+    PRODUCTS_MANUAL_DOWNLOAD: 'Download User Manual (PDF)',
+    PRODUCTS_NO_MANUAL: 'There is no user manual available for this product yet.',
 
     // Warranty Additions
     COUNTRY_TAIWAN: 'Taiwan',

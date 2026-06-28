@@ -27,6 +27,8 @@ export interface Product {
   images?: string[];
   pdfUrl?: string;
   pdfUrl_en?: string;
+  manualUrl?: string;
+  manualUrl_en?: string;
   specs: ProductSpec[];
   features: ProductFeature[];
   specs_en?: ProductSpec[];
@@ -43,11 +45,11 @@ export class ProductService {
   private apiUrl = `${environment.apiUrl}/products`;
 
   getProducts(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/get-products.php`);
+    return this.http.get<any>(`${this.apiUrl}/get-products.php?t=${new Date().getTime()}`);
   }
 
   getProductBySlug(slug: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/get-product.php?slug=${slug}`);
+    return this.http.get<any>(`${this.apiUrl}/get-product.php?slug=${slug}&t=${new Date().getTime()}`);
   }
 
   addProduct(data: FormData): Observable<any> {

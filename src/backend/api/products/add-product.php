@@ -7,8 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-
-
 $slug = $_POST['slug'] ?? '';
 $name = $_POST['name'] ?? '';
 $category = $_POST['category'] ?? '';
@@ -33,7 +31,7 @@ if (!is_dir($upload_dir)) {
     mkdir($upload_dir, 0777, true);
 }
 
-$allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'png'];
+$allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 $allowed_doc_exts = ['pdf', 'doc', 'docx'];
 
 $image_path = '';
@@ -113,9 +111,43 @@ if (isset($_FILES['pdf_file_en']) && $_FILES['pdf_file_en']['error'] == UPLOAD_E
     }
 }
 
+$manual_path = '';
+
+// Handle Manual PDF Upload
+if (isset($_FILES['manual_file']) && $_FILES['manual_file']['error'] == UPLOAD_ERR_OK) {
+    $file_tmp_path = $_FILES['manual_file']['tmp_name'];
+    $file_name = $_FILES['manual_file']['name'];
+    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+    if (in_array($file_ext, $allowed_doc_exts)) {
+        $unique_file_name = time() . '_manual_' . uniqid() . '.' . $file_ext;
+        $dest_path = $upload_dir . $unique_file_name;
+        if (move_uploaded_file($file_tmp_path, $dest_path)) {
+            $manual_path = 'uploads/products/' . $unique_file_name;
+        }
+    }
+}
+
+$manual_path_en = '';
+
+// Handle Manual PDF EN Upload
+if (isset($_FILES['manual_file_en']) && $_FILES['manual_file_en']['error'] == UPLOAD_ERR_OK) {
+    $file_tmp_path = $_FILES['manual_file_en']['tmp_name'];
+    $file_name = $_FILES['manual_file_en']['name'];
+    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+    if (in_array($file_ext, $allowed_doc_exts)) {
+        $unique_file_name = time() . '_manual_en_' . uniqid() . '.' . $file_ext;
+        $dest_path = $upload_dir . $unique_file_name;
+        if (move_uploaded_file($file_tmp_path, $dest_path)) {
+            $manual_path_en = 'uploads/products/' . $unique_file_name;
+        }
+    }
+}
+
 try {
-    $query = "INSERT INTO products (slug, name, name_en, category, shortDescription, description, shortDescription_en, description_en, image, images, pdfUrl, pdfUrl_en, specs, features, specs_en, features_en) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO products (slug, name, name_en, category, shortDescription, description, shortDescription_en, description_en, image, images, pdfUrl, pdfUrl_en, manualUrl, manualUrl_en, specs, features, specs_en, features_en) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
         $slug,
@@ -130,6 +162,8 @@ try {
         json_encode($gallery_images),
         $pdf_path,
         $pdf_path_en,
+        $manual_path,
+        $manual_path_en,
         $specs,
         $features,
         $specs_en,
@@ -137,8 +171,9 @@ try {
     ]);
 
     http_response_code(201);
-        writeAdminLog('products', 'Ekleme', "Ürün eklendi: " . $name);
-    echo json_encode(["success" => true, "message" => "Urun basariyla eklendi.", "id" => $pdo->lastInsertId()]);
+    $newId = $pdo->lastInsertId();
+    writeAdminLog('products', 'Ekleme', "Ürün eklendi: " . $name);
+    echo json_encode(["success" => true, "message" => "Urun basariyla eklendi.", "id" => $newId]);
 } catch (PDOException $e) {
     // If database insert fails, clean up uploaded files
     if (file_exists('../' . $image_path)) unlink('../' . $image_path);
@@ -149,6 +184,8 @@ try {
     }
     if (!empty($pdf_path) && file_exists('../' . $pdf_path)) unlink('../' . $pdf_path);
     if (!empty($pdf_path_en) && file_exists('../' . $pdf_path_en)) unlink('../' . $pdf_path_en);
+    if (!empty($manual_path) && file_exists('../' . $manual_path)) unlink('../' . $manual_path);
+    if (!empty($manual_path_en) && file_exists('../' . $manual_path_en)) unlink('../' . $manual_path_en);
 
     http_response_code(500);
     echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()]);

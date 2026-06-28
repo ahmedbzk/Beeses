@@ -74,7 +74,7 @@ import { environment } from '../../../../environments/environment';
                 class="transition-colors hover:bg-beeses-gold/5" 
                 [ngClass]="i % 2 === 0 ? 'bg-white' : 'bg-gray-50/40'">
               
-              <td class="px-6 py-4 text-center font-semibold text-beeses-dark">{{ item.id }}</td>
+              <td class="px-6 py-4 text-center font-semibold text-beeses-dark">{{ i + 1 }}</td>
               
               
               <td class="px-6 py-4">
@@ -342,7 +342,7 @@ import { environment } from '../../../../environments/environment';
             <div class="space-y-4 pt-2">
               
               <div *ngIf="activeLang === 'tr'" class="animate-fade-in">
-                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Kullanım Kılavuzu / Ürün Broşürü (Türkçe PDF)</label>
+                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Ürün Broşürü (Türkçe PDF)</label>
                 <div class="relative group border border-gray-200 rounded-xl p-4 bg-white hover:border-beeses-gold/60 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div class="flex items-center gap-3">
                     <div class="p-2.5 bg-red-50 text-red-600 rounded-lg">
@@ -370,9 +370,39 @@ import { environment } from '../../../../environments/environment';
                 </div>
               </div>
 
+              <!-- Kullanım Kılavuzu (TR) -->
+              <div *ngIf="activeLang === 'tr'" class="animate-fade-in mt-4">
+                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Kullanım Kılavuzu (Türkçe PDF)</label>
+                <div class="relative group border border-gray-200 rounded-xl p-4 bg-white hover:border-beeses-gold/60 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-red-50 text-red-600 rounded-lg">
+                      <lucide-icon name="file-text" class="w-5 h-5"></lucide-icon>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-xs font-bold text-gray-700">Türkçe Kullanım Kılavuzu PDF</span>
+                      <span class="text-[10px] text-gray-400" *ngIf="!manualFileName && !(editingItem && editingItem.manualUrl)">Mevcut PDF dosyası bulunmamaktadır (Opsiyonel)</span>
+                      <span class="text-[10px] text-beeses-gold font-bold truncate max-w-[280px]" *ngIf="manualFileName || (editingItem && editingItem.manualUrl)" [title]="manualFileName || getFileNameFromPath(editingItem?.manualUrl)">
+                        {{ manualFileName || getFileNameFromPath(editingItem?.manualUrl) }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <div class="relative overflow-hidden">
+                      <button type="button" class="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 transition-all cursor-pointer">
+                        {{ (manualFileName || (editingItem && editingItem.manualUrl)) ? 'Dosyayı Değiştir' : 'PDF Seç' }}
+                      </button>
+                      <input type="file" (change)="onManualSelected($event)" accept=".pdf" class="absolute inset-0 opacity-0 cursor-pointer">
+                    </div>
+                    <button *ngIf="manualFileName || (editingItem && editingItem.manualUrl)" type="button" (click)="deleteManualPdf()" class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-xl border border-transparent transition-all cursor-pointer" title="PDF Kaldır">
+                      <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               
               <div *ngIf="activeLang === 'en'" class="animate-fade-in">
-                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Kullanım Kılavuzu / Ürün Broşürü (İngilizce PDF)</label>
+                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Ürün Broşürü (İngilizce PDF)</label>
                 <div class="relative group border border-gray-200 rounded-xl p-4 bg-white hover:border-beeses-gold/60 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div class="flex items-center gap-3">
                     <div class="p-2.5 bg-red-50 text-red-600 rounded-lg">
@@ -394,6 +424,36 @@ import { environment } from '../../../../environments/environment';
                       <input type="file" (change)="onPdfSelected_en($event)" accept=".pdf" class="absolute inset-0 opacity-0 cursor-pointer">
                     </div>
                     <button *ngIf="pdfFileName_en || (editingItem && editingItem.pdfUrl_en)" type="button" (click)="deletePdfBrochure_en()" class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-xl border border-transparent transition-all cursor-pointer" title="PDF Remove">
+                      <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kullanım Kılavuzu (EN) -->
+              <div *ngIf="activeLang === 'en'" class="animate-fade-in mt-4">
+                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Kullanım Kılavuzu (İngilizce PDF)</label>
+                <div class="relative group border border-gray-200 rounded-xl p-4 bg-white hover:border-beeses-gold/60 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-red-50 text-red-600 rounded-lg">
+                      <lucide-icon name="file-text" class="w-5 h-5"></lucide-icon>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-xs font-bold text-gray-700">English User Manual PDF</span>
+                      <span class="text-[10px] text-gray-400" *ngIf="!manualFileName_en && !(editingItem && editingItem.manualUrl_en)">No current PDF file (Optional)</span>
+                      <span class="text-[10px] text-beeses-gold font-bold truncate max-w-[280px]" *ngIf="manualFileName_en || (editingItem && editingItem.manualUrl_en)" [title]="manualFileName_en || getFileNameFromPath(editingItem?.manualUrl_en)">
+                        {{ manualFileName_en || getFileNameFromPath(editingItem?.manualUrl_en) }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <div class="relative overflow-hidden">
+                      <button type="button" class="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 transition-all cursor-pointer">
+                        {{ (manualFileName_en || (editingItem && editingItem.manualUrl_en)) ? 'Change File' : 'Select PDF' }}
+                      </button>
+                      <input type="file" (change)="onManualSelected_en($event)" accept=".pdf" class="absolute inset-0 opacity-0 cursor-pointer">
+                    </div>
+                    <button *ngIf="manualFileName_en || (editingItem && editingItem.manualUrl_en)" type="button" (click)="deleteManualPdf_en()" class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-xl border border-transparent transition-all cursor-pointer" title="PDF Remove">
                       <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
                     </button>
                   </div>
@@ -651,6 +711,14 @@ export class ProductsAdminComponent implements OnInit {
   pdfFileName_en = '';
   deletePdfFlag_en = false;
 
+  manualFile: File | null = null;
+  manualFileName = '';
+  deleteManualFlag = false;
+
+  manualFile_en: File | null = null;
+  manualFileName_en = '';
+  deleteManualFlag_en = false;
+
   specsList: ProductSpec[] = [];
   specsList_en: ProductSpec[] = [];
   featuresList: ProductFeature[] = [];
@@ -803,6 +871,42 @@ export class ProductsAdminComponent implements OnInit {
     }
   }
 
+  onManualSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.manualFile = file;
+      this.manualFileName = file.name;
+      this.deleteManualFlag = false;
+    }
+  }
+
+  deleteManualPdf() {
+    this.manualFile = null;
+    this.manualFileName = '';
+    this.deleteManualFlag = true;
+    if (this.editingItem) {
+      this.editingItem.manualUrl = '';
+    }
+  }
+
+  onManualSelected_en(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.manualFile_en = file;
+      this.manualFileName_en = file.name;
+      this.deleteManualFlag_en = false;
+    }
+  }
+
+  deleteManualPdf_en() {
+    this.manualFile_en = null;
+    this.manualFileName_en = '';
+    this.deleteManualFlag_en = true;
+    if (this.editingItem) {
+      this.editingItem.manualUrl_en = '';
+    }
+  }
+
   getFileNameFromPath(path: string | undefined): string {
     if (!path) return '';
     return path.split('/').pop() || '';
@@ -907,6 +1011,12 @@ export class ProductsAdminComponent implements OnInit {
     this.pdfFile_en = null;
     this.pdfFileName_en = '';
     this.deletePdfFlag_en = false;
+    this.manualFile = null;
+    this.manualFileName = '';
+    this.deleteManualFlag = false;
+    this.manualFile_en = null;
+    this.manualFileName_en = '';
+    this.deleteManualFlag_en = false;
     this.customCategory = '';
     
     this.formData = {
@@ -950,6 +1060,12 @@ export class ProductsAdminComponent implements OnInit {
     this.pdfFile_en = null;
     this.pdfFileName_en = '';
     this.deletePdfFlag_en = false;
+    this.manualFile = null;
+    this.manualFileName = '';
+    this.deleteManualFlag = false;
+    this.manualFile_en = null;
+    this.manualFileName_en = '';
+    this.deleteManualFlag_en = false;
     this.customCategory = '';
 
     const isPredefined = ['SQL SERİSİ', 'OF SERİSİ', 'PETEK SERİSİ'].includes(item.category);
@@ -1003,6 +1119,12 @@ export class ProductsAdminComponent implements OnInit {
     this.pdfFile = null;
     this.pdfFileName = '';
     this.deletePdfFlag = false;
+    this.manualFile = null;
+    this.manualFileName = '';
+    this.deleteManualFlag = false;
+    this.manualFile_en = null;
+    this.manualFileName_en = '';
+    this.deleteManualFlag_en = false;
   }
 
   saveProduct() {
@@ -1111,6 +1233,12 @@ export class ProductsAdminComponent implements OnInit {
     if (this.pdfFile_en) {
       payload.append('pdf_file_en', this.pdfFile_en);
     }
+    if (this.manualFile) {
+      payload.append('manual_file', this.manualFile);
+    }
+    if (this.manualFile_en) {
+      payload.append('manual_file_en', this.manualFile_en);
+    }
 
     if (isEdit && this.editingItem) {
       payload.append('id', String(this.editingItem.id));
@@ -1123,6 +1251,12 @@ export class ProductsAdminComponent implements OnInit {
       }
       if (this.deletePdfFlag_en) {
         payload.append('delete_pdf_en', 'true');
+      }
+      if (this.deleteManualFlag) {
+        payload.append('delete_manual', 'true');
+      }
+      if (this.deleteManualFlag_en) {
+        payload.append('delete_manual_en', 'true');
       }
 
       this.productService.updateProduct(payload).subscribe({

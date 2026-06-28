@@ -44,7 +44,6 @@ export class ProductDetailComponent implements OnInit {
             if (response.success) {
               this.product = response.data;
               if (this.product) {
-                // Update SEO Meta Tags dynamically
                 const pName = this.translate.currentLang === 'en' && this.product.name_en ? this.product.name_en : this.product.name;
                 const pDesc = this.translate.currentLang === 'en' && this.product.shortDescription_en ? this.product.shortDescription_en : this.product.shortDescription;
                 
@@ -69,6 +68,14 @@ export class ProductDetailComponent implements OnInit {
                 
                 if (this.product.pdfUrl_en) {
                   this.product.pdfUrl_en = this.getImageUrl(this.product.pdfUrl_en);
+                }
+
+                if (this.product.manualUrl) {
+                  this.product.manualUrl = this.getImageUrl(this.product.manualUrl);
+                }
+                
+                if (this.product.manualUrl_en) {
+                  this.product.manualUrl_en = this.getImageUrl(this.product.manualUrl_en);
                 }
               }
             }
@@ -155,7 +162,10 @@ export class ProductDetailComponent implements OnInit {
     } else {
       rawPdf = this.product.pdfUrl;
     }
-    if (!rawPdf) return undefined;
+    
+    if (!rawPdf || rawPdf.trim() === '' || rawPdf === 'null' || rawPdf === 'undefined') {
+      return undefined;
+    }
     
     let relativePath = rawPdf;
     if (rawPdf.includes('backend/api/')) {
@@ -164,6 +174,39 @@ export class ProductDetailComponent implements OnInit {
       relativePath = rawPdf.split('localhost/beeses_api/')[1];
     } else if (rawPdf.startsWith('http')) {
       return rawPdf;
+    }
+    
+    if (!relativePath || relativePath.trim() === '' || relativePath === 'null' || relativePath === 'undefined') {
+      return undefined;
+    }
+    
+    return `${this.apiUrl}/serve-pdf.php?path=${encodeURIComponent(relativePath)}`;
+  }
+
+  getManualUrl(): string | undefined {
+    if (!this.product) return undefined;
+    let rawPdf: string | undefined;
+    if (this.translate.currentLang === 'en') {
+      rawPdf = this.product.manualUrl_en || this.product.manualUrl;
+    } else {
+      rawPdf = this.product.manualUrl || this.product.manualUrl_en;
+    }
+    
+    if (!rawPdf || rawPdf.trim() === '' || rawPdf === 'null' || rawPdf === 'undefined') {
+      return undefined;
+    }
+    
+    let relativePath = rawPdf;
+    if (rawPdf.includes('backend/api/')) {
+      relativePath = rawPdf.split('backend/api/')[1];
+    } else if (rawPdf.includes('localhost/beeses_api/')) {
+      relativePath = rawPdf.split('localhost/beeses_api/')[1];
+    } else if (rawPdf.startsWith('http')) {
+      return rawPdf;
+    }
+    
+    if (!relativePath || relativePath.trim() === '' || relativePath === 'null' || relativePath === 'undefined') {
+      return undefined;
     }
     
     return `${this.apiUrl}/serve-pdf.php?path=${encodeURIComponent(relativePath)}`;

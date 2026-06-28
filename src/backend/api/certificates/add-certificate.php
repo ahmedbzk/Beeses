@@ -7,8 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-
-
 // Ensure name_en and description_en columns exist in certificates table
 try {
     $columns = $pdo->query("SHOW COLUMNS FROM certificates")->fetchAll(PDO::FETCH_COLUMN);
@@ -41,8 +39,9 @@ try {
     $stmt->execute([$name, $description, $name_en, $description_en, $icon]);
     
     http_response_code(201);
-        writeAdminLog('certificates', 'Ekleme', "Sertifika eklendi: " . $name);
-    echo json_encode(["success" => true, "message" => "Sertifika başarıyla eklendi.", "id" => $pdo->lastInsertId()]);
+    $newId = $pdo->lastInsertId();
+    writeAdminLog('certificates', 'Ekleme', "Sertifika eklendi: " . $name);
+    echo json_encode(["success" => true, "message" => "Sertifika başarıyla eklendi.", "id" => $newId]);
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(["success" => false, "message" => "Hata: " . $e->getMessage()]);

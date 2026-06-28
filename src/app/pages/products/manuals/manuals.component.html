@@ -1,0 +1,120 @@
+<div class="bg-[#eceef1] min-h-screen text-gray-800 font-sans animate-fade-in relative z-0">
+  
+  <!-- Page Hero Section -->
+  <section class="relative w-full h-auto flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
+    <div class="absolute inset-0 w-full h-full">
+      <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
+      <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/95 via-beeses-dark/70 to-[#eceef1]"></div>
+    </div>
+    
+    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 md:pt-40 pb-16 md:pb-20">
+      <span class="text-beeses-gold text-[10px] md:text-sm tracking-[0.5em] font-bold uppercase mb-4 md:mb-6 block drop-shadow-md">
+        {{ translate.currentLang === 'en' ? 'TECHNICAL SUPPORT & DOCUMENTATION' : 'TEKNİK DESTEK & DÖKÜMANTASYON' }}
+      </span>
+      <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl break-words">
+        {{ 'HEADER_MANUALS' | translate }}
+      </h1>
+      <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
+      <p class="text-base md:text-xl text-beeses-dark font-medium leading-relaxed max-w-2xl mx-auto drop-shadow-lg">
+        {{ translate.currentLang === 'en' ? 'Access the technical details, setup guides, and user manuals of Beeses Audio products.' : 'Beeses Audio ürünlerinin teknik detaylarına, kurulum kılavuzlarına ve kullanım yönergelerine buradan ulaşabilirsiniz.' }}
+      </p>
+    </div>
+  </section>
+
+  <!-- Content Grid Section -->
+  <section class="container mx-auto px-4 md:px-8 lg:px-12 max-w-7xl py-12 md:py-20 relative z-10">
+    
+    <!-- Search Bar Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12 border-b border-gray-200 pb-8">
+      <div class="text-sm text-gray-500 font-medium">
+        {{ translate.currentLang === 'en' ? 'Filter products by name or category:' : 'Ürünleri isme veya kategoriye göre filtreleyin:' }}
+      </div>
+      <div class="relative w-full sm:w-80">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <lucide-icon name="search" class="w-4 h-4 text-gray-400"></lucide-icon>
+        </div>
+        <input type="text" [(ngModel)]="searchQuery" 
+          class="w-full bg-white border border-gray-200 text-gray-900 text-sm rounded-full pl-10 pr-4 py-2.5 outline-none focus:border-beeses-gold focus:ring-1 focus:ring-beeses-gold transition-all shadow-sm"
+          [placeholder]="'PRODUCTS_SEARCH_PLACEHOLDER' | translate">
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="min-h-[200px] flex items-center justify-center">
+      <div class="flex flex-col items-center gap-3">
+        <div class="w-12 h-12 border-4 border-beeses-gold border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider animate-pulse">{{ 'PRODUCTS_LOADING' | translate }}</p>
+      </div>
+    </div>
+
+    <!-- Products Manual List (Card-based Layout) -->
+    <div *ngIf="!isLoading && filteredProducts.length > 0" class="space-y-6">
+      
+      <div *ngFor="let item of filteredProducts" 
+           class="bg-white rounded-3xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-gray-100 hover:shadow-[0_20px_40px_rgba(181,129,49,0.06)] hover:border-beeses-gold/30 transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between gap-6 group">
+        
+        <!-- Left: Product Image & Info -->
+        <div class="flex flex-col sm:flex-row items-center gap-6 flex-1 min-w-0">
+          
+          <!-- Image Wrapper (Larger size) -->
+          <div class="w-full sm:w-44 h-32 bg-[#eceef1] rounded-2xl flex items-center justify-center shrink-0 p-3 border border-gray-100/50 group-hover:scale-105 transition-transform duration-300">
+            <img [src]="getImageUrl(item.image)" [alt]="item.name" class="max-w-full max-h-full object-contain filter drop-shadow-sm">
+          </div>
+          
+          <!-- Info (Standardized text sizes) -->
+          <div class="flex flex-col text-center sm:text-left min-w-0 space-y-2">
+            <span class="text-[10px] font-bold text-beeses-gold tracking-[0.2em] uppercase">
+              {{ getCategoryTranslationKey(item.category) | translate }}
+            </span>
+            <h3 class="text-beeses-dark font-bold text-lg tracking-wide group-hover:text-beeses-gold transition-colors">
+              {{ translate.currentLang === 'en' && item.name_en ? item.name_en : item.name }}
+            </h3>
+            <p class="text-gray-500 text-sm font-normal leading-relaxed line-clamp-2">
+              {{ translate.currentLang === 'en' && item.shortDescription_en ? item.shortDescription_en : item.shortDescription }}
+            </p>
+          </div>
+          
+        </div>
+        
+        <!-- Right: Manual Status / Action Buttons -->
+        <div class="flex flex-row md:flex-col items-center justify-between md:justify-center gap-4 shrink-0 border-t border-gray-100 md:border-t-0 pt-4 md:pt-0 w-full md:w-auto">
+          
+          <!-- Manual Status / Download Link -->
+          <div>
+            <a *ngIf="getManualUrl(item)" [href]="getManualUrl(item)" target="_blank"
+               class="inline-flex items-center gap-2 px-6 py-3 bg-beeses-dark hover:bg-beeses-gold text-white hover:text-black rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 shadow-md">
+              <lucide-icon name="file-down" class="w-4 h-4"></lucide-icon> {{ 'DOWNLOAD' | translate }}
+            </a>
+            <span *ngIf="!getManualUrl(item)" class="inline-flex px-4 py-2 bg-gray-100/80 text-gray-400 rounded-full text-xs font-bold italic uppercase tracking-wider">
+              {{ translate.currentLang === 'en' ? 'Not Available' : 'Mevcut Değil' }}
+            </span>
+          </div>
+          
+          <!-- Detail Link -->
+          <a [routerLink]="['/products', item.slug]" 
+             class="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase text-gray-500 hover:text-beeses-dark group-hover:text-beeses-gold transition-colors">
+            {{ 'PRODUCTS_MORE_DETAILS' | translate }} 
+            <lucide-icon name="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></lucide-icon>
+          </a>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+
+    <!-- Empty Result -->
+    <div *ngIf="!isLoading && filteredProducts.length === 0" class="min-h-[250px] flex flex-col items-center justify-center text-center bg-white rounded-3xl p-8 border border-gray-200">
+      <div class="w-16 h-16 bg-[#eceef1] rounded-full flex items-center justify-center text-beeses-gold mb-4">
+        <lucide-icon name="book-open" class="w-8 h-8"></lucide-icon>
+      </div>
+      <h3 class="text-beeses-dark font-bold text-xl mb-2">{{ 'PRODUCTS_SEARCH_EMPTY_TITLE' | translate }}</h3>
+      <p class="text-gray-500 text-sm max-w-sm leading-relaxed mb-6">{{ 'PRODUCTS_SEARCH_EMPTY_DESC' | translate }}</p>
+      <button (click)="searchQuery = ''" class="px-6 py-2.5 bg-beeses-gold text-black rounded-full text-xs font-bold tracking-widest uppercase hover:bg-beeses-dark hover:text-white transition-all shadow-md">
+        {{ 'PRODUCTS_CLEAR_FILTERS' | translate }}
+      </button>
+    </div>
+
+  </section>
+
+</div>

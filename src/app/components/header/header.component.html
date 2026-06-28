@@ -55,6 +55,7 @@
             <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }">{{ 'HEADER_PETEK_SERIES' | translate }}</a>
             <div class="h-px bg-gray-100 my-2"></div>
             <a routerLink="/products/innovation" class="text-beeses-gold font-black">{{ 'HEADER_INNOVATION' | translate }}</a>
+            <a routerLink="/products/manuals" class="text-beeses-gold font-black">{{ 'HEADER_MANUALS' | translate }}</a>
           </div>
         </div>
       </nav>
@@ -189,6 +190,7 @@
             <a routerLink="/products" [queryParams]="{ category: 'OF SERİSİ' }" (click)="toggleSideMenu()">{{ 'HEADER_OF_SERIES' | translate }}</a>
             <a routerLink="/products" [queryParams]="{ category: 'PETEK SERİSİ' }" (click)="toggleSideMenu()">{{ 'HEADER_PETEK_SERIES' | translate }}</a>
             <a routerLink="/products/innovation" (click)="toggleSideMenu()" class="font-black text-white">{{ 'HEADER_INNOVATION' | translate }}</a>
+            <a routerLink="/products/manuals" (click)="toggleSideMenu()" class="font-black text-white">{{ 'HEADER_MANUALS' | translate }}</a>
           </div>
         </div>
 

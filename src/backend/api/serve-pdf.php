@@ -37,6 +37,6 @@ $title = "Beeses Audio";
     </style>
 </head>
 <body>
-    <iframe src="/backend/api/<?php echo htmlspecialchars($path); ?>"></iframe>
+    <iframe src="<?php echo htmlspecialchars($path); ?>"></iframe>
 </body>
 </html>

@@ -1,11 +1,14 @@
 <?php
 require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
 
 
 try {
-    $stmt = $pdo->query("SELECT * FROM products ORDER BY id ASC");
+    $stmt = $pdo->query("SELECT * FROM products ORDER BY CASE WHEN category = 'PETEK SERİSİ' THEN 1 WHEN category = 'OF SERİSİ' THEN 2 WHEN category = 'SQL SERİSİ' THEN 3 ELSE 4 END ASC, slug ASC");
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Decode JSON fields
