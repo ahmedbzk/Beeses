@@ -196,8 +196,8 @@
               <h4 class="text-beeses-dark font-bold text-xl tracking-wide mb-2">{{ 'PRODUCTS_MANUAL' | translate }} (PDF)</h4>
               <p class="text-gray-500 text-sm font-light leading-relaxed">{{ 'PRODUCTS_MANUAL_DOWNLOAD' | translate }}</p>
             </div>
-            <a [href]="getManualUrl()" target="_blank" class="px-6 py-3 bg-beeses-dark text-white hover:bg-beeses-gold hover:text-black font-bold text-[11px] tracking-[0.2em] uppercase transition-all duration-300 shrink-0 rounded-full">
-              {{ 'DOWNLOAD' | translate }}
+            <a [href]="getManualUrl()" target="_blank" class="px-6 py-3 bg-beeses-dark text-white hover:bg-beeses-gold hover:text-black font-bold text-[11px] tracking-[0.2em] uppercase transition-all duration-300 shrink-0 rounded-full flex items-center gap-2 cursor-pointer border-none outline-none">
+              <lucide-icon name="eye" class="w-4 h-4"></lucide-icon> {{ translate.currentLang === 'en' ? 'VIEW PDF' : 'GÖRÜNTÜLE' }}
             </a>
           </div>
           <div *ngIf="!getManualUrl()" class="text-gray-500 text-sm italic font-light text-center">
@@ -218,8 +218,8 @@
               <h4 class="text-beeses-dark font-bold text-xl tracking-wide mb-2">{{ 'PRODUCTS_BROCHURE' | translate }} (PDF)</h4>
               <p class="text-gray-500 text-sm font-light leading-relaxed">{{ 'PRODUCTS_BROCHURE_DESC' | translate }}</p>
             </div>
-            <a [href]="getPdfUrl()" target="_blank" class="px-6 py-3 bg-beeses-dark text-white hover:bg-beeses-gold hover:text-black font-bold text-[11px] tracking-[0.2em] uppercase transition-all duration-300 shrink-0 rounded-full">
-              {{ 'DOWNLOAD' | translate }}
+            <a [href]="getPdfUrl()" target="_blank" class="px-6 py-3 bg-beeses-dark text-white hover:bg-beeses-gold hover:text-black font-bold text-[11px] tracking-[0.2em] uppercase transition-all duration-300 shrink-0 rounded-full flex items-center gap-2 cursor-pointer border-none outline-none">
+              <lucide-icon name="eye" class="w-4 h-4"></lucide-icon> {{ translate.currentLang === 'en' ? 'VIEW PDF' : 'GÖRÜNTÜLE' }}
             </a>
           </div>
           <div *ngIf="!getPdfUrl()" class="text-gray-500 text-sm italic font-light text-center">

@@ -36,17 +36,17 @@
 /* --- Responsive Header Navigation --- */
 .header-nav {
   gap: 1rem; /* gap-4 on narrow desktop */
-  font-size: 10.5px !important;
+  font-size: 11.5px !important;
   transition: all 0.5s ease-in-out;
 
   @media (min-width: 1200px) {
     gap: 1.5rem; /* gap-6 */
-    font-size: 11.5px !important;
+    font-size: 12.5px !important;
   }
 
   @media (min-width: 1400px) {
     gap: 2.5rem; /* gap-10 */
-    font-size: 12px !important;
+    font-size: 13px !important;
   }
 }
 
@@ -71,7 +71,7 @@
   a {
     display: block;
     padding: 12px 20px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
     color: #555555;
     transition: all 0.3s ease;
@@ -315,7 +315,7 @@
 .cta-button {
   background-color: #000000;
   color: #ffffff;
-  font-size: 8px; /* default narrow size */
+  font-size: 9px; /* default narrow size */
   font-weight: 700;
   padding: 0.5rem 0.75rem;
   letter-spacing: 0.1em;
@@ -324,14 +324,14 @@
   text-transform: uppercase;
   
   @media (min-width: 1200px) {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 800;
     padding: 0.65rem 1.1rem;
     letter-spacing: 0.125em;
   }
 
   @media (min-width: 1400px) {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 900;
     padding: 0.75rem 1.5rem;
     letter-spacing: 0.15em;

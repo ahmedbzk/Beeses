@@ -81,9 +81,8 @@
           
           <!-- Manual Status / Download Link -->
           <div>
-            <a *ngIf="getManualUrl(item)" [href]="getManualUrl(item)" target="_blank"
-               class="inline-flex items-center gap-2 px-6 py-3 bg-beeses-dark hover:bg-beeses-gold text-white hover:text-black rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 shadow-md">
-              <lucide-icon name="file-down" class="w-4 h-4"></lucide-icon> {{ 'DOWNLOAD' | translate }}
+            <a *ngIf="getManualUrl(item)" [href]="getManualUrl(item)" target="_blank" class="px-4 py-2 sm:px-6 sm:py-3 bg-beeses-dark text-white hover:bg-beeses-gold hover:text-black font-bold text-[10px] sm:text-[11px] tracking-[0.2em] uppercase transition-all duration-300 rounded-full flex items-center gap-2 cursor-pointer border-none outline-none shadow-md hover:shadow-lg whitespace-nowrap">
+              <lucide-icon name="eye" class="w-4 h-4"></lucide-icon> {{ translate.currentLang === 'en' ? 'VIEW PDF' : 'GÖRÜNTÜLE' }}
             </a>
             <span *ngIf="!getManualUrl(item)" class="inline-flex px-4 py-2 bg-gray-100/80 text-gray-400 rounded-full text-xs font-bold italic uppercase tracking-wider">
               {{ translate.currentLang === 'en' ? 'Not Available' : 'Mevcut Değil' }}
@@ -117,4 +116,4 @@
 
   </section>
 
-</div>
+
