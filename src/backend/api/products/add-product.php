@@ -34,10 +34,29 @@ if (!is_dir($upload_dir)) {
 $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 $allowed_doc_exts = ['pdf', 'doc', 'docx'];
 
+// Upload error code => mesaj
+function getUploadErrorMessage($code) {
+    $errors = [
+        UPLOAD_ERR_INI_SIZE   => 'Dosya boyutu sunucu limitini aşıyor',
+        UPLOAD_ERR_FORM_SIZE  => 'Dosya boyutu form limitini aşıyor',
+        UPLOAD_ERR_PARTIAL    => 'Dosya kısmen yüklendi, tekrar deneyin',
+        UPLOAD_ERR_NO_TMP_DIR => 'Geçici klasör bulunamadı',
+        UPLOAD_ERR_CANT_WRITE => 'Disk yazma hatası',
+        UPLOAD_ERR_EXTENSION  => 'Bir PHP eklentisi yüklemeyi durdurdu',
+    ];
+    return $errors[$code] ?? 'Bilinmeyen upload hatası (kod: ' . $code . ')';
+}
+
 $image_path = '';
 
 // Handle Primary Image Upload
-if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == UPLOAD_ERR_OK) {
+if (isset($_FILES['image_file'])) {
+    if ($_FILES['image_file']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Ana görsel yüklenemedi: " . getUploadErrorMessage($_FILES['image_file']['error'])]);
+        exit;
+    }
+    
     $file_tmp_path = $_FILES['image_file']['tmp_name'];
     $file_name = $_FILES['image_file']['name'];
     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -47,13 +66,21 @@ if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == UPLOAD_ERR
         $dest_path = $upload_dir . $unique_file_name;
         if (move_uploaded_file($file_tmp_path, $dest_path)) {
             $image_path = 'uploads/products/' . $unique_file_name;
+        } else {
+            http_response_code(500);
+            echo json_encode(["success" => false, "message" => "Ana görsel sunucuya taşınamadı."]);
+            exit;
         }
+    } else {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Geçersiz resim formatı."]);
+        exit;
     }
 }
 
 if (empty($image_path)) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Ana urun gorseli yuklenmelidir."]);
+    echo json_encode(["success" => false, "message" => "Ana ürün görseli yüklenmelidir."]);
     exit;
 }
 
@@ -80,7 +107,13 @@ for ($i = 0; $i < 4; $i++) {
 $pdf_path = '';
 
 // Handle PDF Upload
-if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] == UPLOAD_ERR_OK) {
+if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+    if ($_FILES['pdf_file']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Türkçe PDF yüklenemedi: " . getUploadErrorMessage($_FILES['pdf_file']['error'])]);
+        exit;
+    }
+
     $file_tmp_path = $_FILES['pdf_file']['tmp_name'];
     $file_name = $_FILES['pdf_file']['name'];
     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -90,14 +123,28 @@ if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] == UPLOAD_ERR_OK)
         $dest_path = $upload_dir . $unique_file_name;
         if (move_uploaded_file($file_tmp_path, $dest_path)) {
             $pdf_path = 'uploads/products/' . $unique_file_name;
+        } else {
+            http_response_code(500);
+            echo json_encode(["success" => false, "message" => "Türkçe PDF sunucuya taşınamadı."]);
+            exit;
         }
+    } else {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Türkçe PDF için geçersiz dosya türü."]);
+        exit;
     }
 }
 
 $pdf_path_en = '';
 
 // Handle PDF EN Upload
-if (isset($_FILES['pdf_file_en']) && $_FILES['pdf_file_en']['error'] == UPLOAD_ERR_OK) {
+if (isset($_FILES['pdf_file_en']) && $_FILES['pdf_file_en']['error'] !== UPLOAD_ERR_NO_FILE) {
+    if ($_FILES['pdf_file_en']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "İngilizce PDF yüklenemedi: " . getUploadErrorMessage($_FILES['pdf_file_en']['error'])]);
+        exit;
+    }
+
     $file_tmp_path = $_FILES['pdf_file_en']['tmp_name'];
     $file_name = $_FILES['pdf_file_en']['name'];
     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -107,14 +154,28 @@ if (isset($_FILES['pdf_file_en']) && $_FILES['pdf_file_en']['error'] == UPLOAD_E
         $dest_path = $upload_dir . $unique_file_name;
         if (move_uploaded_file($file_tmp_path, $dest_path)) {
             $pdf_path_en = 'uploads/products/' . $unique_file_name;
+        } else {
+            http_response_code(500);
+            echo json_encode(["success" => false, "message" => "İngilizce PDF sunucuya taşınamadı."]);
+            exit;
         }
+    } else {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "İngilizce PDF için geçersiz dosya türü."]);
+        exit;
     }
 }
 
 $manual_path = '';
 
 // Handle Manual PDF Upload
-if (isset($_FILES['manual_file']) && $_FILES['manual_file']['error'] == UPLOAD_ERR_OK) {
+if (isset($_FILES['manual_file']) && $_FILES['manual_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+    if ($_FILES['manual_file']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Türkçe Kullanım Kılavuzu yüklenemedi: " . getUploadErrorMessage($_FILES['manual_file']['error'])]);
+        exit;
+    }
+
     $file_tmp_path = $_FILES['manual_file']['tmp_name'];
     $file_name = $_FILES['manual_file']['name'];
     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -124,14 +185,28 @@ if (isset($_FILES['manual_file']) && $_FILES['manual_file']['error'] == UPLOAD_E
         $dest_path = $upload_dir . $unique_file_name;
         if (move_uploaded_file($file_tmp_path, $dest_path)) {
             $manual_path = 'uploads/products/' . $unique_file_name;
+        } else {
+            http_response_code(500);
+            echo json_encode(["success" => false, "message" => "Türkçe Kullanım Kılavuzu sunucuya taşınamadı."]);
+            exit;
         }
+    } else {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Türkçe Kullanım Kılavuzu için geçersiz dosya türü."]);
+        exit;
     }
 }
 
 $manual_path_en = '';
 
 // Handle Manual PDF EN Upload
-if (isset($_FILES['manual_file_en']) && $_FILES['manual_file_en']['error'] == UPLOAD_ERR_OK) {
+if (isset($_FILES['manual_file_en']) && $_FILES['manual_file_en']['error'] !== UPLOAD_ERR_NO_FILE) {
+    if ($_FILES['manual_file_en']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "İngilizce Kullanım Kılavuzu yüklenemedi: " . getUploadErrorMessage($_FILES['manual_file_en']['error'])]);
+        exit;
+    }
+
     $file_tmp_path = $_FILES['manual_file_en']['tmp_name'];
     $file_name = $_FILES['manual_file_en']['name'];
     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -141,7 +216,15 @@ if (isset($_FILES['manual_file_en']) && $_FILES['manual_file_en']['error'] == UP
         $dest_path = $upload_dir . $unique_file_name;
         if (move_uploaded_file($file_tmp_path, $dest_path)) {
             $manual_path_en = 'uploads/products/' . $unique_file_name;
+        } else {
+            http_response_code(500);
+            echo json_encode(["success" => false, "message" => "İngilizce Kullanım Kılavuzu sunucuya taşınamadı."]);
+            exit;
         }
+    } else {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "İngilizce Kullanım Kılavuzu için geçersiz dosya türü."]);
+        exit;
     }
 }
 

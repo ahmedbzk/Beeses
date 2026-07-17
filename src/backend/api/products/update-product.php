@@ -153,7 +153,13 @@ try {
     }
 
     // PDF yükleme (TR)
-    if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] == UPLOAD_ERR_OK) {
+    if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($_FILES['pdf_file']['error'] !== UPLOAD_ERR_OK) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Türkçe PDF yüklenemedi: " . getUploadErrorMessage($_FILES['pdf_file']['error'])]);
+            exit;
+        }
+
         $file_tmp_path = $_FILES['pdf_file']['tmp_name'];
         $file_name = $_FILES['pdf_file']['name'];
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -166,7 +172,15 @@ try {
                     unlink('../' . $current['pdfUrl']);
                 }
                 $pdf_path = 'uploads/products/' . $unique_file_name;
+            } else {
+                http_response_code(500);
+                echo json_encode(["success" => false, "message" => "Türkçe PDF sunucuya taşınamadı."]);
+                exit;
             }
+        } else {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Türkçe PDF için geçersiz dosya türü."]);
+            exit;
         }
     } else if (isset($_POST['delete_pdf']) && $_POST['delete_pdf'] == 'true') {
         if (!empty($current['pdfUrl']) && strpos($current['pdfUrl'], 'uploads/') === 0 && file_exists('../' . $current['pdfUrl'])) {
@@ -177,7 +191,13 @@ try {
 
     // PDF yükleme (EN)
     $pdf_path_en = $current['pdfUrl_en'] ?? '';
-    if (isset($_FILES['pdf_file_en']) && $_FILES['pdf_file_en']['error'] == UPLOAD_ERR_OK) {
+    if (isset($_FILES['pdf_file_en']) && $_FILES['pdf_file_en']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($_FILES['pdf_file_en']['error'] !== UPLOAD_ERR_OK) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "İngilizce PDF yüklenemedi: " . getUploadErrorMessage($_FILES['pdf_file_en']['error'])]);
+            exit;
+        }
+
         $file_tmp_path = $_FILES['pdf_file_en']['tmp_name'];
         $file_name = $_FILES['pdf_file_en']['name'];
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -190,7 +210,15 @@ try {
                     unlink('../' . $current['pdfUrl_en']);
                 }
                 $pdf_path_en = 'uploads/products/' . $unique_file_name;
+            } else {
+                http_response_code(500);
+                echo json_encode(["success" => false, "message" => "İngilizce PDF sunucuya taşınamadı."]);
+                exit;
             }
+        } else {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "İngilizce PDF için geçersiz dosya türü."]);
+            exit;
         }
     } else if (isset($_POST['delete_pdf_en']) && $_POST['delete_pdf_en'] == 'true') {
         if (!empty($current['pdfUrl_en']) && strpos($current['pdfUrl_en'], 'uploads/') === 0 && file_exists('../' . $current['pdfUrl_en'])) {
@@ -201,7 +229,13 @@ try {
 
     // Kullanım Kılavuzu (TR)
     $manual_path = $current['manualUrl'] ?? '';
-    if (isset($_FILES['manual_file']) && $_FILES['manual_file']['error'] == UPLOAD_ERR_OK) {
+    if (isset($_FILES['manual_file']) && $_FILES['manual_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($_FILES['manual_file']['error'] !== UPLOAD_ERR_OK) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Türkçe Kullanım Kılavuzu yüklenemedi: " . getUploadErrorMessage($_FILES['manual_file']['error'])]);
+            exit;
+        }
+
         $file_tmp_path = $_FILES['manual_file']['tmp_name'];
         $file_name = $_FILES['manual_file']['name'];
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -214,7 +248,15 @@ try {
                     unlink('../' . $current['manualUrl']);
                 }
                 $manual_path = 'uploads/products/' . $unique_file_name;
+            } else {
+                http_response_code(500);
+                echo json_encode(["success" => false, "message" => "Türkçe Kullanım Kılavuzu sunucuya taşınamadı."]);
+                exit;
             }
+        } else {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Türkçe Kullanım Kılavuzu için geçersiz dosya türü."]);
+            exit;
         }
     } else if (isset($_POST['delete_manual']) && $_POST['delete_manual'] == 'true') {
         if (!empty($current['manualUrl']) && strpos($current['manualUrl'], 'uploads/') === 0 && file_exists('../' . $current['manualUrl'])) {
@@ -225,7 +267,13 @@ try {
 
     // Kullanım Kılavuzu (EN)
     $manual_path_en = $current['manualUrl_en'] ?? '';
-    if (isset($_FILES['manual_file_en']) && $_FILES['manual_file_en']['error'] == UPLOAD_ERR_OK) {
+    if (isset($_FILES['manual_file_en']) && $_FILES['manual_file_en']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($_FILES['manual_file_en']['error'] !== UPLOAD_ERR_OK) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "İngilizce Kullanım Kılavuzu yüklenemedi: " . getUploadErrorMessage($_FILES['manual_file_en']['error'])]);
+            exit;
+        }
+
         $file_tmp_path = $_FILES['manual_file_en']['tmp_name'];
         $file_name = $_FILES['manual_file_en']['name'];
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -238,7 +286,15 @@ try {
                     unlink('../' . $current['manualUrl_en']);
                 }
                 $manual_path_en = 'uploads/products/' . $unique_file_name;
+            } else {
+                http_response_code(500);
+                echo json_encode(["success" => false, "message" => "İngilizce Kullanım Kılavuzu sunucuya taşınamadı."]);
+                exit;
             }
+        } else {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "İngilizce Kullanım Kılavuzu için geçersiz dosya türü."]);
+            exit;
         }
     } else if (isset($_POST['delete_manual_en']) && $_POST['delete_manual_en'] == 'true') {
         if (!empty($current['manualUrl_en']) && strpos($current['manualUrl_en'], 'uploads/') === 0 && file_exists('../' . $current['manualUrl_en'])) {

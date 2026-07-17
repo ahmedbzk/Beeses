@@ -11,7 +11,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS
 $isLocal = !isset($_SERVER['HTTP_HOST']) || (strpos($_SERVER['HTTP_HOST'], 'beesesaudio.com') === false);
 
 if ($isLocal) {
-    $host = 'localhost'; // Lokal XAMPP sunucusu
+    $host = '127.0.0.1'; // Lokal XAMPP sunucusu
     $db   = 'beeses_db'; // Yerel veritabanı adı
     $user = 'root';      // XAMPP varsayılan kullanıcı adı
     $pass = '';          // XAMPP varsayılan şifresi (boş)

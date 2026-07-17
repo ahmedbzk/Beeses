@@ -27,6 +27,8 @@ export class ManualsComponent implements OnInit {
     this.loadProducts();
   }
 
+  filteredProducts: Product[] = [];
+
   loadProducts() {
     this.isLoading = true;
     this.productService.getProducts().subscribe({
@@ -42,6 +44,7 @@ export class ManualsComponent implements OnInit {
             }
             return a.slug.localeCompare(b.slug);
           });
+          this.applyFilter();
         }
         this.isLoading = false;
       },
@@ -51,14 +54,21 @@ export class ManualsComponent implements OnInit {
     });
   }
 
-  get filteredProducts(): Product[] {
-    if (!this.searchQuery.trim()) return this.products;
+  applyFilter() {
+    if (!this.searchQuery.trim()) {
+      this.filteredProducts = this.products;
+      return;
+    }
     const q = this.searchQuery.toLowerCase().trim();
-    return this.products.filter(p => 
+    this.filteredProducts = this.products.filter(p => 
       p.name.toLowerCase().includes(q) || 
       (p.name_en && p.name_en.toLowerCase().includes(q)) ||
       p.category.toLowerCase().includes(q)
     );
+  }
+
+  onSearchChange() {
+    this.applyFilter();
   }
 
   getImageUrl(path: string | undefined): string {
