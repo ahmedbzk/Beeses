@@ -189,44 +189,6 @@ try {
         $pdf_path = '';
     }
 
-    // PDF yükleme (EN)
-    $pdf_path_en = $current['pdfUrl_en'] ?? '';
-    if (isset($_FILES['pdf_file_en']) && $_FILES['pdf_file_en']['error'] !== UPLOAD_ERR_NO_FILE) {
-        if ($_FILES['pdf_file_en']['error'] !== UPLOAD_ERR_OK) {
-            http_response_code(400);
-            echo json_encode(["success" => false, "message" => "İngilizce PDF yüklenemedi: " . getUploadErrorMessage($_FILES['pdf_file_en']['error'])]);
-            exit;
-        }
-
-        $file_tmp_path = $_FILES['pdf_file_en']['tmp_name'];
-        $file_name = $_FILES['pdf_file_en']['name'];
-        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-
-        if (in_array($file_ext, $allowed_doc_exts)) {
-            $unique_file_name = time() . '_doc_en_' . uniqid() . '.' . $file_ext;
-            $dest_path = $upload_dir . $unique_file_name;
-            if (move_uploaded_file($file_tmp_path, $dest_path)) {
-                if (!empty($current['pdfUrl_en']) && strpos($current['pdfUrl_en'], 'uploads/') === 0 && file_exists('../' . $current['pdfUrl_en'])) {
-                    unlink('../' . $current['pdfUrl_en']);
-                }
-                $pdf_path_en = 'uploads/products/' . $unique_file_name;
-            } else {
-                http_response_code(500);
-                echo json_encode(["success" => false, "message" => "İngilizce PDF sunucuya taşınamadı."]);
-                exit;
-            }
-        } else {
-            http_response_code(400);
-            echo json_encode(["success" => false, "message" => "İngilizce PDF için geçersiz dosya türü."]);
-            exit;
-        }
-    } else if (isset($_POST['delete_pdf_en']) && $_POST['delete_pdf_en'] == 'true') {
-        if (!empty($current['pdfUrl_en']) && strpos($current['pdfUrl_en'], 'uploads/') === 0 && file_exists('../' . $current['pdfUrl_en'])) {
-            unlink('../' . $current['pdfUrl_en']);
-        }
-        $pdf_path_en = '';
-    }
-
     // Kullanım Kılavuzu (TR)
     $manual_path = $current['manualUrl'] ?? '';
     if (isset($_FILES['manual_file']) && $_FILES['manual_file']['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -265,47 +227,9 @@ try {
         $manual_path = '';
     }
 
-    // Kullanım Kılavuzu (EN)
-    $manual_path_en = $current['manualUrl_en'] ?? '';
-    if (isset($_FILES['manual_file_en']) && $_FILES['manual_file_en']['error'] !== UPLOAD_ERR_NO_FILE) {
-        if ($_FILES['manual_file_en']['error'] !== UPLOAD_ERR_OK) {
-            http_response_code(400);
-            echo json_encode(["success" => false, "message" => "İngilizce Kullanım Kılavuzu yüklenemedi: " . getUploadErrorMessage($_FILES['manual_file_en']['error'])]);
-            exit;
-        }
-
-        $file_tmp_path = $_FILES['manual_file_en']['tmp_name'];
-        $file_name = $_FILES['manual_file_en']['name'];
-        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-
-        if (in_array($file_ext, $allowed_doc_exts)) {
-            $unique_file_name = time() . '_manual_en_' . uniqid() . '.' . $file_ext;
-            $dest_path = $upload_dir . $unique_file_name;
-            if (move_uploaded_file($file_tmp_path, $dest_path)) {
-                if (!empty($current['manualUrl_en']) && strpos($current['manualUrl_en'], 'uploads/') === 0 && file_exists('../' . $current['manualUrl_en'])) {
-                    unlink('../' . $current['manualUrl_en']);
-                }
-                $manual_path_en = 'uploads/products/' . $unique_file_name;
-            } else {
-                http_response_code(500);
-                echo json_encode(["success" => false, "message" => "İngilizce Kullanım Kılavuzu sunucuya taşınamadı."]);
-                exit;
-            }
-        } else {
-            http_response_code(400);
-            echo json_encode(["success" => false, "message" => "İngilizce Kullanım Kılavuzu için geçersiz dosya türü."]);
-            exit;
-        }
-    } else if (isset($_POST['delete_manual_en']) && $_POST['delete_manual_en'] == 'true') {
-        if (!empty($current['manualUrl_en']) && strpos($current['manualUrl_en'], 'uploads/') === 0 && file_exists('../' . $current['manualUrl_en'])) {
-            unlink('../' . $current['manualUrl_en']);
-        }
-        $manual_path_en = '';
-    }
-
     // Veritabanını güncelle
     $query = "UPDATE products 
-              SET slug = ?, name = ?, name_en = ?, category = ?, shortDescription = ?, description = ?, shortDescription_en = ?, description_en = ?, image = ?, images = ?, pdfUrl = ?, pdfUrl_en = ?, manualUrl = ?, manualUrl_en = ?, specs = ?, features = ?, specs_en = ?, features_en = ? 
+              SET slug = ?, name = ?, name_en = ?, category = ?, shortDescription = ?, description = ?, shortDescription_en = ?, description_en = ?, image = ?, images = ?, pdfUrl = ?, manualUrl = ?, specs = ?, features = ?, specs_en = ?, features_en = ? 
               WHERE id = ?";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
@@ -320,9 +244,7 @@ try {
         $image_path,
         json_encode($new_gallery),
         $pdf_path,
-        $pdf_path_en,
         $manual_path,
-        $manual_path_en,
         $specs,
         $features,
         $specs_en,

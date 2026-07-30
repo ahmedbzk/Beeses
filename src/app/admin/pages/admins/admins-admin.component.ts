@@ -374,6 +374,7 @@ export class AdminsAdminComponent implements OnInit {
     { key: 'contacts', label: 'İletişim Formları' },
     { key: 'warranties', label: 'Garanti Kayıtları' },
     { key: 'distributors', label: 'Distribütör Listesi' },
+    { key: 'distributor_applications', label: 'Distribütör Başvuruları' },
     { key: 'innovations', label: 'İnovasyon & Gelecek' },
     { key: 'newsletter', label: 'Aboneler & Bülten' },
     { key: 'admins', label: 'Yönetici Yetkilendirme' }
@@ -436,7 +437,25 @@ export class AdminsAdminComponent implements OnInit {
     this.adminService.getLogs().subscribe({
       next: (res) => {
         if (res.success) {
-          this.logs = res.data;
+          this.logs = res.data.map((log: any) => {
+            // Map actions
+            if (log.action === 'update_status') log.action = 'Güncelleme';
+            
+            // Map details for distributor applications
+            if (log.page === 'distributor_applications' && log.details.startsWith('{')) {
+              try {
+                const parsed = JSON.parse(log.details);
+                if (parsed.new_status) {
+                  const trStatus = parsed.new_status === 'pending' ? 'Bekliyor' : 
+                                   parsed.new_status === 'reviewed' ? 'İncelendi' :
+                                   parsed.new_status === 'answered' ? 'Cevaplandı' :
+                                   parsed.new_status === 'rejected' ? 'Reddedildi' : parsed.new_status;
+                  log.details = `Başvuru statüsü güncellendi: ${trStatus} (ID: ${parsed.application_id})`;
+                }
+              } catch(e) {}
+            }
+            return log;
+          });
         } else {
           this.alertService.showError('Sistem logları yüklenirken hata oluştu.');
         }
@@ -483,6 +502,7 @@ export class AdminsAdminComponent implements OnInit {
   getPageLabel(pageKey: string): string {
     if (pageKey === 'dashboard') return 'Ana Sayfa';
     if (pageKey === 'auth') return 'Giriş / Çıkış';
+    if (pageKey === 'distributor_applications') return 'Distribütör Başvuruları';
     
     const mod = this.modules.find(m => m.key === pageKey);
     return mod ? mod.label : pageKey;

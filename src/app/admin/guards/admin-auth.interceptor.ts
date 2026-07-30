@@ -12,8 +12,11 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const adminId = localStorage.getItem('admin_id');
     const username = localStorage.getItem('admin_username');
 
-    // Only intercept requests going to our backend API
-    if (token && adminId && username && (req.url.includes('/backend/api') || req.url.includes('/beeses_api') || req.url.includes('127.0.0.1'))) {
+    // Exclude public endpoints from getting admin headers
+    const isPublicEndpoint = req.url.includes('/apply.php') || req.url.includes('/get-distributors.php');
+
+    // Only intercept requests going to our backend API and that are NOT public
+    if (token && adminId && username && !isPublicEndpoint && (req.url.includes('/backend/api') || req.url.includes('/beeses_api') || req.url.includes('127.0.0.1'))) {
       const cloned = req.clone({
         setHeaders: {
           'X-Admin-Id': adminId,

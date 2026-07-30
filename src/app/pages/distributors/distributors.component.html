@@ -105,7 +105,7 @@
           <div *ngIf="filteredDistributors.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             
             <!-- Distributor Card -->
-            <div *ngFor="let d of filteredDistributors" 
+            <div *ngFor="let d of paginatedDistributors" 
                class="distributor-card group bg-white rounded-2xl overflow-hidden shadow-[0_5px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 flex flex-col animate-fade-in">
               
               <!-- Header Area -->
@@ -175,22 +175,22 @@
               
               <!-- Bottom Action - Social Media Links -->
               <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-100 flex justify-center gap-4">
-                <a *ngIf="d.website" [href]="d.website" target="_blank" 
+                <a *ngIf="d.website" [href]="formatUrl(d.website)" target="_blank" 
                    class="w-9 h-9 bg-beeses-dark hover:bg-beeses-gold text-white rounded-full transition-all duration-300 flex items-center justify-center shadow-sm"
                    [title]="'DIST_WEBSITE' | translate">
                   <lucide-icon name="globe" class="w-4 h-4"></lucide-icon>
                 </a>
-                <a *ngIf="d.instagram" [href]="d.instagram" target="_blank" 
+                <a *ngIf="d.instagram" [href]="formatUrl(d.instagram)" target="_blank" 
                    class="w-9 h-9 bg-beeses-dark hover:bg-beeses-gold text-white rounded-full transition-all duration-300 flex items-center justify-center shadow-sm"
                    title="Instagram">
                   <lucide-icon name="instagram" class="w-4 h-4"></lucide-icon>
                 </a>
-                <a *ngIf="d.facebook" [href]="d.facebook" target="_blank" 
+                <a *ngIf="d.facebook" [href]="formatUrl(d.facebook)" target="_blank" 
                    class="w-9 h-9 bg-beeses-dark hover:bg-beeses-gold text-white rounded-full transition-all duration-300 flex items-center justify-center shadow-sm"
                    title="Facebook">
                   <lucide-icon name="facebook" class="w-4 h-4"></lucide-icon>
                 </a>
-                <a *ngIf="d.youtube" [href]="d.youtube" target="_blank" 
+                <a *ngIf="d.youtube" [href]="formatUrl(d.youtube)" target="_blank" 
                    class="w-9 h-9 bg-beeses-dark hover:bg-beeses-gold text-white rounded-full transition-all duration-300 flex items-center justify-center shadow-sm"
                    title="YouTube">
                   <lucide-icon name="youtube" class="w-4 h-4"></lucide-icon>
@@ -202,6 +202,24 @@
             </div>
 
           </div>
+
+          <!-- Pagination -->
+          <div *ngIf="totalPages > 1" class="flex justify-center mt-12 gap-2">
+            <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1"
+                    class="w-10 h-10 rounded-full flex items-center justify-center transition-all bg-white border border-gray-200 text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+              <lucide-icon name="chevron-left" class="w-4 h-4"></lucide-icon>
+            </button>
+            <button *ngFor="let p of pageNumbers" (click)="changePage(p)"
+                    class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all"
+                    [ngClass]="currentPage === p ? 'bg-beeses-gold text-white shadow-lg shadow-beeses-gold/30' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'">
+              {{ p }}
+            </button>
+            <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages"
+                    class="w-10 h-10 rounded-full flex items-center justify-center transition-all bg-white border border-gray-200 text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+              <lucide-icon name="chevron-right" class="w-4 h-4"></lucide-icon>
+            </button>
+          </div>
+
         </div>
 
       </div>
@@ -210,3 +228,162 @@
     </div> <!-- End Main Content Wrapper -->
   </div>
 </section>
+
+<!-- Floating Action Button -->
+<div class="fixed z-50 cursor-pointer group flex items-center top-1/2 -translate-y-1/2 right-0" (click)="openApplicationModal()">
+  <div class="bg-beeses-dark border border-beeses-gold/40 border-r-0 shadow-[-10px_0_20px_rgba(0,0,0,0.15)] rounded-l-full p-2 md:p-2.5 flex items-center gap-2 md:gap-3 transition-all duration-500 hover:bg-beeses-dark/95 hover:border-beeses-gold md:hover:-translate-x-1">
+    
+    <div class="w-10 h-10 md:w-12 md:h-12 bg-beeses-gold rounded-full flex shrink-0 items-center justify-center shadow-[0_0_15px_rgba(181,129,49,0.4)] relative overflow-hidden transition-transform duration-500">
+      <lucide-icon name="briefcase" class="w-4 h-4 md:w-5 md:h-5 text-beeses-dark absolute inset-0 m-auto transition-transform duration-500 group-hover:translate-x-[150%]"></lucide-icon>
+      <lucide-icon name="chevron-left" class="w-5 h-5 md:w-6 md:h-6 text-beeses-dark absolute inset-0 m-auto -translate-x-[150%] transition-transform duration-500 group-hover:translate-x-0"></lucide-icon>
+    </div>
+    
+    <div class="flex flex-col justify-center transition-all duration-700 ease-in-out pr-2 group-hover:pr-4">
+      <h4 class="text-white font-bold text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden transition-all duration-700 ease-in-out max-w-0 max-h-0 opacity-0 group-hover:max-w-[250px] group-hover:max-h-[24px] group-hover:opacity-100 group-hover:mb-1">
+        {{ 'DIST_APPLY_TITLE' | translate }}
+      </h4>
+      <p class="text-beeses-gold text-[9px] md:text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all duration-700">
+        {{ 'DIST_APPLY_SUBTITLE' | translate }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Application Modal -->
+<!-- Application Modal -->
+<div *ngIf="isFormModalOpen" class="fixed inset-0 z-[9999] flex justify-center px-4 md:px-10 py-10">
+  <div class="absolute inset-0 bg-beeses-dark/80 backdrop-blur-sm" (click)="closeApplicationModal()"></div>
+  <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-4xl h-full flex flex-col z-10 animate-fade-in border border-gray-100 overflow-hidden">
+    
+    <!-- Modal Header -->
+    <div class="shrink-0 p-6 md:px-10 md:py-8 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-beeses-gold/10 rounded-full flex items-center justify-center">
+          <lucide-icon name="mail" class="w-6 h-6 text-beeses-gold"></lucide-icon>
+        </div>
+        <div>
+          <h2 class="text-xl md:text-2xl font-bold text-beeses-dark">{{ 'DIST_APPLY_INFO_TITLE' | translate }}</h2>
+          <p class="text-sm text-gray-500 mt-1">{{ 'DIST_APPLY_INFO_DESC1' | translate }}</p>
+        </div>
+      </div>
+      <button (click)="closeApplicationModal()" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all shadow-sm">
+        <lucide-icon name="x" class="w-5 h-5"></lucide-icon>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar">
+      <div *ngIf="submitSuccess" class="h-full flex flex-col items-center justify-center text-center space-y-6 animate-fade-in py-12">
+        <div class="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mb-2">
+          <lucide-icon name="check-circle" class="w-12 h-12 text-green-500"></lucide-icon>
+        </div>
+        <h3 class="text-3xl font-bold text-beeses-dark">{{ 'DIST_APPLY_SUCCESS_TITLE' | translate }}</h3>
+        <p class="text-gray-500 max-w-md text-lg">{{ 'DIST_APPLY_SUCCESS' | translate }}</p>
+        <button (click)="closeApplicationModal()" class="mt-8 px-10 py-4 bg-beeses-dark text-white rounded-full font-bold tracking-widest uppercase hover:bg-beeses-gold transition-colors">
+          {{ 'DIST_APPLY_CLOSE' | translate }}
+        </button>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isSubmitting && !submitSuccess" class="h-full flex flex-col items-center justify-center text-center space-y-6 animate-fade-in py-24">
+        <lucide-icon name="loader" class="w-16 h-16 animate-spin text-beeses-gold mx-auto"></lucide-icon>
+        <h3 class="text-2xl font-bold text-beeses-dark">Gönderiliyor...</h3>
+        <p class="text-gray-500 max-w-md">Lütfen bekleyin, başvurunuz iletiliyor.</p>
+      </div>
+
+      <form *ngIf="!submitSuccess && !isSubmitting" (ngSubmit)="submitApplication()" #form="ngForm">
+        
+        <div *ngIf="submitError" class="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl flex items-center gap-3 text-sm font-medium">
+          <lucide-icon name="alert-circle" class="w-5 h-5 shrink-0"></lucide-icon>
+          {{ submitError }}
+        </div>
+
+        <div class="text-gray-600 text-sm md:text-base leading-relaxed space-y-8 px-0 text-left">
+          
+          <div class="space-y-4">
+            <p class="font-bold text-beeses-dark text-lg">{{ 'DIST_APPLY_INFO_DESC2' | translate }}</p>
+            <ul class="list-disc pl-5 space-y-2 text-gray-500">
+              <li>{{ 'DIST_APPLY_INFO_L1' | translate }}</li>
+              <li>{{ 'DIST_APPLY_INFO_L2' | translate }}</li>
+              <li>{{ 'DIST_APPLY_INFO_L3' | translate }}</li>
+              <li>{{ 'DIST_APPLY_INFO_L4' | translate }}</li>
+              <li>{{ 'DIST_APPLY_INFO_L5' | translate }}</li>
+            </ul>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 pb-2">
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-beeses-dark">{{ 'DIST_APPLY_COMPANY_NAME' | translate }} <span class="text-red-500">*</span></label>
+                <input type="text" [(ngModel)]="applicationForm.company_name" name="company_name" required
+                       class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-beeses-gold/50 focus:border-beeses-gold transition-all outline-none">
+              </div>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-beeses-dark">{{ 'DIST_APPLY_CONTACT_EMAIL' | translate }} <span class="text-red-500">*</span></label>
+                <input type="email" [(ngModel)]="applicationForm.contact_email" name="contact_email" required
+                       class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-beeses-gold/50 focus:border-beeses-gold transition-all outline-none">
+              </div>
+            </div>
+
+            <textarea [(ngModel)]="applicationForm.group1_info" name="group1_info" rows="4" [placeholder]="'DIST_APPLY_PLACEHOLDER' | translate" required
+                      class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-beeses-gold/50 focus:border-beeses-gold transition-all outline-none resize-none"></textarea>
+          </div>
+
+          <div class="space-y-4">
+            <p>{{ 'DIST_APPLY_INFO_DESC3' | translate }}</p>
+            <ul class="list-disc pl-5 space-y-2 text-gray-500">
+              <li>{{ 'DIST_APPLY_INFO_L6' | translate }}</li>
+              <li>{{ 'DIST_APPLY_INFO_L7' | translate }}</li>
+              <li>{{ 'DIST_APPLY_INFO_L8' | translate }}</li>
+            </ul>
+            <textarea [(ngModel)]="applicationForm.group2_info" name="group2_info" rows="3" [placeholder]="'DIST_APPLY_PLACEHOLDER' | translate"
+                      class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-beeses-gold/50 focus:border-beeses-gold transition-all outline-none resize-none"></textarea>
+          </div>
+
+          <div class="space-y-4">
+            <p>{{ 'DIST_APPLY_INFO_DESC4' | translate }}</p>
+            <ul class="list-disc pl-5 space-y-2 text-gray-500">
+              <li>{{ 'DIST_APPLY_INFO_L9' | translate }}</li>
+              <li>{{ 'DIST_APPLY_INFO_L10' | translate }}</li>
+            </ul>
+            <textarea [(ngModel)]="applicationForm.group3_info" name="group3_info" rows="3" [placeholder]="'DIST_APPLY_PLACEHOLDER' | translate"
+                      class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-beeses-gold/50 focus:border-beeses-gold transition-all outline-none resize-none"></textarea>
+          </div>
+
+          <div class="space-y-4">
+            <p>{{ 'DIST_APPLY_INFO_DESC5' | translate }}</p>
+            <div class="relative w-full max-w-md">
+              <input type="file" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx"
+                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+              <div class="w-full bg-gray-50 border border-dashed border-gray-300 rounded-xl px-4 py-3 flex items-center justify-between text-sm transition-all group hover:border-beeses-gold hover:bg-white">
+                <span class="text-gray-500 truncate mr-4">
+                  {{ selectedFile ? selectedFile.name : ('DIST_APPLY_FILE' | translate) }}
+                </span>
+                <lucide-icon name="upload-cloud" class="w-5 h-5 text-gray-400 group-hover:text-beeses-gold transition-colors"></lucide-icon>
+              </div>
+            </div>
+            <p *ngIf="fileError" class="text-xs text-red-500">{{ fileError }}</p>
+          </div>
+
+          <div class="space-y-2 pt-4">
+            <p>{{ 'DIST_APPLY_INFO_DESC6' | translate }}</p>
+            <p class="font-medium text-beeses-dark">{{ 'DIST_APPLY_INFO_DESC7' | translate }}<br>Beeses Audio Team</p>
+          </div>
+          
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div *ngIf="!submitSuccess && !isSubmitting" class="shrink-0 p-6 md:px-10 md:py-6 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-4">
+      <button type="button" (click)="closeApplicationModal()" 
+              class="px-8 py-3 rounded-xl font-bold tracking-wide text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 transition-colors">
+        {{ 'DIST_APPLY_CANCEL' | translate }}
+      </button>
+      <button type="button" (click)="submitApplication()" [disabled]="isSubmitting || !applicationForm.company_name || !applicationForm.contact_email || !applicationForm.group1_info"
+              class="px-10 py-3 bg-beeses-gold text-white rounded-xl font-bold tracking-wide hover:bg-beeses-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-beeses-gold/30 flex items-center gap-2">
+        <lucide-icon *ngIf="isSubmitting" name="loader-2" class="w-5 h-5 animate-spin"></lucide-icon>
+        <lucide-icon *ngIf="!isSubmitting" name="send" class="w-5 h-5"></lucide-icon>
+        {{ isSubmitting ? ('DIST_APPLY_UPLOADING' | translate) : ('DIST_APPLY_SUBMIT' | translate) }}
+      </button>
+    </div>
+  </div>
+</div>

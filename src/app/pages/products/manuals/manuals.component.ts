@@ -79,12 +79,7 @@ export class ManualsComponent implements OnInit {
   }
 
   getManualUrl(item: Product): string | undefined {
-    let rawPdf: string | undefined;
-    if (this.translate.currentLang === 'en') {
-      rawPdf = item.manualUrl_en || item.manualUrl;
-    } else {
-      rawPdf = item.manualUrl || item.manualUrl_en;
-    }
+    let rawPdf = item.manualUrl;
     
     if (!rawPdf || rawPdf.trim() === '' || rawPdf === 'null' || rawPdf === 'undefined') {
       return undefined;

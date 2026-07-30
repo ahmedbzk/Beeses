@@ -149,6 +149,15 @@ import { AlertService } from '../../services/alert.service';
                 Distribütör Listesi
               </span>
             </a>
+            <a routerLink="/admin/dashboard/distributor-applications" *ngIf="hasPermission('distributor_applications')" routerLinkActive="bg-white/10 text-beeses-gold border-white/10 shadow-sm" 
+               class="flex items-center rounded-xl text-white/50 hover:text-white font-medium text-sm transition-all border border-transparent duration-500"
+               [ngClass]="isSidebarCollapsed ? 'lg:justify-center lg:p-2.5 lg:gap-0 px-3.5 py-2.5 gap-3' : 'px-3.5 py-2.5 gap-3'">
+              <lucide-icon name="briefcase" class="w-5 h-5 shrink-0"></lucide-icon>
+              <span class="transition-all duration-500 overflow-hidden whitespace-nowrap"
+                    [ngClass]="isSidebarCollapsed ? 'lg:max-w-0 lg:opacity-0 lg:pointer-events-none' : 'max-w-[200px] opacity-100'">
+                Distribütör Başvuruları
+              </span>
+            </a>
           </div>
 
           

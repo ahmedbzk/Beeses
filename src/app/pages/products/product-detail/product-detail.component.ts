@@ -65,17 +65,9 @@ export class ProductDetailComponent implements OnInit {
                 if (this.product.pdfUrl) {
                   this.product.pdfUrl = this.getImageUrl(this.product.pdfUrl);
                 }
-                
-                if (this.product.pdfUrl_en) {
-                  this.product.pdfUrl_en = this.getImageUrl(this.product.pdfUrl_en);
-                }
 
                 if (this.product.manualUrl) {
                   this.product.manualUrl = this.getImageUrl(this.product.manualUrl);
-                }
-                
-                if (this.product.manualUrl_en) {
-                  this.product.manualUrl_en = this.getImageUrl(this.product.manualUrl_en);
                 }
               }
             }
@@ -156,12 +148,7 @@ export class ProductDetailComponent implements OnInit {
 
   getPdfUrl(): string | undefined {
     if (!this.product) return undefined;
-    let rawPdf: string | undefined;
-    if (this.translate.currentLang === 'en' && this.product.pdfUrl_en) {
-      rawPdf = this.product.pdfUrl_en;
-    } else {
-      rawPdf = this.product.pdfUrl;
-    }
+    let rawPdf = this.product.pdfUrl;
     
     if (!rawPdf || rawPdf.trim() === '' || rawPdf === 'null' || rawPdf === 'undefined') {
       return undefined;
@@ -185,12 +172,7 @@ export class ProductDetailComponent implements OnInit {
 
   getManualUrl(): string | undefined {
     if (!this.product) return undefined;
-    let rawPdf: string | undefined;
-    if (this.translate.currentLang === 'en') {
-      rawPdf = this.product.manualUrl_en || this.product.manualUrl;
-    } else {
-      rawPdf = this.product.manualUrl || this.product.manualUrl_en;
-    }
+    let rawPdf = this.product.manualUrl;
     
     if (!rawPdf || rawPdf.trim() === '' || rawPdf === 'null' || rawPdf === 'undefined') {
       return undefined;

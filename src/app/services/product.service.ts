@@ -26,9 +26,7 @@ export interface Product {
   image: string;
   images?: string[];
   pdfUrl?: string;
-  pdfUrl_en?: string;
   manualUrl?: string;
-  manualUrl_en?: string;
   specs: ProductSpec[];
   features: ProductFeature[];
   specs_en?: ProductSpec[];

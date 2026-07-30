@@ -17,6 +17,7 @@ export const adminRoutes: Routes = [
       { path: 'warranties', component: WarrantiesAdminComponent },
       { path: 'contacts', loadComponent: () => import('./pages/contacts/contacts-admin.component').then(m => m.ContactsAdminComponent) },
       { path: 'distributors', loadComponent: () => import('./pages/distributors/distributors-admin.component').then(m => m.DistributorsAdminComponent) },
+      { path: 'distributor-applications', loadComponent: () => import('./pages/distributor-applications/distributor-applications-admin.component').then(m => m.DistributorApplicationsAdminComponent) },
       { path: 'news', loadComponent: () => import('./pages/news/news-admin.component').then(m => m.NewsAdminComponent) },
       { path: 'certificates', loadComponent: () => import('./pages/certificates/certificates-admin.component').then(m => m.CertificatesAdminComponent) },
       { path: 'faq', loadComponent: () => import('./pages/faq/faq-admin.component').then(m => m.FaqAdminComponent) },
