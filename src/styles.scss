@@ -24,4 +24,74 @@ html, body {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  @keyframes attention-pulse {
+    0%, 40%, 100% {
+      box-shadow: -10px 0 20px rgba(0,0,0,0.15);
+      border-color: rgba(181, 129, 49, 0.4);
+    }
+    20% {
+      box-shadow: -15px 0 35px rgba(181, 129, 49, 0.8);
+      border-color: rgba(181, 129, 49, 1);
+    }
+  }
+
+  @keyframes attention-jiggle {
+    0%, 40%, 100% {
+      transform: translateX(0);
+    }
+    8% { transform: translateX(-4px); }
+    16% { transform: translateX(2px); }
+    24% { transform: translateX(-2px); }
+    32% { transform: translateX(0); }
+  }
+
+  @keyframes attention-scale {
+    0%, 40%, 100% { transform: scale(1); }
+    10% { transform: scale(1.15) rotate(-5deg); }
+    20% { transform: scale(1.15) rotate(5deg); }
+    30% { transform: scale(1); }
+  }
+
+  @keyframes attention-shine {
+    0%, 40%, 100% { left: -100%; }
+    20% { left: 200%; }
+  }
+
+  @keyframes attention-icon-scale {
+    0%, 40%, 100% { transform: scale(1); }
+    20% { transform: scale(1.15); }
+  }
+
+  .animate-attention {
+    animation: attention-pulse 5s infinite ease-in-out, attention-jiggle 5s infinite ease-in-out;
+  }
+
+  .animate-attention-circle {
+    animation: attention-scale 5s infinite ease-in-out;
+  }
+
+  .animate-attention-inner-icon {
+    animation: attention-icon-scale 5s infinite ease-in-out;
+  }
+
+  .animate-attention-circle::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-25deg);
+    animation: attention-shine 5s infinite;
+    z-index: 10;
+  }
+
+  .group:hover .animate-attention,
+  .group:hover .animate-attention-circle,
+  .group:hover .animate-attention-circle::after,
+  .group:hover .animate-attention-inner-icon {
+    animation: none;
+  }
 }
