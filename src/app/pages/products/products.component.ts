@@ -1,4 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
@@ -20,6 +21,7 @@ export class ProductsComponent implements OnInit {
   private newsletterService = inject(NewsletterService);
   private route = inject(ActivatedRoute);
   public translate = inject(TranslateService);
+  private platformId = inject(PLATFORM_ID);
 
   products: Product[] = [];
   filteredProducts: Product[] = [];
@@ -37,7 +39,9 @@ export class ProductsComponent implements OnInit {
   newsletterError: string = '';
 
   ngOnInit(): void {
-    this.loadProducts();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadProducts();
+    }
   }
 
   loadProducts(): void {

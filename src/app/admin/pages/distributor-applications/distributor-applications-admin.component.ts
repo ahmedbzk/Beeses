@@ -116,7 +116,7 @@ interface DistributorApplication {
               </td>
               <td class="px-6 py-4">
                 <div class="text-xs text-gray-500 space-y-1">
-                  <p class="line-clamp-3">{{ item.group1_info || 'Detay Yok' }}</p>
+                  <p class="line-clamp-3 whitespace-pre-line">{{ item.group1_info || 'Detay Yok' }}</p>
                 </div>
               </td>
               <!-- Tailwind Safelist: bg-yellow-50 text-yellow-600 border border-yellow-200 bg-yellow-500 bg-blue-50 text-blue-600 border-blue-200 bg-blue-500 bg-green-50 text-green-600 border-green-200 bg-green-500 bg-red-50 text-red-600 border-red-200 bg-red-500 -->

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { DistributorService, Distributor } from '../../services/distributor.service';
@@ -73,29 +74,32 @@ export class DistributorsComponent implements OnInit {
   constructor(
     private distributorService: DistributorService,
     private http: HttpClient,
-    private translate: TranslateService
+    private translate: TranslateService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
-    this.distributorService.getDistributors().subscribe({
-      next: (res) => {
-        if (res.success && res.data) {
-          this.distributors = res.data;
-          
-          const countrySet = new Set<string>();
-          this.distributors.forEach(d => {
-            if (d.country) countrySet.add(d.country);
-          });
-          this.countries = Array.from(countrySet).sort((a, b) => a.localeCompare(b, 'tr'));
+    if (isPlatformBrowser(this.platformId)) {
+      this.distributorService.getDistributors().subscribe({
+        next: (res) => {
+          if (res.success && res.data) {
+            this.distributors = res.data;
+            
+            const countrySet = new Set<string>();
+            this.distributors.forEach(d => {
+              if (d.country) countrySet.add(d.country);
+            });
+            this.countries = Array.from(countrySet).sort((a, b) => a.localeCompare(b, 'tr'));
 
-          this.applyFilters();
+            this.applyFilters();
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.isLoading = false;
-      }
-    });
+      });
+    }
   }
 
   filterByCountry(country: string | null): void {
