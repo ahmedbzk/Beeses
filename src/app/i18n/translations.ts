@@ -85,7 +85,7 @@ export const translations = {
     ABOUT_HERO_SUBTITLE: 'Beeses Audio, yüksek performanslı ses amplifikatörleri alanında yerli Ar-Ge ve inovasyon gücüyle sınırları zorluyor.',
     ABOUT_MISSION_TITLE: 'Misyon & Vizyon',
     ABOUT_MISSION_DESC: 'Müzik ve ses tutkunları için en saf, en dinamik ve en kararlı ses amplifikasyon teknolojilerini üretmek.',
-    ABOUT_STORY_TITLE: 'Biz Kimiz?',
+    ABOUT_STORY_TITLE: 'BİZ KİMİZ?',
     ABOUT_STORY_DESC1: 'Beeses Audio, profesyonel ses sistemleri alanında uzun yıllara dayanan sektörel birikim ve tutkunun bir sonucu olarak İstanbul\'da kurulmuştur. İlk günden itibaren temel hedefimiz, ithal ses sistemlerine bağımlılığı azaltmak ve dünya standartlarında yerli amplifikatör çözümleri sunmaktır.',
     ABOUT_STORY_DESC2: 'Tamamen kendi mühendislerimiz tarafından tasarlanan devre şemaları, özel Cosmo toroidal trafo sarım teknolojileri ve seçkin komponent eşleştirme süreçleriyle, kaliteden ödün vermeden üretim yapıyoruz. Bugün amfilerimiz, üst düzey ses performansları ve yüksek güvenilirlikleri ile Türkiye\'nin dört bir yanındaki müzikseverlerin ve ses profesyonellerinin ilk tercihi haline gelmiştir.',
     ABOUT_STORY_DESC3: 'Geleceği sesle şekillendirmek ve her tınıyı en saf haliyle ulaştırmak için çalışmaya devam ediyoruz.',
@@ -93,8 +93,8 @@ export const translations = {
     ABOUT_STATS_COMPONENTS: 'Eşleştirilmiş Komponent Oranı',
     ABOUT_STATS_SATISFACTION: 'Müşteri Memnuniyeti',
     ABOUT_STATS_PRODUCTION: 'Yerli Üretim Payı',
-    ABOUT_HERO_TAG: 'Kusursuz Sesin Peşinde',
-    ABOUT_STORY_TITLE2: 'Sesi Sanata Dönüştürdük',
+    ABOUT_HERO_TAG: 'KUSURSUZ SESİN PEŞİNDE',
+    ABOUT_STORY_TITLE2: 'SESİ SANATA DÖNÜŞTÜRDÜK',
     ABOUT_PETEK_TECH: 'Petek Serisi Teknolojisi',
     ABOUT_PETEK_TECH_DESC1: 'Özel alüminyum soğutucu blokları ile maksimum termal verimlilik.',
     ABOUT_PETEK_TECH_DESC2: 'Saf bakır bobinler ile sıfır kayıplı sinyal iletimi.',
@@ -147,7 +147,7 @@ export const translations = {
     INNOVATION_TECH2_DESC: 'Beeses laboratuvarlarında özel olarak geliştirilmiş yüksek geçirgenlikli toroidal transformatörler, ani akım taleplerini anında karşılar.',
     INNOVATION_TECH3_TITLE: 'Akıllı Termal Yönetim',
     INNOVATION_TECH3_DESC: 'CNC alüminyum gövdenin termal tasarımı ve sıcaklık sensörleri sayesinde cihaz uzun süreli yüksek güç çıkışlarında bile ideal sıcaklıkta kalır.',
-    
+
     INNOVATION_HERO_TAG: 'Ar-Ge & İnovasyon',
     INNOVATION_HERO_TITLE: 'İNOVASYON & GELECEK',
     INNOVATION_HERO_DESC: 'Ses teknolojilerinin sınırlarını geleceğin projeleriyle zorluyoruz.',
@@ -342,7 +342,7 @@ export const translations = {
     REF_HERO_TAG: 'Gurur Tablomuz',
     REF_HERO_TITLE: 'REFERANSLARIMIZ',
     REF_HERO_SUBTITLE: 'Dünya çapında ses getiren projelerimiz ve değerli iş ortaklarımız.',
-    
+
     REF_CAT_ARTISTS: 'MÜZİK GRUPLARI & SANATÇILAR',
     REF_COMMENT_ARTISTS: 'Yerel ve uluslararası sahnelerde performans sergileyen birçok sanatçı, BeeSes amfilerinin güçlü ve temiz ses kalitesini tercih ediyor. Yüksek ses gücü, ton dengesi ve dayanıklı yapısıyla sahnede kusursuz bir deneyim sunuyoruz.',
     REF_CAT_EDUCATION: 'EĞİTİM KURUMLARI & KONSERVATUVARLAR',
@@ -785,7 +785,7 @@ export const translations = {
     REF_HERO_TAG: 'Our Pride',
     REF_HERO_TITLE: 'OUR REFERENCES',
     REF_HERO_SUBTITLE: 'Our world-renowned projects and valuable business partners.',
-    
+
     REF_CAT_ARTISTS: 'MUSIC GROUPS & ARTISTS',
     REF_COMMENT_ARTISTS: 'Many artists performing on local and international stages prefer the powerful and clean sound quality of BeeSes amplifiers. We offer a flawless experience on stage with its high sound power, tone balance, and durable structure.',
     REF_CAT_EDUCATION: 'EDUCATIONAL INSTITUTIONS & CONSERVATORIES',
