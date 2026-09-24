@@ -274,6 +274,9 @@ interface DistributorApplication {
                   <button (click)="sendReply()" [disabled]="!replyText" class="w-full px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                     <lucide-icon name="send" class="w-4 h-4"></lucide-icon> Gönder ve Cevaplandı İşaretle
                   </button>
+                  <button (click)="markAsAnsweredOnly()" class="w-full px-5 py-3 rounded-xl border-2 border-green-100 text-green-600 hover:bg-green-50 font-bold text-sm transition-all flex items-center justify-center gap-2">
+                    <lucide-icon name="check-circle" class="w-4 h-4"></lucide-icon> Sadece Cevaplandı İşaretle
+                  </button>
                   <button (click)="markAsRejected()" class="w-full px-5 py-3 rounded-xl border-2 border-red-100 text-red-600 hover:bg-red-50 font-bold text-sm transition-all flex items-center justify-center gap-2">
                     <lucide-icon name="x" class="w-4 h-4"></lucide-icon> Başvuruyu Reddet
                   </button>
@@ -359,6 +362,34 @@ export class DistributorApplicationsAdminComponent implements OnInit {
               const app = this.applications.find(a => a.id === this.selectedApp.id);
               if (app) app.status = 'rejected';
               if (this.selectedApp) this.selectedApp.status = 'rejected';
+              this.applyFilters();
+              this.closeModal();
+            } else {
+              this.alertService.showError('Hata: ' + res.message);
+            }
+          },
+          error: () => this.alertService.showError('Bir hata oluştu')
+        });
+      }
+    );
+  }
+
+  markAsAnsweredOnly() {
+    if (!this.selectedApp || !this.hasEditPermission) return;
+    
+    this.showConfirm(
+      'Sadece Cevaplandı İşaretle',
+      'Bu başvuruya sistem üzerinden mail atılmadan statüsü "Cevaplandı" olarak güncellenecektir. Onaylıyor musunuz?',
+      'Evet, İşaretle',
+      'primary',
+      () => {
+        this.distributorService.updateApplicationStatus(this.selectedApp.id, 'answered').subscribe({
+          next: (res) => {
+            if (res.success) {
+              this.alertService.showSuccess('Başvuru durumu güncellendi.');
+              const app = this.applications.find(a => a.id === this.selectedApp.id);
+              if (app) app.status = 'answered';
+              if (this.selectedApp) this.selectedApp.status = 'answered';
               this.applyFilters();
               this.closeModal();
             } else {

@@ -21,7 +21,7 @@ function readSMTPResponse($socket) {
     return $response;
 }
 
-function sendMailSMTP($to, $subject, $message, $isHtml = false) {
+function sendMailSMTP($to, $subject, $message, $isHtml = false, $replyTo = null, $fromNameOverride = null) {
     // Read SMTP settings from .env manually
     $envPath = __DIR__ . '/../../.env';
     if (!file_exists($envPath)) {
@@ -54,9 +54,8 @@ function sendMailSMTP($to, $subject, $message, $isHtml = false) {
             }
         }
     }
-    
     $fromEmail = !empty($smtpUser) ? $smtpUser : "info@beesesaudio.com";
-    $fromName = "Beeses Audio";
+    $fromName = !empty($fromNameOverride) ? $fromNameOverride : "Beeses Audio";
     
     // Connect to SMTP server
     $hostSpec = ($smtpSecure === 'ssl') ? 'ssl://' . $smtpHost : $smtpHost;
@@ -119,8 +118,9 @@ function sendMailSMTP($to, $subject, $message, $isHtml = false) {
         fwrite($socket, "DATA\r\n");
         $response = readSMTPResponse($socket);
         
-        // Normalize newlines in message body to CRLF (\r\n) to prevent "bare LF" mail drops by Gmail/Yahoo
-        $normalizedMessage = str_replace(["\r\n", "\r", "\n"], "\r\n", $message);
+        // Normalize newlines in message body to CRLF (\r\n) to prevent "bare LF" or "bare CR" mail drops
+        $normalizedMessage = str_replace(["\r\n", "\r"], "\n", $message);
+        $normalizedMessage = str_replace("\n", "\r\n", $normalizedMessage);
 
         // Formulate Headers
         $headers = "MIME-Version: 1.0\r\n";
@@ -130,6 +130,9 @@ function sendMailSMTP($to, $subject, $message, $isHtml = false) {
             $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
         }
         $headers .= "From: =?UTF-8?B?" . base64_encode($fromName) . "?= <$fromEmail>\r\n";
+        if (!empty($replyTo)) {
+            $headers .= "Reply-To: <$replyTo>\r\n";
+        }
         $headers .= "To: <$to>\r\n";
         $headers .= "Subject: =?UTF-8?B?" . base64_encode($subject) . "?=\r\n";
         $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n\r\n";

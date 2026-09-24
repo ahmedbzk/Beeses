@@ -220,6 +220,11 @@ import { AlertService } from '../../../services/alert.service';
             Kapat
           </button>
           
+          <button *ngIf="selectedMessage.status !== 'cevaplandi'" (click)="markAsAnsweredOnly()" class="mr-auto px-5 py-2.5 rounded-xl border-2 border-beeses-gold text-beeses-gold hover:bg-beeses-gold hover:text-white font-bold text-sm transition-colors flex items-center gap-2">
+            <lucide-icon name="check-circle" class="w-4 h-4"></lucide-icon>
+            Sadece Cevaplandı İşaretle
+          </button>
+          
           <button *ngIf="selectedMessage.status !== 'cevaplandi'" (click)="markAsReplied()" [disabled]="!replyText" class="px-5 py-2.5 rounded-xl bg-beeses-gold hover:bg-beeses-dark text-white font-bold text-sm transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
             <lucide-icon name="send" class="w-4 h-4"></lucide-icon>
             Cevapla ve Kapat
@@ -376,6 +381,24 @@ export class ContactsAdminComponent implements OnInit {
           if(this.selectedMessage) {
             this.selectedMessage.status = 'cevaplandi';
             this.selectedMessage.reply_message = this.replyText;
+          }
+          this.closeDetail();
+        } else {
+          this.alertService.showError('Durum güncellenemedi.');
+        }
+      },
+      error: () => this.alertService.showError('Bir hata oluştu.')
+    });
+  }
+
+  markAsAnsweredOnly() {
+    if (!this.selectedMessage || !this.selectedMessage.id) return;
+    this.contactService.updateContactStatus(this.selectedMessage.id, 'cevaplandi').subscribe({
+      next: (res) => {
+        if(res.success) {
+          this.alertService.showSuccess('Durum "Cevaplandı" olarak güncellendi.');
+          if(this.selectedMessage) {
+            this.selectedMessage.status = 'cevaplandi';
           }
           this.closeDetail();
         } else {

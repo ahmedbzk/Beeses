@@ -73,8 +73,28 @@ try {
 
     $appId = $pdo->lastInsertId();
 
-    // E-posta gönderimi isteğe bağlı olarak kaldırıldı.
-    // Başvurular doğrudan Admin paneline (veritabanına) kaydedilir.
+    // Admin Bildirim E-postası
+    try {
+        $fileHtml = '';
+        if (!empty($file_path)) {
+            $fileUrl = 'https://beesesaudio.com/backend/api/' . $file_path;
+            $fileHtml = '<p><strong>Şirket Profili Dosyası:</strong> <a href="' . $fileUrl . '" style="color: #0056b3;">Dosyayı İndir / Görüntüle</a></p>';
+        }
+
+        $htmlMessage = '
+        <div style="font-family: Arial, sans-serif; color: #333; font-size: 14px; line-height: 1.6;">
+            <p><strong>Firma:</strong> '.htmlspecialchars($company_name).'<br>
+            <strong>İletişim E-Posta:</strong> '.htmlspecialchars($contact_email).'</p>
+            ' . $fileHtml . '
+            <hr style="border: none; border-top: 1px solid #ccc; margin: 15px 0;">
+            <p><strong>1. Firma ve Operasyonel Bilgiler:</strong><br>'.nl2br(htmlspecialchars($group1_info)).'</p><br>
+            <p><strong>2. Pazar ve Müşteri:</strong><br>'.nl2br(htmlspecialchars($group2_info)).'</p><br>
+            <p><strong>3. Pazarlama ve Deneyim:</strong><br>'.nl2br(htmlspecialchars($group3_info)).'</p>
+        </div>';
+        sendMailSMTP('info@beesesaudio.com', 'Yeni Distribütör Başvurusu: ' . $company_name, $htmlMessage, true, $contact_email, $company_name . ' (Distribütör)');
+    } catch (Exception $mailEx) {
+        // Mail gönderim hatası formu engellemesin
+    }
 
     echo json_encode(["success" => true, "message" => "Başvurunuz alınmıştır."]);
 
