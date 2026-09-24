@@ -91,7 +91,12 @@ try {
             <p><strong>2. Pazar ve Müşteri:</strong><br>'.nl2br(htmlspecialchars($group2_info)).'</p><br>
             <p><strong>3. Pazarlama ve Deneyim:</strong><br>'.nl2br(htmlspecialchars($group3_info)).'</p>
         </div>';
-        sendMailSMTP('info@beesesaudio.com', 'Yeni Distribütör Başvurusu: ' . $company_name, $htmlMessage, true, $contact_email, $company_name . ' (Distribütör)');
+        try {
+            sendMailSMTP('info@beesesaudio.com', 'Yeni Distribütör Başvurusu: ' . $company_name, $htmlMessage, true, $contact_email, $company_name . ' (Distribütör)');
+        } catch (Exception $e) {}
+        try {
+            sendMailSMTP('mahmut.lapoglu@iotek.com.tr', 'Yeni Distribütör Başvurusu: ' . $company_name, $htmlMessage, true, $contact_email, $company_name . ' (Distribütör)');
+        } catch (Exception $e) {}
     } catch (Exception $mailEx) {
         // Mail gönderim hatası formu engellemesin
     }
