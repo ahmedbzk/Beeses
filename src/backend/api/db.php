@@ -3,6 +3,8 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Admin-Id, X-Admin-Username, X-Admin-Token");
+// API yanıtları (JSON) Google'da sayfa olarak dizine eklenmesin; tarama serbest kalır (sayfalar bu veriyle çizilir)
+header("X-Robots-Tag: noindex");
 
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
