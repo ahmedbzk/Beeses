@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
+import { CookieConsentService } from '../../services/cookie-consent.service';
 
 @Component({
   selector: 'app-cookie-policy',
@@ -10,7 +11,7 @@ import { LucideAngularModule } from 'lucide-angular';
   template: `
     <section class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
       <div class="absolute inset-0 w-full h-full">
-        <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
+        <img src="assets/backgrounds/bg1.jpg" alt="" aria-hidden="true" class="w-full h-full object-cover opacity-60" />
         <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/95 via-beeses-dark/70 to-beeses-silver"></div>
       </div>
       
@@ -22,6 +23,10 @@ import { LucideAngularModule } from 'lucide-angular';
           {{ translate.currentLang === 'tr' ? 'Çerez Ayarları' : 'Cookie Settings' }}
         </h1>
         <div class="w-20 md:w-24 h-1 bg-beeses-gold mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(181,129,49,0.5)]"></div>
+        <button type="button" (click)="consent.open()"
+          class="bg-beeses-gold text-white text-xs font-black uppercase tracking-[0.2em] px-8 py-4 rounded-full hover:bg-white hover:text-beeses-dark transition-colors">
+          {{ 'COOKIE_BANNER_MANAGE' | translate }}
+        </button>
       </div>
     </section>
 
@@ -123,4 +128,5 @@ import { LucideAngularModule } from 'lucide-angular';
 })
 export class CookiePolicyComponent {
   translate = inject(TranslateService);
+  consent = inject(CookieConsentService);
 }

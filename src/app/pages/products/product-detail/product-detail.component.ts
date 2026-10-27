@@ -1,11 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { ProductService, Product } from '../../../services/product.service';
 import { environment } from '../../../../environments/environment';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { Title, Meta } from '@angular/platform-browser';
+import { SeoService } from '../../../services/seo.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -18,8 +18,8 @@ export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
   public translate = inject(TranslateService);
-  private titleService = inject(Title);
-  private metaService = inject(Meta);
+  private router = inject(Router);
+  private seo = inject(SeoService);
 
   product: Product | undefined;
   isLoading: boolean = true;
@@ -44,14 +44,6 @@ export class ProductDetailComponent implements OnInit {
             if (response.success) {
               this.product = response.data;
               if (this.product) {
-                const pName = this.translate.currentLang === 'en' && this.product.name_en ? this.product.name_en : this.product.name;
-                const pDesc = this.translate.currentLang === 'en' && this.product.shortDescription_en ? this.product.shortDescription_en : this.product.shortDescription;
-                
-                this.titleService.setTitle(`${pName} | Beeses Audio`);
-                this.metaService.updateTag({ name: 'description', content: pDesc || '' });
-                this.metaService.updateTag({ property: 'og:title', content: `${pName} | Beeses Audio` });
-                this.metaService.updateTag({ property: 'og:description', content: pDesc || '' });
-
                 if (this.product.images && this.product.images.length > 0) {
                   this.product.images = this.product.images.map(img => this.getImageUrl(img));
                   this.selectedImage = this.product.images[0];
@@ -69,11 +61,24 @@ export class ProductDetailComponent implements OnInit {
                 if (this.product.manualUrl) {
                   this.product.manualUrl = this.getImageUrl(this.product.manualUrl);
                 }
+
+                const pName = this.translate.currentLang === 'en' && this.product.name_en ? this.product.name_en : this.product.name;
+                const pDesc = this.translate.currentLang === 'en' && this.product.shortDescription_en ? this.product.shortDescription_en : this.product.shortDescription;
+
+                this.seo.setPage(this.router.url, {
+                  title: `${pName} | Beeses Audio`,
+                  description: pDesc || '',
+                  image: this.selectedImage,
+                  type: 'product'
+                });
               }
             }
+            if (!this.product) this.markNotFound();
             this.isLoading = false;
           },
           error: () => {
+            this.product = undefined;
+            this.markNotFound();
             this.isLoading = false;
           }
         });
@@ -81,6 +86,11 @@ export class ProductDetailComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  // Olmayan ürün adresleri Google'da boş sayfa olarak indekslenmesin
+  private markNotFound(): void {
+    this.seo.setNoIndex(this.seo.lang === 'en' ? 'Product Not Found | Beeses Audio' : 'Ürün Bulunamadı | Beeses Audio');
   }
 
   toggleDescription(): void {

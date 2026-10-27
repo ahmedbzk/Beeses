@@ -1,14 +1,31 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # Tek adres: www.beesesaudio.com -> beesesaudio.com (tekrarlanan içerik olmasın)
+  RewriteCond %{HTTP_HOST} ^www\.beesesaudio\.com$ [NC]
+  RewriteRule ^(.*)$ https://beesesaudio.com/$1 [R=301,L]
+
   RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+
+  # Var olan dosya ve klasörler (prerender edilmiş sayfalar, assets, backend) olduğu gibi sunulur
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Henüz prerender edilmemiş dinamik sayfalar (yeni eklenen ürün/haber) ve admin -> uygulama kabuğu
+  RewriteRule ^(en/)?(products|corporate/components/news)/[^/]+/?$ index.csr.html [L]
+  RewriteRule ^admin(/.*)?$ index.csr.html [L]
+
+  # Geri kalan bilinmeyen adresler gerçek 404 döner (Google "soft 404" saymasın)
+  RewriteRule ^ - [R=404,L]
 </IfModule>
 
-# Disable cache for index.html to prevent serving old version of the website after deployment
-<FilesMatch "index\.html">
+# 404 sayfası: uygulama kabuğu, dile uygun "Sayfa Bulunamadı" içeriğini gösterir
+ErrorDocument 404 /index.csr.html
+
+# Disable cache for HTML pages to prevent serving old version of the website after deployment
+<FilesMatch "^index(\.csr)?\.html$">
   FileETag None
   <IfModule mod_headers.c>
     Header unset ETag

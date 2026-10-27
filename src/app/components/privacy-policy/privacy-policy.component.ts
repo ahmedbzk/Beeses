@@ -10,7 +10,7 @@ import { LucideAngularModule } from 'lucide-angular';
   template: `
     <section class="relative w-full h-auto md:h-[40vh] min-h-[350px] md:min-h-[400px] flex items-start justify-center overflow-hidden bg-beeses-silver border-none">
       <div class="absolute inset-0 w-full h-full">
-        <img src="assets/backgrounds/bg1.jpg" class="w-full h-full object-cover opacity-60" />
+        <img src="assets/backgrounds/bg1.jpg" alt="" aria-hidden="true" class="w-full h-full object-cover opacity-60" />
         <div class="absolute inset-0 bg-gradient-to-b from-beeses-dark/95 via-beeses-dark/70 to-beeses-silver"></div>
       </div>
       

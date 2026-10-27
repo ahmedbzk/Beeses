@@ -7,7 +7,7 @@
       <div class="relative group/lang pointer-events-auto">
         <button (click)="toggleLangDropdown()"
           class="flex items-center gap-2 text-white hover:text-beeses-gold transition text-[10px] font-bold outline-none uppercase tracking-widest cursor-pointer">
-          <img [src]="currentLang.flag" class="w-4 h-auto rounded-sm shadow-sm">
+          <img [src]="currentLang.flag" alt="" class="w-4 h-auto rounded-sm shadow-sm">
           <span>{{ currentLang.code }}</span>
           <lucide-icon name="chevron-down" class="w-3 h-3 text-white transition"></lucide-icon>
         </button>
@@ -15,7 +15,7 @@
         <div [ngClass]="{'opacity-100 visible': isLangDropdownOpen, 'opacity-0 invisible': !isLangDropdownOpen}"
           class="lang-dropdown">
           <button *ngFor="let lang of languages" (click)="changeLang(lang)">
-            <img [src]="lang.flag" class="w-4 h-auto">
+            <img [src]="lang.flag" alt="" class="w-4 h-auto">
             <span>{{ lang.name }}</span>
           </button>
         </div>
@@ -84,7 +84,7 @@
           </div>
         </div>
 
-        <a href="mailto:info@beesesaudio.com?subject=Beeses Audio İletişim" 
+        <a [href]="'mailto:info@beesesaudio.com?subject=' + ('MAIL_SUBJECT_CONTACT' | translate)" 
            class="cta-button flex items-center gap-2 rounded-full shadow-xl cursor-pointer">
           <lucide-icon name="mail" class="w-4 h-4 cta-icon"></lucide-icon>
           <span>{{ 'BUTTON_CONTACT' | translate }}</span>
@@ -112,7 +112,7 @@
 
         <!-- Right Side: Black Mail Button -->
         <div class="flex-1 flex justify-end items-center">
-          <a href="mailto:info@beesesaudio.com?subject=Beeses Audio İletişim"
+          <a [href]="'mailto:info@beesesaudio.com?subject=' + ('MAIL_SUBJECT_CONTACT' | translate)"
              class="flex items-center justify-center w-10 h-10 md:w-11 md:h-11 bg-black hover:bg-beeses-dark text-white rounded-full transition-all duration-300 shadow-md cursor-pointer">
             <lucide-icon name="mail" class="w-4.5 h-4.5 md:w-5 md:h-5 text-beeses-gold"></lucide-icon>
           </a>
@@ -147,7 +147,7 @@
         <button *ngFor="let lang of languages" (click)="changeLang(lang)"
           class="flex items-center gap-2 px-3 py-2 rounded-xl border text-[10px] font-black tracking-widest uppercase transition-all duration-300"
           [ngClass]="currentLang.code === lang.code ? 'bg-white text-black border-white shadow-lg' : 'bg-transparent text-white border-white/20 hover:bg-white/5'">
-          <img [src]="lang.flag" class="w-4 h-auto rounded-sm shadow-sm"> 
+          <img [src]="lang.flag" alt="" class="w-4 h-auto rounded-sm shadow-sm"> 
           <span>{{ lang.code }}</span>
         </button>
       </div>

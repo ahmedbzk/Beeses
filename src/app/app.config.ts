@@ -5,14 +5,16 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { CustomTranslateLoader } from './i18n/custom-translate-loader';
-import { IMAGE_CONFIG } from '@angular/common';
+import { APP_BASE_HREF, IMAGE_CONFIG } from '@angular/common';
 import { adminAuthInterceptor } from './admin/guards/admin-auth.interceptor';
+import { baseHrefFactory } from './i18n/site-lang';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: APP_BASE_HREF, useFactory: baseHrefFactory },
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(withFetch(), withInterceptors([adminAuthInterceptor])),

@@ -1,21 +1,37 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
 
 <head>
   <meta charset="utf-8">
-  <title>BeesesAudio</title>
+  <title>Beeses Audio | Premium Ses Teknolojileri ve Amplifikatörler</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Beeses Audio, yüksek performanslı ses amplifikatörleri alanında yerli Ar-Ge ve inovasyon gücüyle premium ses çözümleri sunar.">
+  <meta name="google-site-verification" content="PtvsZ9lAETjXPBzaRBNnZ6n4_9962GNsQC0HVHrMpNc">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SG9J89X4Y6"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
 
+    // Google Consent Mode v2: kullanıcı çerez bandından onay verene kadar analitik çerez yazılmaz.
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      wait_for_update: 500
+    });
+    try {
+      if (localStorage.getItem('cookie_consent') === 'granted') {
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+      }
+    } catch (e) { }
+
+    gtag('js', new Date());
     gtag('config', 'G-SG9J89X4Y6');
   </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SG9J89X4Y6"></script>
 </head>
 
 <body>

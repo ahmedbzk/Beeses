@@ -398,6 +398,21 @@ export const translations = {
     DIST_APPLY_UPLOADING: 'Gönderiliyor...',
     DIST_APPLY_SUCCESS: 'Başvurunuz başarıyla alındı. En kısa sürede sizinle iletişime geçeceğiz.',
     DIST_APPLY_ERROR: 'Başvuru gönderilirken bir hata oluştu. Lütfen tekrar deneyin.',
+    DIST_APPLY_SENDING: 'Gönderiliyor...',
+    DIST_APPLY_SENDING_TEXT: 'Lütfen bekleyin, başvurunuz iletiliyor.',
+
+    MAIL_SUBJECT_CONTACT: 'Beeses Audio İletişim',
+
+    NOT_FOUND_TITLE: 'Sayfa Bulunamadı',
+    NOT_FOUND_TEXT: 'Aradığınız sayfa taşınmış, kaldırılmış ya da hiç var olmamış olabilir.',
+    NOT_FOUND_BUTTON: 'Ana Sayfaya Dön',
+
+    COOKIE_BANNER_TITLE: 'Çerez Tercihleri',
+    COOKIE_BANNER_TEXT: 'Sitemizin çalışması için zorunlu çerezler kullanıyoruz. Onay verirseniz ziyaretinizi analiz etmek için Google Analytics çerezlerini de kullanırız.',
+    COOKIE_BANNER_POLICY: 'Çerez Politikası',
+    COOKIE_BANNER_ACCEPT: 'Kabul Et',
+    COOKIE_BANNER_REJECT: 'Reddet',
+    COOKIE_BANNER_MANAGE: 'Çerez Tercihlerini Değiştir',
     DIST_APPLY_FILE_ERROR: 'Dosya yüklenemedi. Sadece PDF/DOCX ve maks 5MB.',
     DIST_APPLY_INFO_TITLE: 'Beeses Distribütörü Olmak İçin',
     DIST_APPLY_INFO_DESC1: 'Bizimle çalışmaya gösterdiğiniz ilgi için teşekkür ederiz.',
@@ -841,6 +856,21 @@ export const translations = {
     DIST_APPLY_UPLOADING: 'Submitting...',
     DIST_APPLY_SUCCESS: 'Your application has been received successfully. We will contact you soon.',
     DIST_APPLY_ERROR: 'An error occurred while submitting the application. Please try again.',
+    DIST_APPLY_SENDING: 'Sending...',
+    DIST_APPLY_SENDING_TEXT: 'Please wait, your application is being submitted.',
+
+    MAIL_SUBJECT_CONTACT: 'Beeses Audio Contact',
+
+    NOT_FOUND_TITLE: 'Page Not Found',
+    NOT_FOUND_TEXT: 'The page you are looking for may have been moved, removed or never existed.',
+    NOT_FOUND_BUTTON: 'Back to Home',
+
+    COOKIE_BANNER_TITLE: 'Cookie Preferences',
+    COOKIE_BANNER_TEXT: 'We use essential cookies to make our site work. With your consent, we also use Google Analytics cookies to analyse your visit.',
+    COOKIE_BANNER_POLICY: 'Cookie Policy',
+    COOKIE_BANNER_ACCEPT: 'Accept',
+    COOKIE_BANNER_REJECT: 'Reject',
+    COOKIE_BANNER_MANAGE: 'Change Cookie Preferences',
     DIST_APPLY_FILE_ERROR: 'File upload failed. PDF/DOCX only, max 5MB.',
     DIST_APPLY_PLACEHOLDER: 'You can write your answer here...',
     DIST_APPLY_CANCEL: 'Cancel',

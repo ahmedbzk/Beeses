@@ -6,10 +6,13 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SocialFabComponent } from './components/social-fab/social-fab.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { CookieBannerComponent } from './components/cookie-banner/cookie-banner.component';
 import { LucideAngularModule } from 'lucide-angular';
 import { filter } from 'rxjs/operators';
 
-import { Title, Meta } from '@angular/platform-browser';
+import { Meta } from '@angular/platform-browser';
+import { SeoService } from './services/seo.service';
+import { SITE_URL } from './i18n/site-lang';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +24,7 @@ import { Title, Meta } from '@angular/platform-browser';
     FooterComponent,
     SocialFabComponent,
     AlertComponent,
+    CookieBannerComponent,
     LucideAngularModule
   ],
   templateUrl: './app.component.html',
@@ -35,21 +39,14 @@ export class AppComponent implements OnInit {
     private location: Location,
     @Inject(PLATFORM_ID) private platformId: Object,
     private translate: TranslateService,
-    private titleService: Title,
-    private metaService: Meta
+    private metaService: Meta,
+    private seo: SeoService
   ) {
-    if (isPlatformBrowser(this.platformId)) {
-      const savedLang = localStorage.getItem('lang');
-      this.translate.setDefaultLang('tr');
-      if (savedLang) {
-        this.translate.use(savedLang.toLowerCase());
-      } else {
-        this.translate.use('tr');
-      }
-    } else {
-      this.translate.setDefaultLang('tr');
-      this.translate.use('tr');
-    }
+    // Dil artık URL'den gelir: /en/... -> İngilizce, diğer tüm yollar -> Türkçe.
+    // Böylece Google iki dili ayrı sayfalar olarak indeksleyebilir.
+    this.translate.setDefaultLang('tr');
+    this.translate.use(this.seo.lang);
+    this.seo.applyLang();
 
     // Sayfa henüz yüklenirken veya yenilenirken ilk andan itibaren URL kontrolünü yap
     this.checkIfDemoPage(this.location.path());
@@ -64,15 +61,10 @@ export class AppComponent implements OnInit {
       this.checkIfDemoPage(event.url);
       this.updateSEO(event.url);
 
+      // Sayfa görüntülemeleri GA4'ün "geliştirilmiş ölçüm" (tarayıcı geçmişi) özelliğiyle otomatik izlenir;
+      // burada ayrıca gtag('config') çağırmaya gerek yok.
       if (isPlatformBrowser(this.platformId)) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        // Track page view in Google Analytics
-        if ((window as any).gtag) {
-          (window as any).gtag('config', 'G-SG9J89X4Y6', {
-            'page_path': event.urlAfterRedirects || event.url
-          });
-        }
       }
     });
   }
@@ -82,17 +74,20 @@ export class AppComponent implements OnInit {
   }
 
   private updateSEO(url: string) {
-    const path = url.split('?')[0]; // Remove query params
-    const lang = this.translate.currentLang || 'tr';
+    const path = url.split(/[?#]/)[0]; // Remove query params
+    const lang = this.seo.lang;
 
     // Skip SEO update for admin pages
     if (path.includes('/admin')) {
-      this.titleService.setTitle('Yonetici Paneli | Beeses Audio');
-      this.metaService.updateTag({ name: 'robots', content: 'noindex, nofollow' });
+      this.seo.setNoIndex('Yönetici Paneli | Beeses Audio');
       return;
     }
 
-    this.metaService.removeTag("name='robots'");
+    // Bilinmeyen sayfa (404)
+    if (this.isNotFoundRoute()) {
+      this.seo.setNoIndex(lang === 'en' ? 'Page Not Found | Beeses Audio' : 'Sayfa Bulunamadı | Beeses Audio');
+      return;
+    }
 
     // Default values
     let pageTitle = '';
@@ -205,18 +200,52 @@ export class AppComponent implements OnInit {
     }
 
     if (pageTitle) {
-      this.titleService.setTitle(pageTitle);
-      this.metaService.updateTag({ name: 'description', content: pageDesc });
+      this.seo.setPage(path, { title: pageTitle, description: pageDesc });
       this.metaService.updateTag({ name: 'keywords', content: pageKeywords });
-
-      // OpenGraph SEO Meta Tags (For Facebook/WhatsApp/Social Media previews)
-      this.metaService.updateTag({ property: 'og:title', content: pageTitle });
-      this.metaService.updateTag({ property: 'og:description', content: pageDesc });
-      this.metaService.updateTag({ property: 'og:image', content: 'assets/logo.png' });
-      this.metaService.updateTag({ property: 'og:type', content: 'website' });
-      this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
-      this.metaService.updateTag({ name: 'twitter:title', content: pageTitle });
-      this.metaService.updateTag({ name: 'twitter:description', content: pageDesc });
+      this.seo.setJsonLd('page', null);
+      this.seo.setJsonLd('organization', (path === '/' || path === '') ? this.organizationJsonLd() : null);
     }
+  }
+
+  private isNotFoundRoute(): boolean {
+    let route = this.router.routerState.snapshot.root;
+    while (route.firstChild) route = route.firstChild;
+    return route.routeConfig?.path === '**';
+  }
+
+  private organizationJsonLd() {
+    return {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Organization',
+          '@id': SITE_URL + '/#organization',
+          name: 'Beeses Audio',
+          url: SITE_URL + '/',
+          logo: SITE_URL + '/assets/logo.png',
+          email: 'info@beesesaudio.com',
+          telephone: '+90 533 275 36 39',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'Oruçreis Mahallesi Giyimkent 16. Sokak, Giyimkent Sitesi B170 Blok No: 112/A',
+            addressLocality: 'Esenler',
+            addressRegion: 'İstanbul',
+            addressCountry: 'TR'
+          },
+          sameAs: [
+            'https://www.instagram.com/beeses.audio',
+            'https://www.facebook.com/share/1DWuneXLUK/'
+          ]
+        },
+        {
+          '@type': 'WebSite',
+          '@id': SITE_URL + '/#website',
+          name: 'Beeses Audio',
+          url: SITE_URL + '/',
+          inLanguage: ['tr', 'en'],
+          publisher: { '@id': SITE_URL + '/#organization' }
+        }
+      ]
+    };
   }
 }

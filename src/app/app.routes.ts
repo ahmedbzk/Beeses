@@ -18,6 +18,7 @@ import { WarrantyQueryComponent } from './pages/contact/warranty-query/warranty-
 import { InnovationComponent } from './pages/products/innovation/innovation.component';
 import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
 import { CookiePolicyComponent } from './components/cookie-policy/cookie-policy.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -49,5 +50,5 @@ export const routes: Routes = [
     ]
   },
   { path: 'admin', loadChildren: () => import('./admin/admin.routes').then(m => m.adminRoutes) },
-  { path: '**', redirectTo: '' }
+  { path: '**', component: NotFoundComponent }
 ];

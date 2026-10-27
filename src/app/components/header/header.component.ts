@@ -1,8 +1,9 @@
 import { Component, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule } from 'lucide-angular'; 
+import { LucideAngularModule } from 'lucide-angular';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { localizedPath } from '../../i18n/site-lang';
 
 @Component({
   selector: 'app-header',
@@ -27,23 +28,10 @@ export class HeaderComponent {
     { code: 'EN', name: 'English', flag: 'assets/flags/england.png' }
   ];
 
-  constructor(private translate: TranslateService) {
-    if (typeof window !== 'undefined') {
-      const savedLang = localStorage.getItem('lang');
-      if (savedLang) {
-        const found = this.languages.find(l => l.code.toLowerCase() === savedLang.toLowerCase());
-        if (found) {
-          this.currentLang = found;
-          this.translate.use(savedLang.toLowerCase());
-        } else {
-          this.translate.use('tr');
-        }
-      } else {
-        this.translate.use('tr');
-      }
-    } else {
-      this.translate.use('tr');
-    }
+  constructor(private translate: TranslateService, private location: Location) {
+    // Aktif dil AppComponent tarafından URL'den belirlenir (/en/... -> EN)
+    const lang = (this.translate.currentLang || 'tr').toUpperCase();
+    this.currentLang = this.languages.find(l => l.code === lang) || this.languages[0];
   }
 
   @HostListener('window:scroll', [])
@@ -89,12 +77,15 @@ toggleMobileIletisim(event: Event) {
   }
 }
 
-  changeLang(lang: any) { 
-    this.currentLang = lang; 
+  changeLang(lang: any) {
     this.isLangDropdownOpen = false;
+    if (lang.code === this.currentLang.code) return;
+    this.currentLang = lang;
     if (typeof window !== 'undefined') {
-      localStorage.setItem('lang', lang.code.toLowerCase());
-      window.location.reload();
+      // Aynı sayfanın diğer dildeki adresine git (ör. /products/ <-> /en/products/)
+      const target = localizedPath(lang.code.toLowerCase(), this.location.path());
+      const query = window.location.search + window.location.hash;
+      window.location.href = target + query;
     }
   }
 

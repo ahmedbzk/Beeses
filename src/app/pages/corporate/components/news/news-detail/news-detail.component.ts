@@ -5,7 +5,8 @@ import { LucideAngularModule } from 'lucide-angular';
 import { NewsService, News } from '../../../../../services/news.service';
 import { environment } from '../../../../../../environments/environment';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Title, Meta } from '@angular/platform-browser';
+import { SeoService } from '../../../../../services/seo.service';
+import { SITE_URL } from '../../../../../i18n/site-lang';
 
 @Component({
   selector: 'app-news-detail',
@@ -19,8 +20,7 @@ export class NewsDetailComponent implements OnInit {
   private router = inject(Router);
   private newsService = inject(NewsService);
   public translate = inject(TranslateService);
-  private titleService = inject(Title);
-  private metaService = inject(Meta);
+  private seo = inject(SeoService);
 
   news: News | undefined;
   otherNews: News[] = [];
@@ -51,13 +51,27 @@ export class NewsDetailComponent implements OnInit {
           this.news = res.data;
           if (this.news) {
             // Update SEO Meta Tags dynamically
-            const nTitle = this.translate.currentLang === 'en' && this.news.title_en ? this.news.title_en : this.news.title;
-            const nSummary = this.translate.currentLang === 'en' && this.news.summary_en ? this.news.summary_en : this.news.summary;
-            
-            this.titleService.setTitle(`${nTitle} | Beeses Audio`);
-            this.metaService.updateTag({ name: 'description', content: nSummary || '' });
-            this.metaService.updateTag({ property: 'og:title', content: `${nTitle} | Beeses Audio` });
-            this.metaService.updateTag({ property: 'og:description', content: nSummary || '' });
+            const nTitle = this.translatedTitle;
+            const nSummary = this.translatedSummary;
+            const image = this.news.image ? this.getImageUrl(this.news.image) : undefined;
+
+            this.seo.setPage(this.router.url, {
+              title: `${nTitle} | Beeses Audio`,
+              description: nSummary || '',
+              image,
+              type: 'article'
+            });
+            this.seo.setJsonLd('page', {
+              '@context': 'https://schema.org',
+              '@type': 'NewsArticle',
+              headline: nTitle,
+              description: nSummary || undefined,
+              image: image ? [this.seo.absoluteUrl(image)] : undefined,
+              datePublished: this.news.news_date || this.news.created_at,
+              inLanguage: this.seo.lang,
+              author: { '@type': 'Organization', name: 'Beeses Audio', url: SITE_URL + '/' },
+              publisher: { '@type': 'Organization', name: 'Beeses Audio', logo: { '@type': 'ImageObject', url: SITE_URL + '/assets/logo.png' } }
+            });
           }
           this.loadOtherNews();
         } else {
