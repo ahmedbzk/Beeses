@@ -1,5 +1,8 @@
 <?php
 require_once '../db.php';
+require_once __DIR__ . '/../auth_helper.php';
+requireAdmin('products'); // düzenleme yetkisi: products
+require_once __DIR__ . '/product_helpers.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -7,168 +10,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$slug = $_POST['slug'] ?? '';
-$name = $_POST['name'] ?? '';
-$category = $_POST['category'] ?? '';
+productCheckPostSize();
+
+$slug = trim($_POST['slug'] ?? '');
+$name = trim($_POST['name'] ?? '');
+$name_en = trim($_POST['name_en'] ?? '');
+$category = trim($_POST['category'] ?? '');
 $shortDescription = $_POST['shortDescription'] ?? '';
 $description = $_POST['description'] ?? '';
-$specs = $_POST['specs'] ?? '[]';
-$features = $_POST['features'] ?? '[]';
 $shortDescription_en = $_POST['shortDescription_en'] ?? '';
 $description_en = $_POST['description_en'] ?? '';
+$specs = $_POST['specs'] ?? '[]';
+$features = $_POST['features'] ?? '[]';
 $specs_en = $_POST['specs_en'] ?? '[]';
 $features_en = $_POST['features_en'] ?? '[]';
-$name_en = $_POST['name_en'] ?? '';
 
-if (empty($slug) || empty($name) || empty($category) || empty($name_en)) {
-    http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Lütfen Türkçe ve İngilizce isimler dahil tüm zorunlu alanları doldurun."]);
-    exit;
-}
-
-$upload_dir = '../uploads/products/';
-if (!is_dir($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
-}
-
-$allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-$allowed_doc_exts = ['pdf', 'doc', 'docx'];
-
-// Upload error code => mesaj
-function getUploadErrorMessage($code) {
-    $errors = [
-        UPLOAD_ERR_INI_SIZE   => 'Dosya boyutu sunucu limitini aşıyor',
-        UPLOAD_ERR_FORM_SIZE  => 'Dosya boyutu form limitini aşıyor',
-        UPLOAD_ERR_PARTIAL    => 'Dosya kısmen yüklendi, tekrar deneyin',
-        UPLOAD_ERR_NO_TMP_DIR => 'Geçici klasör bulunamadı',
-        UPLOAD_ERR_CANT_WRITE => 'Disk yazma hatası',
-        UPLOAD_ERR_EXTENSION  => 'Bir PHP eklentisi yüklemeyi durdurdu',
-    ];
-    return $errors[$code] ?? 'Bilinmeyen upload hatası (kod: ' . $code . ')';
-}
-
-$image_path = '';
-
-// Handle Primary Image Upload
-if (isset($_FILES['image_file'])) {
-    if ($_FILES['image_file']['error'] !== UPLOAD_ERR_OK) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Ana görsel yüklenemedi: " . getUploadErrorMessage($_FILES['image_file']['error'])]);
-        exit;
-    }
-    
-    $file_tmp_path = $_FILES['image_file']['tmp_name'];
-    $file_name = $_FILES['image_file']['name'];
-    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-
-    if (in_array($file_ext, $allowed_exts)) {
-        $unique_file_name = time() . '_main_' . uniqid() . '.' . $file_ext;
-        $dest_path = $upload_dir . $unique_file_name;
-        if (move_uploaded_file($file_tmp_path, $dest_path)) {
-            $image_path = 'uploads/products/' . $unique_file_name;
-        } else {
-            http_response_code(500);
-            echo json_encode(["success" => false, "message" => "Ana görsel sunucuya taşınamadı."]);
-            exit;
-        }
-    } else {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Geçersiz resim formatı."]);
-        exit;
-    }
-}
-
-if (empty($image_path)) {
-    http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Ana ürün görseli yüklenmelidir."]);
-    exit;
-}
-
-$gallery_images = [$image_path]; // First image in gallery is the main one
-
-// Handle Gallery Image Uploads (up to 4)
-for ($i = 0; $i < 4; $i++) {
-    $key = 'gallery_file_' . $i;
-    if (isset($_FILES[$key]) && $_FILES[$key]['error'] == UPLOAD_ERR_OK) {
-        $file_tmp_path = $_FILES[$key]['tmp_name'];
-        $file_name = $_FILES[$key]['name'];
-        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-
-        if (in_array($file_ext, $allowed_exts)) {
-            $unique_file_name = time() . '_gal_' . $i . '_' . uniqid() . '.' . $file_ext;
-            $dest_path = $upload_dir . $unique_file_name;
-            if (move_uploaded_file($file_tmp_path, $dest_path)) {
-                $gallery_images[] = 'uploads/products/' . $unique_file_name;
-            }
-        }
-    }
-}
-
-$pdf_path = '';
-
-// Handle PDF Upload
-if (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] !== UPLOAD_ERR_NO_FILE) {
-    if ($_FILES['pdf_file']['error'] !== UPLOAD_ERR_OK) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Türkçe PDF yüklenemedi: " . getUploadErrorMessage($_FILES['pdf_file']['error'])]);
-        exit;
-    }
-
-    $file_tmp_path = $_FILES['pdf_file']['tmp_name'];
-    $file_name = $_FILES['pdf_file']['name'];
-    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-
-    if (in_array($file_ext, $allowed_doc_exts)) {
-        $unique_file_name = time() . '_doc_' . uniqid() . '.' . $file_ext;
-        $dest_path = $upload_dir . $unique_file_name;
-        if (move_uploaded_file($file_tmp_path, $dest_path)) {
-            $pdf_path = 'uploads/products/' . $unique_file_name;
-        } else {
-            http_response_code(500);
-            echo json_encode(["success" => false, "message" => "Türkçe PDF sunucuya taşınamadı."]);
-            exit;
-        }
-    } else {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Türkçe PDF için geçersiz dosya türü."]);
-        exit;
-    }
-}
-
-$manual_path = '';
-
-// Handle Manual PDF Upload
-if (isset($_FILES['manual_file']) && $_FILES['manual_file']['error'] !== UPLOAD_ERR_NO_FILE) {
-    if ($_FILES['manual_file']['error'] !== UPLOAD_ERR_OK) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Türkçe Kullanım Kılavuzu yüklenemedi: " . getUploadErrorMessage($_FILES['manual_file']['error'])]);
-        exit;
-    }
-
-    $file_tmp_path = $_FILES['manual_file']['tmp_name'];
-    $file_name = $_FILES['manual_file']['name'];
-    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-
-    if (in_array($file_ext, $allowed_doc_exts)) {
-        $unique_file_name = time() . '_manual_' . uniqid() . '.' . $file_ext;
-        $dest_path = $upload_dir . $unique_file_name;
-        if (move_uploaded_file($file_tmp_path, $dest_path)) {
-            $manual_path = 'uploads/products/' . $unique_file_name;
-        } else {
-            http_response_code(500);
-            echo json_encode(["success" => false, "message" => "Türkçe Kullanım Kılavuzu sunucuya taşınamadı."]);
-            exit;
-        }
-    } else {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Türkçe Kullanım Kılavuzu için geçersiz dosya türü."]);
-        exit;
-    }
+if ($slug === '' || $name === '' || $category === '' || $name_en === '') {
+    productFail(400,
+        "Lütfen Türkçe ve İngilizce ürün adı, slug ve kategori dahil tüm zorunlu alanları doldurun.",
+        "Please fill in all required fields, including the Turkish and English product names, slug and category.");
 }
 
 try {
-    $query = "INSERT INTO products (slug, name, name_en, category, shortDescription, description, shortDescription_en, description_en, image, images, pdfUrl, manualUrl, specs, features, specs_en, features_en) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    ensureProductFileColumns($pdo);
+} catch (PDOException $e) {
+    productFail(500, "Ürün tablosu hazırlanamadı: " . $e->getMessage(), "The product table could not be prepared: " . $e->getMessage());
+}
+
+$uploaded = []; // bu istekte yüklenen dosyalar (hata olursa silinir)
+
+$image_path = productHandleUpload('image_file', 'image', 'main', 'Ana görsel', 'Main image', $uploaded);
+if (!$image_path) {
+    productFail(400, "Yeni ürün için ana görsel yüklenmelidir.", "A main image is required for a new product.");
+}
+
+$gallery_images = [$image_path];
+for ($i = 0; $i < 4; $i++) {
+    $g = productHandleUpload('gallery_file_' . $i, 'image', 'gal_' . $i, 'Galeri görseli ' . ($i + 1), 'Gallery image ' . ($i + 1), $uploaded);
+    if ($g) $gallery_images[] = $g;
+}
+
+$pdf_path    = productHandleUpload('pdf_file', 'pdf', 'doc', 'Broşür (TR)', 'Brochure (TR)', $uploaded) ?? '';
+$pdf_path_en = productHandleUpload('pdf_file_en', 'pdf', 'doc_en', 'Broşür (EN)', 'Brochure (EN)', $uploaded) ?? '';
+$manual_path = productHandleUpload('manual_file', 'pdf', 'manual', 'Kullanım kılavuzu', 'User manual', $uploaded) ?? '';
+
+try {
+    $query = "INSERT INTO products (slug, name, name_en, category, shortDescription, description, shortDescription_en, description_en, image, images, pdfUrl, pdfUrl_en, manualUrl, specs, features, specs_en, features_en)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
         $slug,
@@ -182,6 +70,7 @@ try {
         $image_path,
         json_encode($gallery_images),
         $pdf_path,
+        $pdf_path_en,
         $manual_path,
         $specs,
         $features,
@@ -189,22 +78,14 @@ try {
         $features_en
     ]);
 
-    http_response_code(201);
     $newId = $pdo->lastInsertId();
     writeAdminLog('products', 'Ekleme', "Ürün eklendi: " . $name);
-    echo json_encode(["success" => true, "message" => "Urun basariyla eklendi.", "id" => $newId]);
+    http_response_code(201);
+    echo json_encode(["success" => true, "message" => "Ürün başarıyla eklendi.", "message_en" => "Product added successfully.", "id" => $newId]);
 } catch (PDOException $e) {
-    // If database insert fails, clean up uploaded files
-    if (file_exists('../' . $image_path)) unlink('../' . $image_path);
-    foreach ($gallery_images as $g_img) {
-        if ($g_img !== $image_path && file_exists('../' . $g_img)) {
-            unlink('../' . $g_img);
-        }
-    }
-    if (!empty($pdf_path) && file_exists('../' . $pdf_path)) unlink('../' . $pdf_path);
-    if (!empty($manual_path) && file_exists('../' . $manual_path)) unlink('../' . $manual_path);
-
-    http_response_code(500);
-    echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()]);
+    // Kayıt başarısızsa bu istekte yüklenen tüm dosyaları temizle
+    productDeleteFiles($uploaded);
+    [$tr, $en] = productDbError($e);
+    productFail(500, $tr, $en);
 }
 ?>

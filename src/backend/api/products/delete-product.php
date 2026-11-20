@@ -1,13 +1,14 @@
 <?php
 require_once '../db.php';
+require_once __DIR__ . '/../auth_helper.php';
+requireAdmin('products'); // düzenleme yetkisi: products
+require_once __DIR__ . '/product_helpers.php';
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
-
-
 
 $id = $_GET['id'] ?? null;
 
@@ -20,50 +21,34 @@ if (!$id) {
 }
 
 if (empty($id)) {
-    http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Urun kimligi (id) zorunludur."]);
-    exit;
+    productFail(400, "Ürün kimliği (id) zorunludur.", "Product id is required.");
 }
 
 try {
-    // 1. Fetch product files to delete them physically
-    $stmt = $pdo->prepare("SELECT image, images, pdfUrl FROM products WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
     $stmt->execute([$id]);
     $prod = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($prod) {
-        // Delete main image
-        if (!empty($prod['image']) && strpos($prod['image'], 'uploads/') === 0 && file_exists('../' . $prod['image'])) {
-            unlink('../' . $prod['image']);
-        }
-
-        // Delete gallery images
-        $gallery = json_decode($prod['images'] ?? '[]', true);
-        if (is_array($gallery)) {
-            foreach ($gallery as $img) {
-                if ($img !== $prod['image'] && strpos($img, 'uploads/') === 0 && file_exists('../' . $img)) {
-                    unlink('../' . $img);
-                }
-            }
-        }
-
-        // Delete PDF
-        if (!empty($prod['pdfUrl']) && strpos($prod['pdfUrl'], 'uploads/') === 0 && file_exists('../' . $prod['pdfUrl'])) {
-            unlink('../' . $prod['pdfUrl']);
-        }
-
-        // 2. Delete database record
-        $deleteStmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
-        $deleteStmt->execute([$id]);
-
-                writeAdminLog('products', 'Silme', "Ürün silindi (ID: " . $id . ")");
-        echo json_encode(["success" => true, "message" => "Urun ve iliskili tum dosyalar basariyla silindi."]);
-    } else {
-        http_response_code(404);
-        echo json_encode(["success" => false, "message" => "Urun bulunamadi."]);
+    if (!$prod) {
+        productFail(404, "Ürün bulunamadı.", "Product not found.");
     }
+
+    $deleteStmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
+    $deleteStmt->execute([$id]);
 } catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()]);
+    [$tr, $en] = productDbError($e);
+    productFail(500, $tr, $en);
 }
+
+// Kayıt silindikten sonra tüm ilişkili dosyaları sil: görseller, TR/EN broşür ve kullanım kılavuzu
+$gallery = json_decode($prod['images'] ?? '[]', true);
+$files = is_array($gallery) ? $gallery : [];
+$files[] = $prod['image'] ?? '';
+$files[] = $prod['pdfUrl'] ?? '';
+$files[] = $prod['pdfUrl_en'] ?? '';
+$files[] = $prod['manualUrl'] ?? '';
+productDeleteFiles($files);
+
+writeAdminLog('products', 'Silme', "Ürün silindi: " . ($prod['name'] ?? '') . " (ID: " . $id . ")");
+echo json_encode(["success" => true, "message" => "Ürün ve ilişkili tüm dosyalar silindi.", "message_en" => "The product and all related files were deleted."]);
 ?>

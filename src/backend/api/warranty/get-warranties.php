@@ -1,5 +1,7 @@
 <?php
 require_once '../db.php';
+require_once __DIR__ . '/../auth_helper.php';
+requireAdmin(); // oturum zorunlu
 // get-warranties.php - Garanti kayıtlarını listeleyen API
 header("Content-Type: application/json; charset=UTF-8");
 

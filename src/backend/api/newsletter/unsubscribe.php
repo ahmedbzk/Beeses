@@ -13,7 +13,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 if (empty($data->id)) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Geçersiz istek."]);
+    echo json_encode(["success" => false, "message" => "Geçersiz istek.", "message_en" => "Invalid request."]);
     exit();
 }
 
@@ -21,10 +21,10 @@ try {
     $stmt = $pdo->prepare("UPDATE newsletter_subscribers SET is_active = 0 WHERE id = :id");
     $stmt->execute([':id' => $data->id]);
 
-    echo json_encode(["success" => true, "message" => "Abone başarıyla silindi."]);
+    echo json_encode(["success" => true, "message" => "Abone başarıyla silindi.", "message_en" => "You have been unsubscribed successfully."]);
 
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()]);
+    echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage(), "message_en" => "Database error: " . $e->getMessage()]);
 }
 ?>

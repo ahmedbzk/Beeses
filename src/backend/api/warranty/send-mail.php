@@ -1,5 +1,7 @@
 <?php
 require_once '../db.php';
+require_once __DIR__ . '/../auth_helper.php';
+requireAdmin('warranties'); // düzenleme yetkisi: warranties
 // send-mail.php - Garanti admin panelinden kullanıcıya mail gönderme
 header("Content-Type: application/json; charset=UTF-8");
 

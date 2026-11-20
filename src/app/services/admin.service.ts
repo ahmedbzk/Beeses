@@ -29,6 +29,11 @@ export class AdminService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/admins`;
 
+  /** Sunucudaki oturum token'ını geçersiz kılar (çıkış). */
+  logout(): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/auth/logout.php`, {});
+  }
+
   getAdmins(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/get-admins.php`);
   }

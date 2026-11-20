@@ -1,5 +1,7 @@
 <?php
 require_once '../db.php';
+require_once __DIR__ . '/../auth_helper.php';
+requireAdmin(); // oturum zorunlu
 // get-warranty-emails.php - Garanti başvurusuna gönderilen e-postaları getiren API
 header("Content-Type: application/json; charset=UTF-8");
 

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { environment } from '../../../../environments/environment';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { apiMessage } from '../../../services/api-message';
 
 export interface WarrantyDetails {
   product_name: string;
@@ -104,10 +105,10 @@ export class WarrantyQueryComponent implements OnInit {
           this.generateCaptcha();
         } else {
           if (res.status === 'pending' || res.status === 'rejected') {
-            this.infoMessage = res.message;
+            this.infoMessage = apiMessage(res, this.translate.currentLang) || this.translate.instant(res.status === 'pending' ? 'WARRANTY_QUERY_PENDING' : 'WARRANTY_QUERY_REJECTED');
             this.queryStatus = res.status;
           } else {
-            this.errorMessage = res.message || this.translate.instant('WARRANTY_QUERY_NOT_FOUND');
+            this.errorMessage = apiMessage(res, this.translate.currentLang) || this.translate.instant('WARRANTY_QUERY_NOT_FOUND');
             this.queryStatus = null;
           }
           this.generateCaptcha();

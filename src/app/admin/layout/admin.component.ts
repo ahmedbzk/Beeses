@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../services/admin.service';
 import { AlertService } from '../../services/alert.service';
+import { clearAdminSession } from '../guards/admin-session';
 
 @Component({
   selector: 'app-admin-layout',
@@ -439,13 +440,10 @@ export class AdminLayoutComponent implements OnDestroy {
     this.destroy$.next();
     this.isBrowser = false;
 
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('admin_token');
-      localStorage.removeItem('admin_username');
-      localStorage.removeItem('admin_role');
-      localStorage.removeItem('admin_permissions');
-      localStorage.removeItem('admin_id');
-    }
+    // Token'ı sunucuda da geçersiz kıl; yanıtı beklemeden yerel oturumu temizle
+    // (istek, token henüz silinmeden gönderilir — interceptor başlıkları hemen ekler)
+    this.adminService.logout().subscribe({ error: () => {} });
+    clearAdminSession();
     this.router.navigate(['/admin/login']);
   }
 

@@ -105,7 +105,7 @@ export class AdminLoginComponent {
       },
       error: () => {
         this.isSubmitting = false;
-        this.errorMessage = 'Sunucu bağlantı hatası. XAMPP açık mı?';
+        this.errorMessage = 'Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.';
       }
     });
   }

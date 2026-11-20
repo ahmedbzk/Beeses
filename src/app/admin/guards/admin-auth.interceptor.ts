@@ -1,11 +1,14 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertService } from '../../services/alert.service';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { clearAdminSession } from './admin-session';
 
 export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const alertService = inject(AlertService);
+  const router = inject(Router);
 
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('admin_token');
@@ -20,7 +23,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
       const cloned = req.clone({
         setHeaders: {
           'X-Admin-Id': adminId,
-          'X-Admin-Username': username,
+          'X-Admin-Username': encodeURIComponent(username),
           'X-Admin-Token': token
         }
       });
@@ -28,8 +31,11 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
         catchError((error: HttpErrorResponse) => {
           if (error.status === 403) {
             alertService.showError('Bu işlem için yetkiniz yok.');
-          } else if (error.status === 401) {
+          } else if (error.status === 401 && !req.url.includes('/auth/logout.php')) {
+            // Sunucu oturumu tanımıyor (süresi dolmuş / çıkış yapılmış): yerel oturumu temizle, girişe yönlendir
+            clearAdminSession();
             alertService.showError('Oturum süreniz doldu, lütfen tekrar giriş yapın.');
+            router.navigate(['/admin/login']);
           }
           return throwError(() => error);
         })

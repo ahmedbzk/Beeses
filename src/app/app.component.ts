@@ -74,7 +74,9 @@ export class AppComponent implements OnInit {
   }
 
   private updateSEO(url: string) {
-    const path = url.split(/[?#]/)[0]; // Remove query params
+    // Query'yi ve sondaki "/"yu at: linkler artık "/products/" biçiminde (TrailingSlashUrlSerializer),
+    // aşağıdaki eşleştirmeler ise "/products" biçimini bekliyor.
+    const path = url.split(/[?#]/)[0].replace(/(.)\/+$/, '$1');
     const lang = this.seo.lang;
 
     // Skip SEO update for admin pages

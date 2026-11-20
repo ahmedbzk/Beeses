@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 $serial_number = $_GET['serial_number'] ?? '';
 
 if (empty($serial_number)) {
-    echo json_encode(["success" => false, "message" => "Seri numarası girmelisiniz."]);
+    echo json_encode(["success" => false, "message" => "Seri numarası girmelisiniz.", "message_en" => "Please enter a serial number."]);
     exit;
 }
 
@@ -78,30 +78,30 @@ try {
             echo json_encode([
                 "success" => false,
                 "status" => "pending",
-                "message" => "Garanti kaydınız alındı ve onay bekliyor. Fatura üzerindeki satış tarihi baz alınarak en kısa sürede onaylanacaktır."
+                "message" => "Garanti kaydınız alındı ve onay bekliyor. Fatura üzerindeki satış tarihi baz alınarak en kısa sürede onaylanacaktır.", "message_en" => "Your warranty registration has been received and is awaiting approval. It will be approved as soon as possible based on the sale date on your invoice."
             ]);
         } elseif ($status === 'rejected') {
             echo json_encode([
                 "success" => false,
                 "status" => "rejected",
-                "message" => "Garanti başvurunuz reddedilmiştir. Bilgilerin doğruluğunu kontrol edip yeniden başvurabilir veya destek için bizimle iletişime geçebilirsiniz."
+                "message" => "Garanti başvurunuz reddedilmiştir. Bilgilerin doğruluğunu kontrol edip yeniden başvurabilir veya destek için bizimle iletişime geçebilirsiniz.", "message_en" => "Your warranty application has been rejected. Please check your information and apply again, or contact us for support."
             ]);
         } else {
             echo json_encode([
                 "success" => false,
                 "status" => "not_found",
-                "message" => "Sistemde bu seri numarasına ait aktif bir garanti bulunamadı."
+                "message" => "Sistemde bu seri numarasına ait aktif bir garanti bulunamadı.", "message_en" => "No active warranty was found for this serial number."
             ]);
         }
     } else {
         echo json_encode([
             "success" => false,
             "status" => "not_found",
-            "message" => "Girilen seri numarasına ait bir garanti kaydı bulunamadı. Lütfen bilgilerinizi kontrol edin."
+            "message" => "Girilen seri numarasına ait bir garanti kaydı bulunamadı. Lütfen bilgilerinizi kontrol edin.", "message_en" => "No warranty record was found for the entered serial number. Please check your information."
         ]);
     }
 
 } catch (Exception $e) {
-    echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()]);
+    echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage(), "message_en" => "Database error: " . $e->getMessage()]);
 }
 ?>

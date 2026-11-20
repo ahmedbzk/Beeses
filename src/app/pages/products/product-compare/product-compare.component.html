@@ -1,0 +1,264 @@
+<div *ngIf="open" [class.is-closing]="isClosing" class="compare-overlay fixed inset-0 z-[10000] flex flex-col bg-beeses-silver" role="dialog" aria-modal="true" [attr.aria-label]="'COMPARE_TITLE' | ct: lang">
+
+  <!-- ===== Üst Bar ===== -->
+  <div class="relative shrink-0 bg-beeses-dark text-white overflow-hidden">
+    <div class="header-glow absolute inset-0 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-beeses-gold/40 to-transparent"></div>
+
+    <!-- Sol hizası, alttaki ürün seçici panelinin iç boşluğuyla (px-4 md:px-6) aynı -->
+    <div class="relative px-4 md:px-6 py-3 md:py-5 flex items-center justify-between gap-3 md:gap-4">
+      <div class="flex items-center gap-3 md:gap-4 min-w-0">
+        <div class="hidden sm:flex w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-beeses-gold/15 border border-beeses-gold/30 text-beeses-gold items-center justify-center shrink-0">
+          <lucide-icon name="git-compare" class="w-5 h-5 md:w-6 md:h-6"></lucide-icon>
+        </div>
+        <div class="min-w-0">
+          <span class="hidden sm:block text-beeses-gold text-[10px] tracking-[0.4em] font-extrabold uppercase">{{ 'COMPARE_TAG' | ct: lang }}</span>
+          <h2 class="text-sm sm:text-lg md:text-2xl font-black uppercase tracking-tight leading-tight">{{ 'COMPARE_TITLE' | ct: lang }}</h2>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 md:gap-4 shrink-0">
+        <!-- Dil seçici -->
+        <div class="flex items-center p-0.5 md:p-1 rounded-full bg-white/[0.05] border border-white/10" role="group" aria-label="Language">
+          <button *ngFor="let l of langs" (click)="switchLang(l.code)"
+                  class="flex items-center gap-1.5 px-2.5 md:px-3 py-1.5 rounded-full text-[10px] md:text-[11px] font-bold tracking-widest transition-all duration-300"
+                  [ngClass]="activeLang === l.code ? 'bg-white/10 text-white' : 'text-white/45 hover:text-white'"
+                  [attr.aria-pressed]="activeLang === l.code">
+            <img [src]="l.flag" [alt]="l.label" class="hidden sm:block w-4 h-4 rounded-full object-cover">
+            <span>{{ l.label }}</span>
+          </button>
+        </div>
+
+        <!-- Kapat: mobilde yuvarlak altın buton, geniş ekranda yazılı -->
+        <button (click)="close()" class="group flex items-center justify-center sm:justify-start gap-2 w-10 h-10 sm:w-auto sm:h-11 sm:pl-3 sm:pr-5 rounded-full bg-beeses-gold text-beeses-dark font-black text-[11px] uppercase tracking-[0.2em] shadow-[0_8px_24px_rgba(181,129,49,0.35)] transition-all duration-300 hover:bg-white hover:shadow-[0_10px_28px_rgba(255,255,255,0.15)]" [attr.aria-label]="'COMPARE_CLOSE' | ct: lang">
+          <span class="sm:w-7 sm:h-7 rounded-full sm:bg-beeses-dark/15 flex items-center justify-center">
+            <lucide-icon name="x" class="w-5 h-5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:rotate-90"></lucide-icon>
+          </span>
+          <span class="hidden sm:inline">{{ 'COMPARE_CLOSE' | ct: lang }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Gövde =====
+       Mobil/tablet (< lg): tüm gövde tek parça kayar, ürün şeridi üstte yapışkan kalır.
+       Masaüstü (lg+): solda sabit seçici, sağda kendi içinde kayan tablo. -->
+  <div class="flex-1 min-h-0 overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row compare-scroll">
+
+    <!-- Ürün Seçici -->
+    <aside class="shrink-0 lg:w-80 xl:w-96 bg-white border-b lg:border-b-0 lg:border-r border-gray-200 flex flex-col lg:min-h-0">
+      <div class="px-4 md:px-6 pt-4 md:pt-6 pb-3 md:pb-4 space-y-3 md:space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-[10px] md:text-xs font-bold text-gray-400 tracking-[0.15em] uppercase">{{ 'COMPARE_SELECT_TITLE' | ct: lang }}</h3>
+          <span class="text-[11px] font-bold tracking-wider px-2.5 py-1 rounded-full"
+                [ngClass]="selectedSlugs.length >= maxSelection ? 'bg-beeses-gold/15 text-beeses-gold' : 'bg-gray-100 text-gray-500'">
+            {{ selectedSlugs.length }} / {{ maxSelection }}
+          </span>
+        </div>
+
+        <!-- Seri filtreleri: mobilde tek satır kaydırmalı, masaüstünde sarmalı -->
+        <div class="flex lg:flex-wrap gap-1.5 overflow-x-auto lg:overflow-visible no-scrollbar -mx-4 px-4 md:-mx-6 md:px-6 lg:mx-0 lg:px-0">
+          <button (click)="setPickerCategory(null)"
+                  class="shrink-0 whitespace-nowrap px-3 py-1.5 md:py-2 rounded-full text-[10px] font-bold tracking-wider uppercase transition-all duration-300 border"
+                  [ngClass]="pickerCategory === null ? 'bg-beeses-dark text-white border-beeses-dark' : 'bg-white text-gray-500 border-gray-200 hover:border-beeses-gold/40'">
+            {{ 'PRODUCTS_CATEGORY_ALL' | ct: lang }}
+          </button>
+          <button *ngFor="let cat of categories" (click)="setPickerCategory(cat)"
+                  class="shrink-0 whitespace-nowrap px-3 py-1.5 md:py-2 rounded-full text-[10px] font-bold tracking-wider uppercase transition-all duration-300 border"
+                  [ngClass]="pickerCategory === cat ? 'bg-beeses-dark text-white border-beeses-dark' : 'bg-white text-gray-500 border-gray-200 hover:border-beeses-gold/40'">
+            {{ categoryKey(cat) | ct: lang }}
+          </button>
+        </div>
+
+        <p *ngIf="limitWarning" class="text-[11px] text-beeses-gold font-semibold animate-fade-in">{{ 'COMPARE_MAX_WARNING' | ct: lang : { max: maxSelection } }}</p>
+      </div>
+
+      <!-- Ürün listesi: mobilde kompakt yatay kaydırma, masaüstünde dikey liste -->
+      <div class="flex lg:flex-col gap-2 lg:gap-3 overflow-x-auto lg:overflow-x-visible lg:overflow-y-auto px-4 md:px-6 pb-4 md:pb-6 no-scrollbar lg:flex-1 lg:min-h-0">
+        <button *ngFor="let p of pickerProducts; trackBy: trackBySlug" (click)="toggleProduct(p)"
+                class="group relative shrink-0 w-36 lg:w-full flex flex-col lg:flex-row items-stretch lg:items-center gap-2 lg:gap-3 p-2 lg:p-2.5 rounded-xl lg:rounded-2xl border text-left transition-all duration-300"
+                [ngClass]="isSelected(p) ? 'border-beeses-gold bg-beeses-gold/[0.06] shadow-[0_8px_20px_rgba(181,129,49,0.12)]' : 'border-gray-100 bg-gray-50 hover:border-beeses-gold/40 hover:bg-white'">
+          <div class="w-full h-16 lg:w-16 lg:h-14 rounded-lg lg:rounded-xl bg-white border border-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+            <img decoding="async" [src]="getImageUrl(p.image)" [alt]="productName(p)" class="w-full h-full object-contain scale-[1.35]">
+          </div>
+          <div class="flex-1 min-w-0 pr-5 lg:pr-0">
+            <span class="text-[8px] lg:text-[9px] font-bold tracking-widest uppercase text-beeses-gold block">{{ categoryKey(p.category) | ct: lang }}</span>
+            <span class="text-[11px] lg:text-sm font-bold text-beeses-dark leading-tight line-clamp-2">{{ productName(p) }}</span>
+          </div>
+          <div class="absolute top-1.5 right-1.5 lg:static w-5 h-5 lg:w-6 lg:h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-300"
+               [ngClass]="isSelected(p) ? 'bg-beeses-gold border-beeses-gold' : 'bg-white border-gray-300 group-hover:border-beeses-gold/60'">
+            <lucide-icon *ngIf="isSelected(p)" name="check" class="w-3 h-3 lg:w-3.5 lg:h-3.5 text-white"></lucide-icon>
+          </div>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Karşılaştırma -->
+    <main class="flex-1 min-w-0 flex flex-col lg:min-h-0">
+
+      <!-- Araç çubuğu -->
+      <div class="shrink-0 flex items-center justify-between gap-3 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200/70 bg-beeses-silver">
+        <p class="text-xs md:text-sm text-gray-500 font-medium">{{ 'COMPARE_SELECTED_COUNT' | ct: lang : { count: selectedProducts.length } }}</p>
+        <div class="flex items-center gap-3">
+          <label class="flex items-center gap-2 md:gap-2.5 cursor-pointer select-none">
+            <span class="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">{{ 'COMPARE_ONLY_DIFF' | ct: lang }}</span>
+            <button type="button" role="switch" [attr.aria-checked]="onlyDifferences" (click)="toggleOnlyDifferences()"
+                    class="relative w-10 h-5 md:w-11 md:h-6 rounded-full transition-colors duration-300 shrink-0"
+                    [ngClass]="onlyDifferences ? 'bg-beeses-gold' : 'bg-gray-300'">
+              <span class="absolute top-0.5 left-0.5 w-4 h-4 md:w-5 md:h-5 rounded-full bg-white shadow transition-transform duration-300"
+                    [ngClass]="onlyDifferences ? 'translate-x-5' : 'translate-x-0'"></span>
+            </button>
+          </label>
+          <button *ngIf="selectedSlugs.length > 0" (click)="clearSelection()"
+                  class="hidden sm:block text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-beeses-gold transition-colors">
+            {{ 'COMPARE_CLEAR' | ct: lang }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Boş durum -->
+      <div *ngIf="selectedProducts.length < 2" class="flex-1 flex items-center justify-center p-8">
+        <div class="text-center max-w-sm animate-fade-in">
+          <div class="w-16 h-16 rounded-2xl bg-beeses-gold/10 text-beeses-gold flex items-center justify-center mx-auto mb-5">
+            <lucide-icon name="scale" class="w-8 h-8"></lucide-icon>
+          </div>
+          <h3 class="text-xl font-bold text-beeses-dark mb-2">{{ (selectedProducts.length === 1 ? 'COMPARE_ONE_MORE_TITLE' : 'COMPARE_EMPTY_TITLE') | ct: lang }}</h3>
+          <p class="text-gray-500 text-sm">{{ selectedProducts.length === 1 ? ('COMPARE_ONE_MORE_DESC' | ct: lang : { name: productName(selectedProducts[0]) }) : ('COMPARE_EMPTY_DESC' | ct: lang) }}</p>
+        </div>
+      </div>
+
+      <!-- ========== MOBİL / TABLET (< lg): yatay kaydırmasız, sütunlu düzen ========== -->
+      <div *ngIf="selectedProducts.length >= 2" class="lg:hidden pb-10">
+
+        <!-- Yapışkan ürün şeridi -->
+        <div class="sticky top-0 z-20 bg-beeses-silver border-b border-gray-200 px-3 py-3 shadow-[0_6px_16px_rgba(0,0,0,0.04)]">
+          <div class="grid gap-2" [style.gridTemplateColumns]="gridColumns">
+            <div *ngFor="let p of selectedProducts; trackBy: trackBySlug" class="relative bg-white rounded-xl border border-gray-100 overflow-hidden">
+              <button (click)="toggleProduct(p)" class="absolute top-1 right-1 z-10 w-6 h-6 rounded-full bg-white/90 border border-gray-200 flex items-center justify-center text-gray-400 active:text-red-500" [attr.aria-label]="'COMPARE_REMOVE' | ct: lang">
+                <lucide-icon name="x" class="w-3 h-3"></lucide-icon>
+              </button>
+              <div class="product-thumb h-16 sm:h-20 flex items-center justify-center overflow-hidden">
+                <img decoding="async" [src]="getImageUrl(p.image)" [alt]="productName(p)" class="w-full h-full object-contain scale-[1.3] drop-shadow-[0_8px_8px_rgba(0,0,0,0.15)]">
+              </div>
+              <a [routerLink]="['/products', p.slug]" (click)="close()" class="block px-2 py-2">
+                <span class="text-[8px] font-bold tracking-widest uppercase text-beeses-gold block truncate">{{ categoryKey(p.category) | ct: lang }}</span>
+                <span class="mobile-name text-[11px] sm:text-xs font-bold text-beeses-dark line-clamp-2">{{ productName(p) }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Özellik satırları: etiket tam genişlikte, değerler altında ürün sütunlarıyla hizalı -->
+        <div *ngFor="let row of visibleRows; trackBy: trackByKey" class="mobile-row" [class.is-diff]="row.differs">
+          <div class="flex items-center gap-2 px-4 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-beeses-dark">
+            <span class="w-1.5 h-1.5 rounded-full shrink-0" [ngClass]="row.differs ? 'bg-beeses-gold' : 'bg-gray-300'"></span>
+            {{ row.label }}
+          </div>
+          <div class="grid gap-2 px-3 pb-3" [style.gridTemplateColumns]="gridColumns">
+            <div *ngFor="let v of row.values" class="px-1 text-xs leading-snug break-words"
+                 [ngClass]="row.differs ? 'text-beeses-dark font-semibold' : 'text-gray-500 font-medium'">
+              <span *ngIf="v; else noValueM">{{ v }}</span>
+              <ng-template #noValueM><span class="text-gray-300">–</span></ng-template>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!onlyDifferences" class="mobile-row">
+          <div class="flex items-center gap-2 px-4 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-beeses-dark">
+            <lucide-icon name="star" class="w-3 h-3 text-beeses-gold shrink-0"></lucide-icon>
+            {{ 'COMPARE_FEATURES' | ct: lang }}
+          </div>
+          <div class="grid gap-2 px-3 pb-4" [style.gridTemplateColumns]="gridColumns">
+            <div *ngFor="let feats of featureRow" class="px-1">
+              <ul *ngIf="feats.length; else noFeatM" class="space-y-1.5">
+                <li *ngFor="let f of feats" class="flex items-start gap-1 text-[11px] text-gray-600 font-medium leading-snug">
+                  <lucide-icon name="check" class="w-3 h-3 text-beeses-gold shrink-0 mt-0.5"></lucide-icon>
+                  <span class="break-words min-w-0">{{ f }}</span>
+                </li>
+              </ul>
+              <ng-template #noFeatM><span class="text-gray-300 text-xs">–</span></ng-template>
+            </div>
+          </div>
+        </div>
+
+        <p *ngIf="onlyDifferences && visibleRows.length === 0" class="text-center text-sm text-gray-500 py-10 px-6">{{ 'COMPARE_NO_DIFF' | ct: lang }}</p>
+      </div>
+
+      <!-- ========== MASAÜSTÜ (lg+): tablo ========== -->
+      <div *ngIf="selectedProducts.length >= 2" class="hidden lg:block flex-1 min-h-0 overflow-auto compare-scroll">
+        <!-- table-fixed + colgroup: ürün sütunları her zaman eşit genişlikte -->
+        <table class="compare-table w-full table-fixed border-separate border-spacing-0"
+               [style.min-width.px]="labelColWidth + selectedProducts.length * 240">
+          <colgroup>
+            <col [style.width.px]="labelColWidth">
+            <col *ngFor="let p of selectedProducts; trackBy: trackBySlug">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="sticky top-0 left-0 z-30 bg-beeses-silver p-6 align-bottom text-left">
+                <span class="text-[10px] font-extrabold text-gray-400 tracking-[0.3em] uppercase">{{ 'COMPARE_SPEC' | ct: lang }}</span>
+              </th>
+              <th *ngFor="let p of selectedProducts; trackBy: trackBySlug" class="sticky top-0 z-20 bg-beeses-silver p-4 align-top">
+                <div class="relative h-full bg-white rounded-2xl border border-gray-100 shadow-[0_10px_30px_rgba(0,0,0,0.05)] overflow-hidden text-left">
+                  <button (click)="toggleProduct(p)" class="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full bg-white/90 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors" [attr.aria-label]="'COMPARE_REMOVE' | ct: lang">
+                    <lucide-icon name="x" class="w-3.5 h-3.5"></lucide-icon>
+                  </button>
+                  <div class="product-thumb relative h-44 flex items-center justify-center overflow-hidden">
+                    <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 bg-beeses-dark/80 rounded-full text-[9px] font-bold tracking-widest uppercase text-beeses-gold border border-beeses-gold/20">{{ categoryKey(p.category) | ct: lang }}</span>
+                    <img decoding="async" [src]="getImageUrl(p.image)" [alt]="productName(p)" class="w-full h-full object-contain scale-[1.3] drop-shadow-[0_14px_14px_rgba(0,0,0,0.18)]">
+                  </div>
+                  <div class="p-4 pt-3">
+                    <!-- Sabit yükseklik: isim 1 ya da 2 satır olsa da tüm kartlar aynı hizada kalır -->
+                    <h4 class="product-name text-base font-bold text-beeses-dark mb-1 line-clamp-2 normal-case tracking-normal" [title]="productName(p)">{{ productName(p) }}</h4>
+                    <p class="text-xs text-gray-500 font-medium line-clamp-1 h-4 mb-3 normal-case tracking-normal">{{ productShortDesc(p) }}</p>
+                    <a [routerLink]="['/products', p.slug]" (click)="close()" class="inline-flex items-center gap-1.5 text-[10px] font-bold text-beeses-dark uppercase tracking-widest hover:text-beeses-gold transition-colors">
+                      {{ 'PRODUCTS_MORE_DETAILS' | ct: lang }}
+                      <lucide-icon name="arrow-right" class="w-3.5 h-3.5"></lucide-icon>
+                    </a>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let row of visibleRows; trackBy: trackByKey" class="compare-row" [class.is-diff]="row.differs">
+              <th scope="row" class="sticky left-0 z-10 text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-beeses-dark row-label">
+                <span class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full shrink-0" [ngClass]="row.differs ? 'bg-beeses-gold' : 'bg-gray-300'"></span>
+                  {{ row.label }}
+                </span>
+              </th>
+              <td *ngFor="let v of row.values" class="px-5 py-4 text-sm align-top"
+                  [ngClass]="row.differs ? 'text-beeses-dark font-semibold' : 'text-gray-500 font-medium'">
+                <span *ngIf="v; else noValue">{{ v }}</span>
+                <ng-template #noValue><lucide-icon name="minus" class="w-4 h-4 text-gray-300"></lucide-icon></ng-template>
+              </td>
+            </tr>
+
+            <!-- Öne çıkan özellikler -->
+            <tr *ngIf="!onlyDifferences" class="compare-row">
+              <th scope="row" class="sticky left-0 z-10 text-left px-6 py-5 text-xs font-bold uppercase tracking-wider text-beeses-dark align-top row-label">
+                <span class="flex items-center gap-2">
+                  <lucide-icon name="star" class="w-3.5 h-3.5 text-beeses-gold shrink-0"></lucide-icon>
+                  {{ 'COMPARE_FEATURES' | ct: lang }}
+                </span>
+              </th>
+              <td *ngFor="let feats of featureRow" class="px-5 py-5 align-top">
+                <ul *ngIf="feats.length; else noFeat" class="space-y-2">
+                  <li *ngFor="let f of feats" class="flex items-start gap-2 text-xs text-gray-600 font-medium leading-snug">
+                    <lucide-icon name="check" class="w-3.5 h-3.5 text-beeses-gold shrink-0 mt-px"></lucide-icon>
+                    {{ f }}
+                  </li>
+                </ul>
+                <ng-template #noFeat><lucide-icon name="minus" class="w-4 h-4 text-gray-300"></lucide-icon></ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p *ngIf="onlyDifferences && visibleRows.length === 0" class="text-center text-sm text-gray-500 py-10">{{ 'COMPARE_NO_DIFF' | ct: lang }}</p>
+      </div>
+    </main>
+  </div>
+</div>

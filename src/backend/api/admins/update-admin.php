@@ -1,5 +1,7 @@
 <?php
 require_once '../db.php';
+require_once __DIR__ . '/../auth_helper.php';
+requireAdmin('admins'); // düzenleme yetkisi: admins
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -41,7 +43,7 @@ try {
 
     if (!empty($password)) {
         // Hashed password
-        $hashed_password = md5($password);
+        $hashed_password = hashAdminPassword($password);
         $query = "UPDATE admins SET username = ?, password = ?, role = ?, permissions = ? WHERE id = ?";
         $stmt = $pdo->prepare($query);
         $stmt->execute([$username, $hashed_password, $role, $permissions_json, $id]);

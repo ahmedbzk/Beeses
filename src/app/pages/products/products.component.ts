@@ -8,11 +8,13 @@ import { NewsletterService } from '../../services/newsletter.service';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { ProductCompareComponent } from './product-compare/product-compare.component';
+import { apiMessage } from '../../services/api-message';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, LucideAngularModule, FormsModule, TranslateModule, ProductCompareComponent],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss'
 })
@@ -31,6 +33,7 @@ export class ProductsComponent implements OnInit {
   searchQuery: string = '';
   isLoading: boolean = true;
   isFilterOpen: boolean = false;
+  isCompareOpen: boolean = false;
   apiUrl = environment.apiUrl;
 
   newsletterEmail: string = '';
@@ -116,6 +119,10 @@ export class ProductsComponent implements OnInit {
     this.filteredProducts = result;
   }
 
+  closeCompare(): void {
+    this.isCompareOpen = false;
+  }
+
   toggleFilter(): void {
     this.isFilterOpen = !this.isFilterOpen;
   }
@@ -142,12 +149,12 @@ export class ProductsComponent implements OnInit {
         if (res.success) {
           this.newsletterSuccess = true;
         } else {
-          this.newsletterError = res.message || 'Bir hata oluştu. Lütfen tekrar deneyin.';
+          this.newsletterError = apiMessage(res, this.translate.currentLang) || this.translate.instant('NEWSLETTER_ERROR');
         }
       },
       error: () => {
         this.newsletterLoading = false;
-        this.newsletterError = 'Sunucu bağlantısı kurulamadı. Lütfen daha sonra tekrar deneyin.';
+        this.newsletterError = this.translate.instant('ERROR_CONNECTION');
       }
     });
   }

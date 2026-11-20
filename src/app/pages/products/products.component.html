@@ -91,6 +91,11 @@
             <p class="text-gray-500 text-sm font-medium">
               {{ 'PRODUCTS_FOUND' | translate: { count: filteredProducts.length } }}
             </p>
+            <button *ngIf="products.length > 1" (click)="isCompareOpen = true" class="compare-btn group">
+              <span *ngIf="!isCompareOpen" class="compare-btn-shine" aria-hidden="true"></span>
+              <lucide-icon name="git-compare" class="relative z-10 w-4 h-4 text-beeses-gold transition-transform duration-500 group-hover:rotate-180"></lucide-icon>
+              <span class="relative z-10">{{ 'COMPARE_BUTTON' | translate }}</span>
+            </button>
           </div>
 
           <!-- Empty State -->
@@ -149,6 +154,8 @@
     </div>
   </div>
 </section>
+
+<app-product-compare [open]="isCompareOpen" [products]="products" [categories]="categories" (closed)="closeCompare()"></app-product-compare>
 
 <!-- ===== BÜLTEN ABONELIK BÖLÜMÜ - CARD TASARIM ===== -->
 <section class="bg-beeses-silver py-16 md:py-24">

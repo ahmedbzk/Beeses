@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { apiMessage } from '../../services/api-message';
 
 @Component({
   selector: 'app-distributors',
@@ -225,7 +226,7 @@ export class DistributorsComponent implements OnInit {
         if (res.success) {
           this.submitSuccess = true;
         } else {
-          this.submitError = res.message || this.translate.instant('DIST_APPLY_ERROR');
+          this.submitError = apiMessage(res, this.translate.currentLang) || this.translate.instant('DIST_APPLY_ERROR');
         }
       },
       error: (err) => {

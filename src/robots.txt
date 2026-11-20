@@ -1,5 +1,7 @@
 User-agent: *
 Disallow: /admin/
+# Cloudflare'in e-posta gizleme linkleri (/cdn-cgi/l/email-protection) 404 döner; taranmasın
+Disallow: /cdn-cgi/
 Allow: /
 
 Sitemap: https://beesesaudio.com/sitemap.xml

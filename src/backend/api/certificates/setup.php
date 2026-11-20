@@ -1,4 +1,6 @@
 <?php
+// Veritabanı yapısını değiştiren kurulum betiği: web üzerinden erişilemez, yalnızca sunucuda komut satırından çalışır.
+if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 require_once '../db.php';
 header("Content-Type: application/json; charset=UTF-8");
 

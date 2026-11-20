@@ -6,6 +6,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ProductService, Product } from '../../../services/product.service';
 import { environment } from '../../../../environments/environment';
+import { manualUrl } from '../../../services/product-documents';
 
 @Component({
   selector: 'app-manuals',
@@ -79,26 +80,7 @@ export class ManualsComponent implements OnInit {
   }
 
   getManualUrl(item: Product): string | undefined {
-    let rawPdf = item.manualUrl;
-    
-    if (!rawPdf || rawPdf.trim() === '' || rawPdf === 'null' || rawPdf === 'undefined') {
-      return undefined;
-    }
-    
-    let relativePath = rawPdf;
-    if (rawPdf.includes('backend/api/')) {
-      relativePath = rawPdf.split('backend/api/')[1];
-    } else if (rawPdf.includes('localhost/beeses_api/')) {
-      relativePath = rawPdf.split('localhost/beeses_api/')[1];
-    } else if (rawPdf.startsWith('http')) {
-      return rawPdf;
-    }
-    
-    if (!relativePath || relativePath.trim() === '' || relativePath === 'null' || relativePath === 'undefined') {
-      return undefined;
-    }
-    
-    return `${this.apiUrl}/serve-pdf.php?path=${encodeURIComponent(relativePath)}`;
+    return manualUrl(item);
   }
 
   getCategoryTranslationKey(cat: string | undefined): string {

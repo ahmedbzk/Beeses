@@ -1,5 +1,7 @@
 <?php
 require_once '../db.php';
+require_once __DIR__ . '/../auth_helper.php';
+requireAdmin(); // oturum zorunlu
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -42,7 +44,7 @@ try {
     }
 
     if (!empty($password)) {
-        $hashed_password = md5($password);
+        $hashed_password = hashAdminPassword($password);
         $stmt = $pdo->prepare("UPDATE admins SET username = ?, password = ? WHERE id = ?");
         $stmt->execute([$username, $hashed_password, $adminId]);
     } else {

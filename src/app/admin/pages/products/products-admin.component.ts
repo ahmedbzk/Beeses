@@ -5,6 +5,41 @@ import { LucideAngularModule } from 'lucide-angular';
 import { ProductService, Product, ProductSpec, ProductFeature } from '../../../services/product.service';
 import { AlertService } from '../../../services/alert.service';
 import { environment } from '../../../../environments/environment';
+import { HttpErrorResponse } from '@angular/common/http';
+
+type DocKey = 'pdf' | 'pdf_en' | 'manual';
+
+interface DocSlot {
+  key: DocKey;
+  label: string;
+  title: string;
+  column: 'pdfUrl' | 'pdfUrl_en' | 'manualUrl';
+  fileField: string;   // backend: $_FILES anahtarı
+  deleteField: string; // backend: silme bayrağı
+}
+
+const DOC_SLOTS: DocSlot[] = [
+  { key: 'pdf',    label: 'Ürün Broşürü (Türkçe)',  title: 'Broşür PDF — TR', column: 'pdfUrl',    fileField: 'pdf_file',    deleteField: 'delete_pdf' },
+  { key: 'pdf_en', label: 'Ürün Broşürü (İngilizce)', title: 'Brochure PDF — EN', column: 'pdfUrl_en', fileField: 'pdf_file_en', deleteField: 'delete_pdf_en' },
+  { key: 'manual', label: 'Kullanım Kılavuzu (Tek PDF — iki dilde ortak)', title: 'Kullanım Kılavuzu PDF', column: 'manualUrl', fileField: 'manual_file', deleteField: 'delete_manual' },
+];
+
+const emptyDocState = (): Record<DocKey, { file: File | null; remove: boolean }> => ({
+  pdf: { file: null, remove: false },
+  pdf_en: { file: null, remove: false },
+  manual: { file: null, remove: false },
+});
+
+/** Backend'in döndüğü hata mesajını göster (400/413/500 yanıtlarında da). */
+function serverMessage(err: unknown, fallback: string): string {
+  if (err instanceof HttpErrorResponse) {
+    if (err.status === 413) return 'Dosya boyutu sunucu limitini aşıyor. Daha küçük bir dosya deneyin.';
+    const msg = err.error && typeof err.error === 'object' ? err.error.message : '';
+    if (msg) return msg;
+    if (err.status === 0) return 'Sunucuya ulaşılamadı. İnternet bağlantınızı kontrol edin.';
+  }
+  return fallback;
+}
 
 @Component({
   selector: 'app-products-admin',
@@ -96,13 +131,19 @@ import { environment } from '../../../../environments/environment';
 
               
               <td class="px-6 py-4">
-                <div *ngIf="item.pdfUrl; else noPdf">
-                  <a [href]="getAdminPdfUrl(item.pdfUrl)" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 text-red-700 hover:bg-red-600 hover:text-white rounded-full text-[10px] font-bold transition-all">
-                    <lucide-icon name="file-text" class="w-3 h-3"></lucide-icon> PDF
+                <div *ngIf="item.pdfUrl || item.pdfUrl_en || item.manualUrl; else noPdf" class="flex flex-wrap gap-1">
+                  <a *ngIf="item.pdfUrl" [href]="getAdminPdfUrl(item.pdfUrl)" target="_blank" title="Broşür (TR)" class="inline-flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 hover:bg-red-600 hover:text-white rounded-full text-[10px] font-bold transition-all whitespace-nowrap">
+                    <lucide-icon name="file-text" class="w-3 h-3"></lucide-icon> TR
+                  </a>
+                  <a *ngIf="item.pdfUrl_en" [href]="getAdminPdfUrl(item.pdfUrl_en)" target="_blank" title="Brochure (EN)" class="inline-flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 hover:bg-red-600 hover:text-white rounded-full text-[10px] font-bold transition-all whitespace-nowrap">
+                    <lucide-icon name="file-text" class="w-3 h-3"></lucide-icon> EN
+                  </a>
+                  <a *ngIf="item.manualUrl" [href]="getAdminPdfUrl(item.manualUrl)" target="_blank" title="Kullanım Kılavuzu" class="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 hover:bg-beeses-dark hover:text-white rounded-full text-[10px] font-bold transition-all whitespace-nowrap">
+                    <lucide-icon name="file-text" class="w-3 h-3"></lucide-icon> Kılavuz
                   </a>
                 </div>
                 <ng-template #noPdf>
-                  <span class="text-xs text-gray-400 italic">Broşür yok</span>
+                  <span class="text-xs text-gray-400 italic">Döküman yok</span>
                 </ng-template>
               </td>
 
@@ -339,67 +380,57 @@ import { environment } from '../../../../environments/environment';
             </div>
 
             
+            <!-- Dökümanlar: Broşür TR / Broşür EN / Kullanım Kılavuzu (tek PDF) -->
             <div class="space-y-4 pt-2">
-              
-              <div class="animate-fade-in">
-                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Ürün Broşürü (Evrensel PDF)</label>
-                <div class="relative group border border-gray-200 rounded-xl p-4 bg-white hover:border-beeses-gold/60 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div class="flex items-center gap-3">
-                    <div class="p-2.5 bg-red-50 text-red-600 rounded-lg">
-                      <lucide-icon name="file-text" class="w-5 h-5"></lucide-icon>
-                    </div>
-                    <div class="flex flex-col">
-                      <span class="text-xs font-bold text-gray-700">Broşür PDF</span>
-                      <span class="text-[10px] text-gray-400" *ngIf="!pdfFileName && !(editingItem && editingItem.pdfUrl)">Mevcut PDF dosyası bulunmamaktadır (Opsiyonel)</span>
-                      <span class="text-[10px] text-beeses-gold font-bold truncate max-w-[280px]" *ngIf="pdfFileName || (editingItem && editingItem.pdfUrl)" [title]="pdfFileName || getFileNameFromPath(editingItem?.pdfUrl)">
-                        {{ pdfFileName || getFileNameFromPath(editingItem?.pdfUrl) }}
-                      </span>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                    <div class="relative overflow-hidden">
-                      <button type="button" class="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 transition-all cursor-pointer">
-                        {{ (pdfFileName || (editingItem && editingItem.pdfUrl)) ? 'Dosyayı Değiştir' : 'PDF Seç' }}
-                      </button>
-                      <input type="file" (change)="onPdfSelected($event)" accept=".pdf" class="absolute inset-0 opacity-0 cursor-pointer">
-                    </div>
-                    <button *ngIf="pdfFileName || (editingItem && editingItem.pdfUrl)" type="button" (click)="deletePdfBrochure()" class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-xl border border-transparent transition-all cursor-pointer" title="PDF Kaldır">
-                      <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
-                    </button>
-                  </div>
-                </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ng-container *ngFor="let slot of brochureSlots">
+                  <ng-container *ngTemplateOutlet="docSlot; context: { $implicit: slot }"></ng-container>
+                </ng-container>
               </div>
-
-              <!-- Kullanım Kılavuzu (Evrensel) -->
-              <div class="animate-fade-in mt-4">
-                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Kullanım Kılavuzu (Evrensel PDF)</label>
-                <div class="relative group border border-gray-200 rounded-xl p-4 bg-white hover:border-beeses-gold/60 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div class="flex items-center gap-3">
-                    <div class="p-2.5 bg-red-50 text-red-600 rounded-lg">
-                      <lucide-icon name="file-text" class="w-5 h-5"></lucide-icon>
-                    </div>
-                    <div class="flex flex-col">
-                      <span class="text-xs font-bold text-gray-700">Kullanım Kılavuzu PDF</span>
-                      <span class="text-[10px] text-gray-400" *ngIf="!manualFileName && !(editingItem && editingItem.manualUrl)">Mevcut PDF dosyası bulunmamaktadır (Opsiyonel)</span>
-                      <span class="text-[10px] text-beeses-gold font-bold truncate max-w-[280px]" *ngIf="manualFileName || (editingItem && editingItem.manualUrl)" [title]="manualFileName || getFileNameFromPath(editingItem?.manualUrl)">
-                        {{ manualFileName || getFileNameFromPath(editingItem?.manualUrl) }}
-                      </span>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                    <div class="relative overflow-hidden">
-                      <button type="button" class="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 transition-all cursor-pointer">
-                        {{ (manualFileName || (editingItem && editingItem.manualUrl)) ? 'Dosyayı Değiştir' : 'PDF Seç' }}
-                      </button>
-                      <input type="file" (change)="onManualSelected($event)" accept=".pdf" class="absolute inset-0 opacity-0 cursor-pointer">
-                    </div>
-                    <button *ngIf="manualFileName || (editingItem && editingItem.manualUrl)" type="button" (click)="deleteManualPdf()" class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-xl border border-transparent transition-all cursor-pointer" title="PDF Kaldır">
-                      <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <p class="text-[11px] text-gray-500 bg-gray-50 border border-gray-100 rounded-xl px-3.5 py-2.5 leading-relaxed">
+                <lucide-icon name="info" class="w-3.5 h-3.5 inline -mt-0.5 text-beeses-gold"></lucide-icon>
+                Broşürü yalnızca bir dilde yüklerseniz sitede iki dilde de o dosya gösterilir. Diğer dili istediğiniz zaman sonradan yükleyebilirsiniz.
+              </p>
+              <ng-container *ngTemplateOutlet="docSlot; context: { $implicit: manualSlot }"></ng-container>
             </div>
+
+            <ng-template #docSlot let-slot>
+              <div class="animate-fade-in">
+                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">{{ slot.label }}</label>
+                <div class="relative group border rounded-xl p-4 bg-white transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                     [ngClass]="docDisplayName(slot.key) ? 'border-beeses-gold/40' : 'border-gray-200 hover:border-beeses-gold/60'">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="p-2.5 bg-red-50 text-red-600 rounded-lg shrink-0">
+                      <lucide-icon name="file-text" class="w-5 h-5"></lucide-icon>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                      <span class="text-xs font-bold text-gray-700">{{ slot.title }}</span>
+                      <ng-container *ngIf="docDisplayName(slot.key) as fileName; else emptyDoc">
+                        <span class="text-[10px] text-beeses-gold font-bold truncate max-w-[240px]" [title]="fileName">{{ fileName }}</span>
+                        <span *ngIf="docPendingFile(slot.key) as pending" class="text-[10px] text-gray-400">{{ formatFileSize(pending.size) }} · kaydedince yüklenecek</span>
+                      </ng-container>
+                      <ng-template #emptyDoc>
+                        <span class="text-[10px] text-gray-400">{{ docEmptyHint(slot.key) }}</span>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
+                    <a *ngIf="docExistingPath(slot.key) && !docPendingFile(slot.key)" [href]="getAdminPdfUrl(docExistingPath(slot.key))" target="_blank" class="p-2 text-gray-500 hover:text-beeses-gold rounded-xl transition-all" title="Görüntüle">
+                      <lucide-icon name="eye" class="w-4 h-4"></lucide-icon>
+                    </a>
+                    <div class="relative overflow-hidden">
+                      <button type="button" class="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 transition-all cursor-pointer">
+                        {{ docDisplayName(slot.key) ? 'Dosyayı Değiştir' : 'PDF Seç' }}
+                      </button>
+                      <input type="file" (change)="onDocSelected(slot.key, $event)" accept="application/pdf,.pdf" class="absolute inset-0 opacity-0 cursor-pointer">
+                    </div>
+                    <button *ngIf="docDisplayName(slot.key)" type="button" (click)="removeDoc(slot.key)" class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-xl border border-transparent transition-all cursor-pointer" title="PDF Kaldır">
+                      <lucide-icon name="trash" class="w-4 h-4"></lucide-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
           </div>
 
           
@@ -643,13 +674,11 @@ export class ProductsAdminComponent implements OnInit {
   galleryFileNames: string[] = ['', '', '', ''];
   existingGallery: string[] = []; // Preserved gallery items in edit mode
   
-  pdfFile: File | null = null;
-  pdfFileName = '';
-  deletePdfFlag = false;
-
-  manualFile: File | null = null;
-  manualFileName = '';
-  deleteManualFlag = false;
+  // Dökümanlar: yeni seçilen dosya ve "kaldır" isteği. Kayıt edilene kadar listedeki ürüne dokunulmaz
+  // (önceden çöp kutusu listedeki ürünü doğrudan değiştiriyor, "İptal"de tablo bozuk kalıyordu).
+  docState: Record<DocKey, { file: File | null; remove: boolean }> = emptyDocState();
+  readonly brochureSlots = DOC_SLOTS.filter(s => s.key !== 'manual');
+  readonly manualSlot = DOC_SLOTS.find(s => s.key === 'manual')!;
 
   specsList: ProductSpec[] = [];
   specsList_en: ProductSpec[] = [];
@@ -767,40 +796,49 @@ export class ProductsAdminComponent implements OnInit {
     this.clearGallerySlot(index);
   }
 
-  onPdfSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.pdfFile = file;
-      this.pdfFileName = file.name;
-      this.deletePdfFlag = false;
+  onDocSelected(key: DocKey, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    // Aynı dosya kaldırılıp tekrar seçilebilsin diye input her seçimde sıfırlanır
+    input.value = '';
+    if (!file) return;
+
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    if (!isPdf) {
+      this.alertService.showError('Yalnızca PDF dosyası yükleyebilirsiniz.');
+      return;
     }
+    this.docState[key] = { file, remove: false };
   }
 
-  deletePdfBrochure() {
-    this.pdfFile = null;
-    this.pdfFileName = '';
-    this.deletePdfFlag = true;
-    if (this.editingItem) {
-      this.editingItem.pdfUrl = '';
-    }
+  removeDoc(key: DocKey) {
+    this.docState[key] = { file: null, remove: true };
   }
 
-  onManualSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.manualFile = file;
-      this.manualFileName = file.name;
-      this.deleteManualFlag = false;
-    }
+  /** Kayıtlı (sunucudaki) dosya yolu; kaldırılması istendiyse boş. */
+  docExistingPath(key: DocKey): string {
+    if (!this.editingItem || this.docState[key].remove) return '';
+    const slot = DOC_SLOTS.find(s => s.key === key)!;
+    return (this.editingItem[slot.column] as string) || '';
   }
 
-  deleteManualPdf() {
-    this.manualFile = null;
-    this.manualFileName = '';
-    this.deleteManualFlag = true;
-    if (this.editingItem) {
-      this.editingItem.manualUrl = '';
-    }
+  docPendingFile(key: DocKey): File | null {
+    return this.docState[key].file;
+  }
+
+  docDisplayName(key: DocKey): string {
+    return this.docState[key].file?.name || this.getFileNameFromPath(this.docExistingPath(key));
+  }
+
+  /** Boş alan açıklaması: broşürde diğer dil varsa sitede onun gösterileceğini belirt. */
+  docEmptyHint(key: DocKey): string {
+    if (key === 'pdf' && this.docDisplayName('pdf_en')) return 'Yüklenmedi — Türkçe sayfada da EN broşür gösterilir';
+    if (key === 'pdf_en' && this.docDisplayName('pdf')) return 'Yüklenmedi — İngilizce sayfada da TR broşür gösterilir';
+    return 'Dosya yüklenmedi (opsiyonel)';
+  }
+
+  formatFileSize(bytes: number): string {
+    return bytes >= 1024 * 1024 ? (bytes / (1024 * 1024)).toFixed(1) + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB';
   }
 
   getFileNameFromPath(path: string | undefined): string {
@@ -874,11 +912,10 @@ export class ProductsAdminComponent implements OnInit {
     this.specsList_en.push({ name: '', value: '' });
   }
 
+  // Silme sadece açık olan dil sekmesindeki listeyi etkiler. TR ve EN listeleri her üründe aynı uzunlukta
+  // değil (ör. TR 20 / EN 3 satır); sıra numarasıyla birlikte silmek diğer dilde alakasız bir satırı siliyordu.
   removeSpecRow(index: number) {
-    this.specsList.splice(index, 1);
-    if (this.specsList_en[index] !== undefined) {
-      this.specsList_en.splice(index, 1);
-    }
+    (this.activeLang === 'en' ? this.specsList_en : this.specsList).splice(index, 1);
   }
 
   addFeatureRow() {
@@ -887,10 +924,7 @@ export class ProductsAdminComponent implements OnInit {
   }
 
   removeFeatureRow(index: number) {
-    this.featuresList.splice(index, 1);
-    if (this.featuresList_en[index] !== undefined) {
-      this.featuresList_en.splice(index, 1);
-    }
+    (this.activeLang === 'en' ? this.featuresList_en : this.featuresList).splice(index, 1);
   }
 
   openAddModal() {
@@ -901,12 +935,7 @@ export class ProductsAdminComponent implements OnInit {
     this.galleryFiles = [null, null, null, null];
     this.galleryFileNames = ['', '', '', ''];
     this.existingGallery = [];
-    this.pdfFile = null;
-    this.pdfFileName = '';
-    this.deletePdfFlag = false;
-    this.manualFile = null;
-    this.manualFileName = '';
-    this.deleteManualFlag = false;
+    this.docState = emptyDocState();
     this.customCategory = '';
     
     this.formData = {
@@ -944,12 +973,7 @@ export class ProductsAdminComponent implements OnInit {
     this.galleryFiles = [null, null, null, null];
     this.galleryFileNames = ['', '', '', ''];
     this.existingGallery = item.images ? [...item.images] : [item.image];
-    this.pdfFile = null;
-    this.pdfFileName = '';
-    this.deletePdfFlag = false;
-    this.manualFile = null;
-    this.manualFileName = '';
-    this.deleteManualFlag = false;
+    this.docState = emptyDocState();
     this.customCategory = '';
 
     const isPredefined = ['SQL SERİSİ', 'OF SERİSİ', 'PETEK SERİSİ'].includes(item.category);
@@ -997,12 +1021,7 @@ export class ProductsAdminComponent implements OnInit {
     this.activeGalleryMenu = null;
     this.primaryImagePreview = '';
     this.galleryPreviews = ['', '', '', ''];
-    this.pdfFile = null;
-    this.pdfFileName = '';
-    this.deletePdfFlag = false;
-    this.manualFile = null;
-    this.manualFileName = '';
-    this.deleteManualFlag = false;
+    this.docState = emptyDocState();
   }
 
   saveProduct() {
@@ -1074,8 +1093,9 @@ export class ProductsAdminComponent implements OnInit {
     const finalCategory = this.formData.category === 'custom' ? (this.customCategory || '').trim() : this.formData.category;
     const validSpecs = this.specsList.filter(s => s.name && s.value && s.name.trim() !== '' && s.value.trim() !== '');
     const validSpecs_en = this.specsList_en.filter(s => s.name && s.value && s.name.trim() !== '' && s.value.trim() !== '');
-    const validFeatures = this.featuresList.filter(f => f.title && f.description && f.title.trim() !== '' && f.description.trim() !== '');
-    const validFeatures_en = this.featuresList_en.filter(f => f.title && f.description && f.title.trim() !== '' && f.description.trim() !== '');
+    // Öne çıkan detayda başlık yeterli; açıklaması boş olanlar artık sessizce atılmıyor
+    const validFeatures = this.featuresList.filter(f => (f.title || '').trim() !== '').map(f => ({ title: f.title.trim(), description: (f.description || '').trim() }));
+    const validFeatures_en = this.featuresList_en.filter(f => (f.title || '').trim() !== '').map(f => ({ title: f.title.trim(), description: (f.description || '').trim() }));
 
     this.isSaving = true;
 
@@ -1105,11 +1125,14 @@ export class ProductsAdminComponent implements OnInit {
       }
     }
 
-    if (this.pdfFile) {
-      payload.append('pdf_file', this.pdfFile);
-    }
-    if (this.manualFile) {
-      payload.append('manual_file', this.manualFile);
+    // Dökümanlar: yeni dosya varsa gönder; yoksa ve kaldırma istendiyse (sadece düzenlemede) silme bayrağı gönder
+    for (const slot of DOC_SLOTS) {
+      const state = this.docState[slot.key];
+      if (state.file) {
+        payload.append(slot.fileField, state.file);
+      } else if (isEdit && state.remove) {
+        payload.append(slot.deleteField, 'true');
+      }
     }
 
     if (isEdit && this.editingItem) {
@@ -1117,13 +1140,6 @@ export class ProductsAdminComponent implements OnInit {
       
       const filteredExisting = this.existingGallery.filter(path => path && path.trim() !== '');
       payload.append('existing_images', JSON.stringify(filteredExisting));
-
-      if (this.deletePdfFlag) {
-        payload.append('delete_pdf', 'true');
-      }
-      if (this.deleteManualFlag) {
-        payload.append('delete_manual', 'true');
-      }
 
       this.productService.updateProduct(payload).subscribe({
         next: (response) => {
@@ -1136,8 +1152,8 @@ export class ProductsAdminComponent implements OnInit {
           }
           this.isSaving = false;
         },
-        error: () => {
-          this.alertService.showError('Ürün güncellenirken hata oluştu.');
+        error: (err) => {
+          this.alertService.showError(serverMessage(err, 'Ürün güncellenirken hata oluştu.'));
           this.isSaving = false;
         }
       });
@@ -1154,8 +1170,8 @@ export class ProductsAdminComponent implements OnInit {
           }
           this.isSaving = false;
         },
-        error: () => {
-          this.alertService.showError('Ürün eklenirken hata oluştu.');
+        error: (err) => {
+          this.alertService.showError(serverMessage(err, 'Ürün eklenirken hata oluştu.'));
           this.isSaving = false;
         }
       });
@@ -1172,8 +1188,8 @@ export class ProductsAdminComponent implements OnInit {
           this.alertService.showError(response.message || 'Ürün silinemedi.');
         }
       },
-      error: () => {
-        this.alertService.showError('Ürün silinirken hata oluştu.');
+      error: (err) => {
+        this.alertService.showError(serverMessage(err, 'Ürün silinirken hata oluştu.'));
       }
     });
   }

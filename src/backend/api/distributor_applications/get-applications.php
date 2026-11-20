@@ -11,6 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 header("Content-Type: application/json; charset=UTF-8");
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../auth_helper.php';
+requireAdmin(); // oturum zorunlu
 
 try {
     $sql = "SELECT * FROM distributor_applications ORDER BY created_at DESC";

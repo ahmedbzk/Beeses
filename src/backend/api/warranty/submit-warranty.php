@@ -37,7 +37,7 @@ if (isset($_FILES['invoice_image']) && $_FILES['invoice_image']['error'] == UPLO
         // Veritabanına kaydedilecek yol
         $invoice_path = 'uploads/invoices/' . $unique_file_name; 
     } else {
-        echo json_encode(["success" => false, "message" => "Dosya yüklenirken bir hata oluştu."]);
+        echo json_encode(["success" => false, "message" => "Dosya yüklenirken bir hata oluştu.", "message_en" => "An error occurred while uploading the file."]);
         exit;
     }
 }
@@ -59,8 +59,8 @@ try {
         $invoice_path
     ]);
     
-    echo json_encode(["success" => true, "message" => "Garanti kaydınız başarıyla alındı ve onay bekliyor."]);
+    echo json_encode(["success" => true, "message" => "Garanti kaydınız başarıyla alındı ve onay bekliyor.", "message_en" => "Your warranty registration has been received and is awaiting approval."]);
 } catch (Exception $e) {
-    echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage()]);
+    echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $e->getMessage(), "message_en" => "Database error: " . $e->getMessage()]);
 }
 ?>

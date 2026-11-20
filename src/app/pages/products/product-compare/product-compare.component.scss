@@ -1,0 +1,109 @@
+/* Açılış/kapanış: yalnızca opacity + transform (GPU'da çalışır, yeniden yerleşim tetiklemez).
+   contain: ekranın içindeki değişiklikler alttaki sayfanın yeniden hesaplanmasını tetiklemesin. */
+.compare-overlay {
+  contain: layout paint;
+  animation: compare-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  &.is-closing {
+    animation: compare-out 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+    pointer-events: none;
+  }
+}
+
+@keyframes compare-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes compare-out {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(24px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .compare-overlay, .compare-overlay.is-closing { animation-duration: 0.01s; }
+}
+
+/* blur() filtresi yerine gradyan: aynı görünüm, çok daha ucuz çizim */
+.header-glow {
+  background: radial-gradient(circle at 0% 0%, rgba(181, 129, 49, 0.18) 0%, rgba(181, 129, 49, 0) 35%);
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.product-name {
+  line-height: 1.25;
+  height: 2.5em; // her zaman 2 satırlık alan
+}
+
+/* ── Mobil düzen ── */
+.mobile-name {
+  line-height: 1.25;
+  height: 2.5em; // 1 ya da 2 satır isimde kartlar aynı yükseklikte
+}
+
+.mobile-row {
+  background: #ffffff;
+  border-bottom: 1px solid #eef0f2;
+  box-shadow: inset 3px 0 0 transparent;
+
+  &:nth-child(odd) { background: #fafafa; }
+  &.is-diff { box-shadow: inset 3px 0 0 #B58131; }
+}
+
+.product-thumb {
+  background:
+    radial-gradient(circle at center, rgba(181, 129, 49, 0.10) 0%, rgba(248, 249, 250, 0) 70%),
+    #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Satırlar: zebra + farklı satırlarda altın vurgulu sol çizgi.
+   Yapışkan (sticky) etiket hücresinin arka planı opak olmalı ki kaydırırken alttaki hücreler görünmesin. */
+.compare-table {
+  .compare-row {
+    > th, > td {
+      background: #ffffff;
+      border-bottom: 1px solid #eef0f2;
+      transition: background-color 0.25s ease;
+    }
+
+    &:nth-child(even) > th,
+    &:nth-child(even) > td {
+      background: #fafafa;
+    }
+
+    &:hover > th,
+    &:hover > td {
+      background: #fbf6ee;
+    }
+
+    &.is-diff > th.row-label {
+      box-shadow: inset 3px 0 0 #B58131;
+    }
+  }
+
+  .row-label {
+    box-shadow: inset 3px 0 0 transparent;
+  }
+
+  td + td, th + td {
+    border-left: 1px solid #f1f2f4;
+  }
+}
+
+.compare-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(181, 129, 49, 0.4) transparent;
+
+  &::-webkit-scrollbar { width: 8px; height: 8px; }
+  &::-webkit-scrollbar-thumb { background: rgba(181, 129, 49, 0.35); border-radius: 8px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+}

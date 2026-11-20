@@ -15,11 +15,10 @@
             <span class="text-beeses-gold font-black text-[18px] tracking-[0.5em] mt-2 block w-full text-center">{{ 'FOOTER_SLOGAN2' | translate }}</span>
           </p>
 
-          <div class="flex items-center justify-center gap-4">
-            <a href="#" class="social-icon"><lucide-icon name="facebook"></lucide-icon></a>
-            <a href="#" class="social-icon"><lucide-icon name="twitter"></lucide-icon></a>
-            <a href="#" class="social-icon"><lucide-icon name="youtube"></lucide-icon></a>
-            <a href="#" class="social-icon"><lucide-icon name="instagram"></lucide-icon></a>
+          <!-- Parent company: IOTEK Teknoloji -->
+          <div class="pt-8 border-t border-white/10 w-full max-w-[240px] flex flex-col items-center gap-4">
+            <img src="assets/iotek-logo.png" alt="IOTEK Teknoloji" class="h-16 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300" loading="lazy">
+            <span class="text-beeses-silver/60 text-[12px] leading-tight uppercase tracking-[0.3em] font-medium text-center">{{ 'FOOTER_IOTEK_LABEL' | translate }}</span>
           </div>
         </div>
       </div>
@@ -75,6 +74,13 @@
               <span>+90 533 275 36 39</span>
             </div>
           </div>
+
+          <div class="flex flex-wrap items-center gap-3 mt-12">
+            <a href="#" class="social-icon"><lucide-icon name="facebook"></lucide-icon></a>
+            <a href="#" class="social-icon"><lucide-icon name="twitter"></lucide-icon></a>
+            <a href="#" class="social-icon"><lucide-icon name="youtube"></lucide-icon></a>
+            <a href="#" class="social-icon"><lucide-icon name="instagram"></lucide-icon></a>
+          </div>
         </div>
 
       </div><!-- /footer-links-grid -->
@@ -82,7 +88,7 @@
     </div><!-- /footer-grid -->
 
     <div class="footer-bottom">
-      <p class="text-center lg:text-left">© BEESES 2026. Designed By BEESES AUDIO TECHNOLOGY.</p>
+      <p class="text-center lg:text-left">© BEESES 2026. {{ 'FOOTER_DESIGNED_BY' | translate }} {{ 'FOOTER_IOTEK_NOTE' | translate }}</p>
       <div class="flex flex-wrap justify-center lg:justify-end gap-6 text-[10px] tracking-[0.2em] uppercase font-bold text-beeses-silver/20">
         <a routerLink="/privacy-policy" target="_blank" class="hover:text-beeses-gold transition-colors">{{ 'FOOTER_PRIVACY' | translate }}</a>
         <a routerLink="/cookie-policy" target="_blank" class="hover:text-beeses-gold transition-colors">{{ 'FOOTER_COOKIES' | translate }}</a>

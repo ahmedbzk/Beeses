@@ -25,7 +25,11 @@ export interface Product {
   description_en?: string;
   image: string;
   images?: string[];
+  /** Broşür (TR). Eski kayıtlarda tek broşür bu alanda durur. */
   pdfUrl?: string;
+  /** Broşür (EN). Boşsa sitede TR broşür gösterilir (ve tersi). */
+  pdfUrl_en?: string;
+  /** Kullanım kılavuzu: iki dil için tek PDF. */
   manualUrl?: string;
   specs: ProductSpec[];
   features: ProductFeature[];

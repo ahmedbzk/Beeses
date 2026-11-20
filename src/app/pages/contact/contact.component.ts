@@ -5,6 +5,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { ContactService } from '../../services/contact.service';
 import { AlertService } from '../../services/alert.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { apiMessage } from '../../services/api-message';
 
 @Component({
   selector: 'app-contact',
@@ -67,7 +68,7 @@ export class ContactComponent {
       },
       error: (err) => {
         this.isSubmitting = false;
-        const msg = err.error?.message || this.translate.instant('ERROR_CONNECTION');
+        const msg = apiMessage(err.error, this.translate.currentLang) || this.translate.instant('ERROR_CONNECTION');
         this.alertService.showError(msg);
         this.cdr.detectChanges();
       }

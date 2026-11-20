@@ -6,6 +6,7 @@ import { NewsletterService } from '../../../services/newsletter.service';
 import { InnovationService, Innovation } from '../../../services/innovation.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { environment } from '../../../../environments/environment';
+import { apiMessage } from '../../../services/api-message';
 
 @Component({
   selector: 'app-innovation',
@@ -117,12 +118,12 @@ export class InnovationComponent implements OnInit {
         if (res.success) {
           this.newsletterSuccess = true;
         } else {
-          this.newsletterError = this.translate.currentLang === 'en' ? (res.message || 'An error occurred.') : (res.message || 'Bir hata oluştu.');
+          this.newsletterError = apiMessage(res, this.translate.currentLang) || this.translate.instant('NEWSLETTER_ERROR');
         }
       },
       error: () => {
         this.newsletterLoading = false;
-        this.newsletterError = this.translate.currentLang === 'en' ? 'Server connection failed.' : 'Sunucu bağlantısı kurulamadı.';
+        this.newsletterError = this.translate.instant('ERROR_CONNECTION');
       }
     });
   }

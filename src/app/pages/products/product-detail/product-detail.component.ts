@@ -6,11 +6,13 @@ import { ProductService, Product } from '../../../services/product.service';
 import { environment } from '../../../../environments/environment';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { SeoService } from '../../../services/seo.service';
+import { brochureUrl, manualUrl } from '../../../services/product-documents';
+import { ProductCompareComponent, sortProductsBySeries } from '../product-compare/product-compare.component';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule],
+  imports: [CommonModule, RouterLink, LucideAngularModule, TranslateModule, ProductCompareComponent],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss'
 })
@@ -33,6 +35,37 @@ export class ProductDetailComponent implements OnInit {
   isZooming: boolean = false;
   apiUrl = environment.apiUrl;
 
+  // Ürün karşılaştırma: tüm ürün listesi yalnızca ilk açılışta yüklenir
+  compareProducts: Product[] = [];
+  compareSlugs: string[] = [];
+  isCompareOpen = false;
+  isCompareLoading = false;
+
+  openCompare(slugs?: string[]): void {
+    const slug = this.route.snapshot.paramMap.get('id');
+    this.compareSlugs = slugs && slugs.length ? slugs : (slug ? [slug] : []);
+    if (this.compareProducts.length > 0) {
+      this.isCompareOpen = true;
+      return;
+    }
+    if (this.isCompareLoading) return;
+    this.isCompareLoading = true;
+    this.productService.getProducts().subscribe({
+      next: (res) => {
+        this.isCompareLoading = false;
+        if (res.success) {
+          this.compareProducts = sortProductsBySeries(res.data || []);
+          this.isCompareOpen = true;
+        }
+      },
+      error: () => { this.isCompareLoading = false; }
+    });
+  }
+
+  closeCompare(): void {
+    this.isCompareOpen = false;
+  }
+
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.isLoading = true;
@@ -52,14 +85,6 @@ export class ProductDetailComponent implements OnInit {
                   this.product.image = this.getImageUrl(this.product.image);
                   this.selectedImage = this.product.image;
                   this.selectedIndex = 0;
-                }
-
-                if (this.product.pdfUrl) {
-                  this.product.pdfUrl = this.getImageUrl(this.product.pdfUrl);
-                }
-
-                if (this.product.manualUrl) {
-                  this.product.manualUrl = this.getImageUrl(this.product.manualUrl);
                 }
 
                 const pName = this.translate.currentLang === 'en' && this.product.name_en ? this.product.name_en : this.product.name;
@@ -156,52 +181,14 @@ export class ProductDetailComponent implements OnInit {
     return `${this.apiUrl}/${imagePath}`;
   }
 
+  /** Broşür: sayfanın dilindeki dosya, yoksa diğer dildeki dosya. */
   getPdfUrl(): string | undefined {
-    if (!this.product) return undefined;
-    let rawPdf = this.product.pdfUrl;
-    
-    if (!rawPdf || rawPdf.trim() === '' || rawPdf === 'null' || rawPdf === 'undefined') {
-      return undefined;
-    }
-    
-    let relativePath = rawPdf;
-    if (rawPdf.includes('backend/api/')) {
-      relativePath = rawPdf.split('backend/api/')[1];
-    } else if (rawPdf.includes('localhost/beeses_api/')) {
-      relativePath = rawPdf.split('localhost/beeses_api/')[1];
-    } else if (rawPdf.startsWith('http')) {
-      return rawPdf;
-    }
-    
-    if (!relativePath || relativePath.trim() === '' || relativePath === 'null' || relativePath === 'undefined') {
-      return undefined;
-    }
-    
-    return `${this.apiUrl}/serve-pdf.php?path=${encodeURIComponent(relativePath)}`;
+    return brochureUrl(this.product, this.translate.currentLang);
   }
 
+  /** Kullanım kılavuzu: iki dil için tek PDF. */
   getManualUrl(): string | undefined {
-    if (!this.product) return undefined;
-    let rawPdf = this.product.manualUrl;
-    
-    if (!rawPdf || rawPdf.trim() === '' || rawPdf === 'null' || rawPdf === 'undefined') {
-      return undefined;
-    }
-    
-    let relativePath = rawPdf;
-    if (rawPdf.includes('backend/api/')) {
-      relativePath = rawPdf.split('backend/api/')[1];
-    } else if (rawPdf.includes('localhost/beeses_api/')) {
-      relativePath = rawPdf.split('localhost/beeses_api/')[1];
-    } else if (rawPdf.startsWith('http')) {
-      return rawPdf;
-    }
-    
-    if (!relativePath || relativePath.trim() === '' || relativePath === 'null' || relativePath === 'undefined') {
-      return undefined;
-    }
-    
-    return `${this.apiUrl}/serve-pdf.php?path=${encodeURIComponent(relativePath)}`;
+    return manualUrl(this.product);
   }
 
   getCategoryTranslationKey(cat: string | undefined): string {
